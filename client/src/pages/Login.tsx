@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,10 +8,7 @@ import TextField from '@mui/material/TextField';
 import Avatar from '@mui/material/Avatar';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import axios from 'axios';
-
-
-const theme = createTheme();
+import api from '../components/login/api';
 
 const initialValues = {
   username: '',
@@ -21,6 +17,7 @@ const initialValues = {
 
 export default function Login() {
   const [values, setValues] = useState(initialValues);
+  const [cookie, setCookie] = useState({});
   const navigate = useNavigate();
 
   const handleInputChange = (e:any) => {
@@ -34,7 +31,7 @@ export default function Login() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log(values)
-    axios.post('/login', values)
+    api.logIn(values, updateCookies)
       .then((res) => {
         console.log(res)
         navigate('/');
@@ -42,11 +39,27 @@ export default function Login() {
       .catch((err) => {
         console.log(err)
       })
-
   };
 
+  function updateCookies() {
+    const newCookies = {};
+    // if (cookie) {
+    //   //if session already exists in state, no need to get username; just copy them over
+    //   newCookies.username = cookie.username;
+    // } else {
+    //   api
+    //     .getCookieData()
+    //     .then((res) => {
+    //       newCookies.username = res.username;
+    //       return api.getUserInfo(res.username);
+    //     })
+    //     .catch((err) => console.log(err));
+    // }
+    // setCookie(newCookies);
+    return newCookies;
+  }
+
   return (
-    <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -95,6 +108,5 @@ export default function Login() {
           </Box>
         </Box>
       </Container>
-    </ThemeProvider>
   );
 }

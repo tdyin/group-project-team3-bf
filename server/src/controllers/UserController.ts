@@ -33,6 +33,7 @@ export const post_register = async(req : Request, res: Response) => {
     } catch (err) {
         res.status(409).send(err);
     }
+}
 
 
 export const post_login = async(req: Request, res: Response) => {

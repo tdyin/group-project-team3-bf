@@ -1,85 +1,117 @@
-import { FormEvent, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import useMultiForm from './useMultiForm';
+import { ErrorMessage } from '@hookform/error-message';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Address from './Address';
-import NameInfo from './NameInfo';
-import User from './User';
+import Typography from '@mui/material/Typography';
 import axios from 'axios';
 
-const RegistrationForm = () => {
-    const [email, setEmail] = useState("");
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [matchPass, setMatchPass] = useState("");
-
-    const userRef: any = useRef();
-    const emailRef: any = useRef();
+type User = {
+    username: string,
+    email: string,
+    password: string,
+    passMatch: string
+}
+const RegistrationForm: React.FC = () => {
+    const { register, handleSubmit, formState: {errors}, watch } = useForm<User>();
 
     //const { steps, currentStep, step, isFirst, isLast, backStep, nextStep } = useMultiForm([<User />, <NameInfo />, <Address />]);
 
-    const onSubmit = async (e: FormEvent) => {
-        e.preventDefault();
+    const onSubmit = async (data: User) => {
         //nextStep();
 
         try {
-            await axios.post('', JSON.stringify({username, password, email}))
+            console.log("Sending Registration Data to Backend: ", data);
+            await axios.post('http://localhost:8080', data)
         } catch (err: any) {
-            
+            console.log(err);
+
         }
     }
 
-
     //TODO: Update Styles
     return (
-        <>
-            <form onSubmit={onSubmit}>
+
+        <Box sx={{marginTop: 9, display: "flex", flexDirection: "column", alignItems: "center"}} >
+            <form onSubmit={handleSubmit(onSubmit)} style={{maxWidth: "20%", padding: "3rem", boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px" }}>
+                <Typography variant="h3">Register an Account</Typography>
+                <br/>
+                
                 <TextField
                     label="E-mail Address"
                     size="small"
                     variant="standard"
-                    type="text"
+                    type="email"
                     id="email"
-                    ref={emailRef}
+                    {...register( "email", { 
+                        required: "Please enter an E-mail",
+                        pattern: {
+                            value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                            message: "E-mail must be in xxx@yyy.zzz format"
+                                }
+                    })}
                     autoComplete="off"
-                    onChange={ (e) => {setEmail(e.target.value)}}
                     required
+                    fullWidth
+                    style={{marginTop: "2rem"}}
                     />
+                <ErrorMessage errors={errors} name="email" render={({ message }) => <p>{message}</p>} />
+                
                 <TextField
                     label="Username"
                     size="small"
                     variant="standard"
                     type="text"
                     id="username"
-                    ref={userRef}
+                    {...register('username', {required: "Please enter a Username", minLength: 4, maxLength: 16, 
+                        pattern: {value: /^[a-zA-z0-9-_]$/, message: "Username must only contains letters and numbers"}
+                    })
+                    }
                     autoComplete="off"
-                    onChange={ (e) => {setUsername(e.target.value)}}
                     required
+                    fullWidth
+                    style={{marginTop: "2rem"}}
                     />
-                
+                <ErrorMessage errors={errors} name="username" as="p"/>
+
                 <TextField
                     label="Password"
                     size="small"
                     variant="standard"
                     type="password"
                     id="password"
-                    onChange={ (e) => {setPassword(e.target.value)}}
                     required
+                    fullWidth
+                    style={{marginTop: "2rem"}}
+                    {...register("password", { required: "Please enter a password", minLength: 8, maxLength: 20,
+                        pattern: {
+                            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*)(+=._-]).$/, 
+                            message: "Password must contain at least one Lowercase, Uppercase, Number, and Special Character"
+                        }
+                })}
                     />
+                <ErrorMessage errors={errors} name="password" render={({ message }) => <p>{message}</p>} />
+
                 <TextField
                     label="Confirm Password"
                     size="small"
                     variant="standard"
                     type="password"
-                    id="confirmPass"
-                    onChange={ (e) => {setMatchPass(e.target.value)}}
+                    id="passMatch"
                     required 
+                    fullWidth
+                    style={{marginTop: "2rem"}}
+                    {...register("passMatch", {required: "Please confirm your password", validate: (value: string) => {
+                        if(watch('password') !== value) {
+                            return "Your Passwords do not match"
+                        }
+                        }})}
                     />
+                <ErrorMessage errors={errors} name="passMatch" as="p"/>
                 
-                <Button disabled={!username || !email || !password || !matchPass ? true : false}>Register</Button>
+                <Button type="submit" fullWidth style={{marginTop: "2rem"}}>Register</Button>
             </form>
-        </>
+        </Box>
     )
 
     /*

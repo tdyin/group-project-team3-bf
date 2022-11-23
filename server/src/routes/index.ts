@@ -1,3 +1,3 @@
+import userRoutes from './UserRoutes'
 
-
-export default { }
+export default { userRoutes }

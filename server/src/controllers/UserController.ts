@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import User from '../models/User';
 
-
 //User Registration
 export const post_register = async(req : Request, res: Response) => {
     try {
@@ -36,33 +35,31 @@ export const post_register = async(req : Request, res: Response) => {
     }
 }
 
+
 export const post_login = async(req: Request, res: Response) => {
     try{
         const hashPass = await bcrypt.hash(req.body.password, 10);
-
         const user = await User.find({username: req.body.username, password: hashPass});
 
         if (user.length === 0) {
             res.status(404).send('Invalid username/password');
         } else {
+            res.setHeader(
+                'Set-Cookie',
+                `isLoggedin=true;
+                _id=${user[0]._id};
+                username=${user[0].username};
+                max-age=1800;
+                HttpOnly
+                `
+            );
             // req.session.username = req.body.username;
             // req.session.user_id = user.id;
             // req.session.isLoggedIn = true;
-            res.status(201).send("Account was successfully login.");
+            res.status(200).send('You are logged in')
         }
     } catch(err) {
         res.status(400).send(err);
     }
 }
 
-// export const logout = async(req: Request, res: Response) => {
-//     req.session.destroy(err => {
-//       if (err) {
-//         console.log(err);
-//         return res.status(500).send();
-//       } else {
-//         res.clearCookie('');
-//         res.redirect('/');
-//       }
-//     });
-// }

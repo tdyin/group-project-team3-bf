@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,14 +11,12 @@ import Typography from '@mui/material/Typography';
 import axios from 'axios';
 
 
-const theme = createTheme();
-
 const initialValues = {
   username: '',
   password: '',
 }
 
-export default function Login() {
+export default function LoginForm() {
   const [values, setValues] = useState(initialValues);
   const navigate = useNavigate();
 
@@ -35,18 +32,18 @@ export default function Login() {
     event.preventDefault();
     console.log(values)
     axios.post('/login', values)
-      .then((res) => {
+      .then((res: any) => {
         console.log(res)
         navigate('/');
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.log(err)
       })
-
   };
 
+
+
   return (
-    <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -95,6 +92,5 @@ export default function Login() {
           </Box>
         </Box>
       </Container>
-    </ThemeProvider>
   );
 }

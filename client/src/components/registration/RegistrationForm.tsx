@@ -15,10 +15,7 @@ type User = {
 const RegistrationForm: React.FC = () => {
     const { register, handleSubmit, formState: {errors}, watch } = useForm<User>();
 
-    //const { steps, currentStep, step, isFirst, isLast, backStep, nextStep } = useMultiForm([<User />, <NameInfo />, <Address />]);
-
     const onSubmit = async (data: User) => {
-        //nextStep();
 
         try {
             console.log("Sending Registration Data to Backend: ", data);
@@ -113,24 +110,6 @@ const RegistrationForm: React.FC = () => {
             </form>
         </Box>
     )
-
-    /*
-    return (
-        <div>
-            <form onSubmit={onSubmit}>
-                <div>
-                    {currentStep + 1} / {steps.length}
-                </div>
-                {step}
-                <div>
-                </div>
-                {!isFirst && (
-                <Button type="button" onClick={backStep}>Previous</Button>
-                    ) }
-                <Button type="submit" onClick={nextStep}>{isLast ? "Register" : "Next"}</Button>
-            </form>
-        </div>
-    ) */
 
 }
 

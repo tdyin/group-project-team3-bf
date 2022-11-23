@@ -8,7 +8,8 @@ import TextField from '@mui/material/TextField';
 import Avatar from '@mui/material/Avatar';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import api from './api';
+import axios from 'axios';
+
 
 const initialValues = {
   username: '',
@@ -17,7 +18,6 @@ const initialValues = {
 
 export default function LoginForm() {
   const [values, setValues] = useState(initialValues);
-  const [cookie, setCookie] = useState({});
   const navigate = useNavigate();
 
   const handleInputChange = (e:any) => {
@@ -31,33 +31,17 @@ export default function LoginForm() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log(values)
-    api.logIn(values, updateCookies)
-      .then((res) => {
+    axios.post('/login', values)
+      .then((res: any) => {
         console.log(res)
         navigate('/');
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.log(err)
       })
   };
 
-  function updateCookies() {
-    const newCookies = {};
-    // if (cookie) {
-    //   //if session already exists in state, no need to get username; just copy them over
-    //   newCookies.username = cookie.username;
-    // } else {
-    //   api
-    //     .getCookieData()
-    //     .then((res) => {
-    //       newCookies.username = res.username;
-    //       return api.getUserInfo(res.username);
-    //     })
-    //     .catch((err) => console.log(err));
-    // }
-    // setCookie(newCookies);
-    return newCookies;
-  }
+
 
   return (
       <Container component="main" maxWidth="xs">

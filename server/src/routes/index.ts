@@ -1,3 +1,4 @@
 import testRoutes from './testRoutes'
+import userRoutes from './UserRoutes'
 
-export default { testRoutes }
+export default { testRoutes, userRoutes }

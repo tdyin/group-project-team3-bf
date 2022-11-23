@@ -48,6 +48,7 @@ export const post_login = async(req: Request, res: Response) => {
                 `isLoggedin=true;
                 _id=${user[0]._id};
                 username=${user[0].username};
+                isHr=true;
                 max-age=1800;
                 HttpOnly
                 `

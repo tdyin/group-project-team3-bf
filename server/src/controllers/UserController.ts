@@ -35,6 +35,7 @@ export const post_register = async(req : Request, res: Response) => {
     }
 }
 
+
 export const post_login = async(req: Request, res: Response) => {
     try{
         const hashPass = await bcrypt.hash(req.body.password, 10);

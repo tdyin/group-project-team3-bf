@@ -12,7 +12,4 @@ userRoutes.get('/register', verifyRegister, get_register);
 userRoutes.post('/login', post_login);
 
 
-userRoutes.post('/login', post_login);
-
-
 export default userRoutes;

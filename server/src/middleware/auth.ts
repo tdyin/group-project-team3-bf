@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-import { nextTick } from 'process';
 
 interface Token extends Request {
     token: string | jwt.JwtPayload

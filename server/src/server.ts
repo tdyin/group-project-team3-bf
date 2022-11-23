@@ -15,7 +15,7 @@ app.use('/', express.json())
 app.use(express.urlencoded({ extended: false }))
 
 // Routes
-app.use('/test', routes.testRoutes)
+
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Express + TypeScript Server')

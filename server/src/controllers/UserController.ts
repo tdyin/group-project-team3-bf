@@ -35,6 +35,14 @@ export const post_register = async(req : Request, res: Response) => {
     }
 }
 
+export const get_register = async (req: Request, res: Response) => {
+    const token: any = req.cookies.token;
+    const verify: any = await jwt.verify(token, process.env.JWT_KEY!);
+
+    //Open token and send Email to Register link
+    res.status(200).send(verify.email);
+}
+
 
 export const post_login = async(req: Request, res: Response) => {
     try{
@@ -49,7 +57,10 @@ export const post_login = async(req: Request, res: Response) => {
                 `isLoggedin=true;
                 _id=${user[0]._id};
                 username=${user[0].username};
+<<<<<<< HEAD
                 isHr=true;
+=======
+>>>>>>> dev
                 max-age=1800;
                 HttpOnly
                 `

@@ -34,9 +34,9 @@ const RegistrationForm: React.FC = () => {
 
         <Box sx={{marginTop: 9, display: "flex", flexDirection: "column", alignItems: "center"}} >
             <form onSubmit={handleSubmit(onSubmit)} style={{maxWidth: "20%", padding: "3rem", boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px" }}>
-            <Typography variant="h3">Register an Account</Typography>
-            <br/>
-            <form onSubmit={onSubmit}>
+                <Typography variant="h3">Register an Account</Typography>
+                <br/>
+                
                 <TextField
                     label="E-mail Address"
                     size="small"

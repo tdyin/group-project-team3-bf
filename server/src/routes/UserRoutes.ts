@@ -1,10 +1,6 @@
 import { Router, Request, Response } from 'express';
-<<<<<<< HEAD
-import { post_register, post_login } from '../controllers/UserController';
-=======
 import { post_register, get_register, post_login } from '../controllers/UserController';
 import verifyRegister from '../middleware/registerCheck';
->>>>>>> dev
 
 //Set Variable to the Import
 const userRoutes = Router();

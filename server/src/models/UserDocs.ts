@@ -10,8 +10,4 @@ const UserDocsSchema: Schema = new Schema<IUserDocs>({
   workAuth: { type: String },
 })
 
-export default mongoose.model<IUserDocs>(
-  'UserDocs',
-  UserDocsSchema,
-  'UserDocs'
-)
+export default mongoose.model<IUserDocs>('UserDocs', UserDocsSchema)

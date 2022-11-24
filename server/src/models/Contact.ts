@@ -10,4 +10,4 @@ const ContactSchema: Schema = new Schema<IContact>({
   workPhone: { type: String },
 })
 
-export default mongoose.model<IContact>('Contact', ContactSchema, 'contact')
+export default mongoose.model<IContact>('Contact', ContactSchema)

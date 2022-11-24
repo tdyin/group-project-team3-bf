@@ -16,4 +16,4 @@ const CarSchema: Schema = new Schema<ICar>({
   expDate: { type: Date },
 })
 
-export default mongoose.model<ICar>('Car', CarSchema, 'car')
+export default mongoose.model<ICar>('Car', CarSchema)

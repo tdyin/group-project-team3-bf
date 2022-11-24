@@ -6,9 +6,9 @@ export interface IUserInfo extends Document {
   middleName: string
   preferredName: string
   profilePic: string
-  SSN: string
-  DOB: Date
-  Gender: 'Male' | 'Female' | 'I do not wish to answer.'
+  ssn: string
+  dob: Date
+  gender: 'Male' | 'Female' | 'I do not wish to answer.' | string
 }
 
 const UserInfoSchema: Schema = new Schema<IUserInfo>({
@@ -21,9 +21,9 @@ const UserInfoSchema: Schema = new Schema<IUserInfo>({
     require: true,
     default: 'https://picsum.photos/id/56/300/300',
   },
-  SSN: { type: String, required: true },
-  DOB: { type: Date, required: true },
-  Gender: { type: String, default: 'I do not wish to answer.' },
+  ssn: { type: String, required: true },
+  dob: { type: Date, required: true },
+  gender: { type: String },
 })
 
-export default mongoose.model<IUserInfo>('UserInfo', UserInfoSchema, 'userInfo')
+export default mongoose.model<IUserInfo>('UserInfo', UserInfoSchema)

@@ -38,17 +38,17 @@ const UserSchema: Schema = new Schema<IUser>({
   email: { type: String, required: true, unique: true, immutable: true },
   password: { type: String, require: true },
   stage: { type: Number, required: true, default: 0 },
-  isHr: { type: Boolean, required: true },
+  isHr: { type: Boolean, required: true, default: false },
   userInfo: { type: Schema.Types.ObjectId, ref: 'UserInfo', required: true },
   address: { type: Schema.Types.ObjectId, ref: 'Address', required: true },
   contact: { type: Schema.Types.ObjectId, ref: 'Contact', required: true },
-  car: { type: Schema.Types.ObjectId, ref: 'Car' },
+  car: { type: Schema.Types.ObjectId, ref: 'Car', required: true },
   legal: { type: Schema.Types.ObjectId, ref: 'Legal', required: true },
-  referInfo: { type: Schema.Types.ObjectId, ref: 'ReferInfo' },
+  referInfo: { type: Schema.Types.ObjectId, ref: 'ReferInfo', required: true },
   emContact: [
     { type: Schema.Types.ObjectId, ref: 'EmContact', required: true },
   ],
   userDocs: { type: Schema.Types.ObjectId, ref: 'UserDocs', required: true },
 })
 
-export default mongoose.model<IUser>('User', UserSchema, 'user')
+export default mongoose.model<IUser>('User', UserSchema)

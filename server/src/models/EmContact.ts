@@ -18,8 +18,4 @@ const EmContactSchema: Schema = new Schema<IEmeContact>({
   relationship: { type: String, require: true },
 })
 
-export default mongoose.model<IEmeContact>(
-  'EmContact',
-  EmContactSchema,
-  'emContact'
-)
+export default mongoose.model<IEmeContact>('EmContact', EmContactSchema)

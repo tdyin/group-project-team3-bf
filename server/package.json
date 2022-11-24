@@ -8,7 +8,8 @@
     "server": "nodemon build/server.js",
     "build": "npx tsc",
     "watch": "concurrently \"npx tsc --watch\" \"npm run server\"",
-    "dev": "concurrently \"npx tsc --watch\" \"npm run client\" \"npm run server\""
+    "dev": "concurrently \"npx tsc --watch\" \"npm run client\" \"npm run server\"",
+    "seed": "node build/config/seed"
   },
   "keywords": [],
   "author": "",

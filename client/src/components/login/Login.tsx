@@ -8,7 +8,10 @@ import TextField from '@mui/material/TextField';
 import Avatar from '@mui/material/Avatar';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
+import Link from '@mui/material/Link';
 import axios from 'axios';
+import { useForm } from 'react-hook-form';
+import { ErrorMessage } from '@hookform/error-message';
 
 
 const initialValues = {
@@ -16,7 +19,13 @@ const initialValues = {
   password: '',
 }
 
+type User = {
+  username: string,
+  password: string
+}
+
 export default function LoginForm() {
+  const { formState: {errors} } = useForm<User>();
   const [values, setValues] = useState(initialValues);
   const navigate = useNavigate();
 
@@ -68,9 +77,11 @@ export default function LoginForm() {
               id="username"
               label="username"
               name="username"
-              autoComplete="username"
+              autoComplete="off"
               onChange={handleInputChange}
+              inputProps={{pattern: {value: /^[a-zA-z0-9-_]$/, message: "Username must only contains letters and numbers"}}}
             />
+            <ErrorMessage errors={errors} name="username" as="p"/>
             <TextField
               margin="normal"
               required
@@ -79,8 +90,14 @@ export default function LoginForm() {
               label="Password"
               type="password"
               id="password"
+              autoComplete="off"
               onChange={handleInputChange}
+              inputProps={{pattern: {
+                value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*)(+=._-]).$/,
+                message: "Password must contain at least one Lowercase, Uppercase, Number, and Special Character"
+            }}}
             />
+            <ErrorMessage errors={errors} name="password" render={({ message }) => <p>{message}</p>} />
             <Button
               type="submit"
               fullWidth
@@ -89,6 +106,9 @@ export default function LoginForm() {
             >
               Sign In
             </Button>
+            <Link onClick={() => navigate('/')} style={{cursor:"pointer"}} variant="body2">
+              {"Don't have an account? Sign Up"}
+            </Link>
           </Box>
         </Box>
       </Container>

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 import Box from '@mui/material/Box';
@@ -14,9 +15,9 @@ type User = {
 }
 const RegistrationForm: React.FC = () => {
     const { register, handleSubmit, formState: {errors}, watch } = useForm<User>();
+    const [email, setEmail] = useState('email@email.com');
 
     const onSubmit = async (data: User) => {
-
         try {
             console.log("Sending Registration Data to Backend: ", data);
             await axios.post('http://localhost:8080', data)
@@ -26,21 +27,26 @@ const RegistrationForm: React.FC = () => {
         }
     }
 
-    //TODO: Update Styles
-    return (
+    useEffect(() => {
+        axios.get('http://localhost:8080/register')
+        .then((data: any) => {
+            setEmail(data.email);
+        })
+    }, [])
 
+    return (
         <Box sx={{marginTop: 9, display: "flex", flexDirection: "column", alignItems: "center"}} >
             <form onSubmit={handleSubmit(onSubmit)} style={{maxWidth: "20%", padding: "3rem", boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px" }}>
                 <Typography variant="h3">Register an Account</Typography>
                 <br/>
-                
+
                 <TextField
                     label="E-mail Address"
                     size="small"
                     variant="standard"
                     type="email"
                     id="email"
-                    {...register( "email", { 
+                    {...register( "email", {
                         required: "Please enter an E-mail",
                         pattern: {
                             value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -48,19 +54,20 @@ const RegistrationForm: React.FC = () => {
                                 }
                     })}
                     autoComplete="off"
-                    required
+                    disabled
+                    defaultValue={email}
                     fullWidth
                     style={{marginTop: "2rem"}}
                     />
                 <ErrorMessage errors={errors} name="email" render={({ message }) => <p>{message}</p>} />
-                
+
                 <TextField
                     label="Username"
                     size="small"
                     variant="standard"
                     type="text"
                     id="username"
-                    {...register('username', {required: "Please enter a Username", minLength: 4, maxLength: 16, 
+                    {...register('username', {required: "Please enter a Username", minLength: 4, maxLength: 16,
                         pattern: {value: /^[a-zA-z0-9-_]$/, message: "Username must only contains letters and numbers"}
                     })
                     }
@@ -82,7 +89,7 @@ const RegistrationForm: React.FC = () => {
                     style={{marginTop: "2rem"}}
                     {...register("password", { required: "Please enter a password", minLength: 8, maxLength: 20,
                         pattern: {
-                            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*)(+=._-]).$/, 
+                            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*)(+=._-]).$/,
                             message: "Password must contain at least one Lowercase, Uppercase, Number, and Special Character"
                         }
                 })}
@@ -95,7 +102,7 @@ const RegistrationForm: React.FC = () => {
                     variant="standard"
                     type="password"
                     id="passMatch"
-                    required 
+                    required
                     fullWidth
                     style={{marginTop: "2rem"}}
                     {...register("passMatch", {required: "Please confirm your password", validate: (value: string) => {
@@ -105,7 +112,7 @@ const RegistrationForm: React.FC = () => {
                         }})}
                     />
                 <ErrorMessage errors={errors} name="passMatch" as="p"/>
-                
+
                 <Button type="submit" fullWidth style={{marginTop: "2rem"}}>Register</Button>
             </form>
         </Box>

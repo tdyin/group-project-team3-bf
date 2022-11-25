@@ -110,8 +110,8 @@ export default function Sidebar({ open, userType, handleDrawerClose }: Props) {
     <>
       <Drawer variant='permanent' open={open}>
         <DrawerHeader>
-          <IconButton>
-            <ChevronLeft onClick={handleDrawerClose} />
+          <IconButton onClick={handleDrawerClose}>
+            <ChevronLeft />
           </IconButton>
         </DrawerHeader>
         <Divider />

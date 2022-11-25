@@ -4,13 +4,9 @@ import Navbar, { DrawerHeader } from '../../components/nav/Navbar'
 
 export default function MyHousing() {
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <Navbar />
       <Box component='main' sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         Personal Housing Page
       </Box>
-    </Box>
   )
 }

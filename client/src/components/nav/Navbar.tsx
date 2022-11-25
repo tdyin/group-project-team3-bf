@@ -4,6 +4,7 @@ import { Button, IconButton, Toolbar, Typography } from '@mui/material'
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import MenuIcon from '@mui/icons-material/Menu'
 import Sidebar from './Sidebar'
+import { Outlet } from 'react-router-dom';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean
@@ -74,11 +75,14 @@ export default function Navbar() {
           </Button>
         </Toolbar>
       </AppBar>
+      
       <Sidebar
         open={open}
         handleDrawerClose={handleDrawerClose}
         userType={userType}
       />
+      
+      <Outlet /> {/**Output the child routes */}
     </>
   )
 }

@@ -16,4 +16,4 @@ const AddressSchema: Schema = new Schema<IAddress>({
   zip: { type: String, require: true },
 })
 
-export default mongoose.model<IAddress>('Address', AddressSchema, 'address')
+export default mongoose.model<IAddress>('Address', AddressSchema)

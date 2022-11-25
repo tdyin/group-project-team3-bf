@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import User from '../models/User';
+import { createDefaultDocs } from '../utils/dbUtils';
 
 //User Registration
 export const post_register = async(req : Request, res: Response) => {
@@ -9,10 +10,20 @@ export const post_register = async(req : Request, res: Response) => {
         const hashPass = await bcrypt.hash(req.body.password, 10);
         const key = process.env.JWT_KEY;
 
+        const docIds = await createDefaultDocs()
+
         const user = new User({
             username: req.body.username,
             email: req.body.email,
-            password: hashPass
+            password: hashPass,
+            address: docIds.addressId,
+            car: docIds.carId,
+            contact: docIds.contactId,
+            emContact: [docIds.emContactId],
+            legal: docIds.legalId,
+            referInfo: docIds.referInfoId,
+            userDocs: docIds.userDocsId,
+            userInfo: docIds.userInfoId
         })
 
         //Save details to Mongo

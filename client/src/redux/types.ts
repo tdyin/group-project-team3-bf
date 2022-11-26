@@ -2,15 +2,18 @@ import type { Action, AnyAction } from 'redux'
 import type { ThunkAction, ThunkDispatch } from 'redux-thunk'
 import store from './store'
 
-export type ProductPayload = {
+// Nav
+export type NavPayload = {
+  open: boolean
+}
+export type NavAction = Action<string> & { payload: NavPayload }
+
+// User
+export type UserPayload = {
   id: string
   name: string
-  quantity: number
-  price: number
+  isHr: boolean
 }
-export type ProductAction = Action<string> & { payload: ProductPayload }
-
-export type UserPayload = { id: string; name: string }
 export type UserAction = Action<string> & { payload: UserPayload | string }
 
 export type RootState = ReturnType<typeof store.getState>
@@ -24,5 +27,3 @@ export type AppThunk<ReturnType = void> = ThunkAction<
   unknown,
   AnyAction
 >
-
-// Types https://github.com/reduxjs/redux-toolkit/issues/587

@@ -1,10 +1,11 @@
-import { useState } from 'react'
 import { styled } from '@mui/material/styles'
 import { Button, IconButton, Toolbar, Typography } from '@mui/material'
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import MenuIcon from '@mui/icons-material/Menu'
 import Sidebar from './Sidebar'
-import { Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+import { toggleNavAction } from '../../redux/actions/navActions'
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean
@@ -37,21 +38,25 @@ export const DrawerHeader = styled('div')(({ theme }) => ({
   ...theme.mixins.toolbar,
 }))
 
-export default function Navbar() {
-  const [userType, setUserType] = useState(false)
-  const [open, setOpen] = useState(false)
+type Props = {
+  isHr: boolean
+}
+
+export default function Navbar({ isHr }: Props) {
+  const dispatch = useAppDispatch()
+  const navState = useAppSelector((state) => state.nav)
 
   const handleDrawerOpen = () => {
-    setOpen(true)
+    dispatch(toggleNavAction({ open: true }))
   }
 
   const handleDrawerClose = () => {
-    setOpen(false)
+    dispatch(toggleNavAction({ open: false }))
   }
 
   return (
     <>
-      <AppBar position='fixed' open={open}>
+      <AppBar position='fixed' open={navState.open}>
         <Toolbar>
           <IconButton
             color='inherit'
@@ -60,28 +65,32 @@ export default function Navbar() {
             edge='start'
             sx={{
               marginRight: 5,
-              ...(open && { display: 'none' }),
+              ...(navState.open && { display: 'none' }),
             }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant='h6' noWrap component='div' sx={{
-            flexGrow: 1
-          }}>
-            {userType ? 'HR Management' : 'Empolyee Portal'}
+          <Typography
+            variant='h6'
+            noWrap
+            component='div'
+            sx={{
+              flexGrow: 1,
+            }}
+          >
+            {isHr ? 'HR Management' : 'Empolyee Portal'}
           </Typography>
-          <Button variant='contained' color="warning" disableElevation>
+          <Button variant='contained' color='warning' disableElevation>
             Log Out
           </Button>
         </Toolbar>
       </AppBar>
       
       <Sidebar
-        open={open}
+        open={navState.open}
         handleDrawerClose={handleDrawerClose}
-        userType={userType}
+        userType={isHr}
       />
-      
       <Outlet /> {/**Output the child routes */}
     </>
   )

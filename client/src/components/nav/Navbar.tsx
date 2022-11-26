@@ -85,6 +85,7 @@ export default function Navbar({ isHr }: Props) {
           </Button>
         </Toolbar>
       </AppBar>
+      
       <Sidebar
         open={navState.open}
         handleDrawerClose={handleDrawerClose}

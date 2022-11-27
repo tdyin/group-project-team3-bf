@@ -9,33 +9,29 @@ import Box from '@mui/material/Box'
 import axios from 'axios';
 import FormControl from '@mui/material/FormControl';
 
-type User = {
+type Emergency = {
     firstName: string,
     lastName: string,
     middleName: string,
-    preferredName: string,
-    profilePicture: string,
+    phone: string,
     email: string,
-    ssn: string,
-    dob: string,
-    gender: string
+    relationship: string
 }
-//Display Name information
-const Name: React.FC = () => {
-    const { register, handleSubmit, formState: {errors}, watch } = useForm<User>();
+
+const Emergency: React.FC = () =>{
+    const { register, handleSubmit, formState: {errors}, watch } = useForm<Emergency>();
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [middleName, setMiddleName] = useState("");
-    const [preferredName, setPreferredName] = useState("");
-    const [profilePicture, setProfilePicture] = useState("");
+    const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
-    const [ssn, setSSN] = useState("");
-    const [dob, setDob] = useState("");
-    const [gender, setGender] = useState("");
+    const [relationship, setRelationship] = useState("");
 
+    //Disable Fields until Edit button clicked
     const [disabled, setDisabled] = useState(true);
 
-    const onSubmit = async (data: User) => {
+    //MAKE SURE TO EDIT THIS
+    const onSubmit = async (data: Emergency) => {
         try {
             console.log("Sending Registration Data to Backend: ", data);
             await axios.post('http://localhost:8080', data)
@@ -47,6 +43,7 @@ const Name: React.FC = () => {
 
     return (
         <FormControl onSubmit={handleSubmit(onSubmit)} sx={{display: "block", flexDirection: "column", alignItems: "center", width: "50em"}}>
+            {/**TODO: Add Button that adds extra fields for multiple emergency contacts */}
             <TextField 
                 label="First Name" 
                 size="small"
@@ -108,29 +105,6 @@ const Name: React.FC = () => {
             />
             <ErrorMessage errors={errors} name="lastName" render={({ message }) => <p>{message}</p>} />
 
-            <TextField 
-                label="Preferred Name" 
-                size="small"
-                variant="standard"
-                type="text"
-                id="preferredName"
-                {...register( "preferredName", {
-                    pattern: {
-                                value: /^[A-Z][a-z]$/,
-                                message: "Name must only contain letters. First letter must be capitalized."
-                    }   
-                })}
-                fullWidth
-                disabled={disabled}
-                defaultValue={preferredName}
-                style={{marginTop: "2rem"}}
-            />
-            <ErrorMessage errors={errors} name="preferredName" render={({ message }) => <p>{message}</p>} />
-
-            <Button>
-                Profile Picture
-            </Button>
-
             <TextField
                 label="E-mail Address"
                 size="small"
@@ -153,61 +127,46 @@ const Name: React.FC = () => {
             <ErrorMessage errors={errors} name="email" render={({ message }) => <p>{message}</p>} />
 
             <TextField 
-                label="Social Security Number (SSN)" 
+                    label="Phone Number" 
+                    size="small"
+                    variant="standard"
+                    type="text"
+                    id="phone"
+                    {...register( "phone", 
+                        { 
+                            required: "Please input a Phone number",
+                            pattern: {
+                                        value: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,
+                                        message: "Phone Number must only contain numbers and may use - characters"
+                            }   
+                        }
+                        )}
+                    fullWidth
+                    disabled={disabled}
+                    defaultValue={phone}
+                    style={{marginTop: "2rem"}}
+                />
+            <ErrorMessage errors={errors} name="phone" render={({ message }) => <p>{message}</p>} />
+
+            <TextField 
+                label="Relationship" 
                 size="small"
                 variant="standard"
                 type="text"
-                id="ssn"
-                {...register( "ssn", {
+                id="relationship"
+                {...register( "relationship", {
+                    required: "Please enter your relationship",
                     pattern: {
-                                value: /^(?!0{3})(?!6{3})[0-8]\d{2}-(?!0{2})\d{2}-(?!0{4})\d{4}$/,
-                                message: "SSN must only contain numbers in XXX-XX-XXXX format"
-                    }   
+                        value: /^[A-Za-z]$/,
+                        message: "Relationship must only contain letters"
+                    }
                 })}
                 fullWidth
                 disabled={disabled}
-                defaultValue={ssn}
+                defaultValue={relationship}
                 style={{marginTop: "2rem"}}
             />
-            <ErrorMessage errors={errors} name="ssn" render={({ message }) => <p>{message}</p>} />
-
-            <TextField 
-                label="Date of Birth" 
-                size="small"
-                variant="standard"
-                type="date"
-                id="dob"
-                {...register( "dob")}
-                fullWidth
-                disabled={disabled}
-                defaultValue={dob}
-                style={{marginTop: "2rem"}}
-            />
-            <ErrorMessage errors={errors} name="dob" render={({ message }) => <p>{message}</p>} />
-
-            <TextField 
-                label="Gender" 
-                size="small"
-                variant="standard"
-                type="text"
-                id="gender"
-                {...register( "gender")}
-                fullWidth
-                disabled={disabled}
-                defaultValue={gender}
-                style={{marginTop: "2rem"}}
-            >
-                <MenuItem value="Male">
-                    Male
-                </MenuItem>
-                <MenuItem value="Female">
-                    Female
-                </MenuItem>
-                <MenuItem value="I do not wish to answer.">
-                    Prefer not to say
-                </MenuItem>
-            </TextField>
-            <ErrorMessage errors={errors} name="gender" render={({ message }) => <p>{message}</p>} />
+            <ErrorMessage errors={errors} name="relationship" render={({ message }) => <p>{message}</p>} />
 
             { disabled === true ? 
                     <Button type="button" onClick={() => setDisabled(false)}>Edit</Button>
@@ -218,7 +177,8 @@ const Name: React.FC = () => {
                     </>
                 }
         </FormControl>
+
     )
 }
 
-export default Name;
+export default Emergency;

@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box'
 import axios from 'axios';
 import FormControl from '@mui/material/FormControl';
+import Modal from '@mui/material/Modal';
 
 type Address = {
     bldgapt: string,
@@ -17,7 +18,7 @@ type Address = {
 }
 
 const Address: React.FC = () => {
-    const { register, handleSubmit, formState: {errors}, watch } = useForm<Address>();
+    const { register, handleSubmit, formState: {errors}, reset } = useForm<Address>();
     const [bldgapt, setBldgapt] = useState("");
     const [street, setStreet] = useState("");
     const [city, setCity] = useState("");
@@ -31,11 +32,31 @@ const Address: React.FC = () => {
     const onSubmit = async (data: Address) => {
         try {
             console.log("Sending Registration Data to Backend: ", data);
-            await axios.post('http://localhost:8080', data)
+            await axios.put('http://localhost:8080/emp/info/address', data)
         } catch (err: any) {
             console.log(err);
-
         }
+    }
+
+    //For Modals
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleButtonClose = () => setOpen(false);
+    const handleClose = (e: any, reason: "backdropClick" | "escapeKeyDown") => {
+        if (reason !== 'backdropClick') {
+            setOpen(false);
+        }
+    }
+
+    const handleReset = () => {
+        reset({
+            bldgapt: bldgapt,
+            street: street,
+            city: city,
+            state: state,
+            zip: zip
+        });
+        setOpen(false);
     }
 
     return (
@@ -132,7 +153,32 @@ const Address: React.FC = () => {
                     <Button type="button" onClick={() => setDisabled(false)}>Edit</Button>
                     :
                     <>
-                        <Button>Clear</Button>
+                        <Button onClick={handleOpen}>Clear</Button>
+                        <Modal 
+                            open={open}
+                            onClose={handleClose}
+                            >
+                                <Box                             
+                                sx={{
+                                position: 'absolute' as 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                transform: 'translate(-50%, -50%)',
+                                width: 400,
+                                bgcolor: 'black',
+                                border: '2px solid #000',
+                                boxShadow: 24,
+                                pt: 2,
+                                px: 4,
+                                pb: 3,
+                                color: 'white'
+                            }}>
+                                    <Typography>Are you sure you want to reset the fields?</Typography>
+                                    <Button onClick={handleReset}>Reset</Button>
+                                    <Button onClick={handleButtonClose}>Cancel</Button>
+                                </Box>
+                                
+                        </Modal>
                         <Button type="submit" onClick={() => setDisabled(true)}>Update</Button>
                     </>
                 }

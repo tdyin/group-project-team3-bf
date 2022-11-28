@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose'
 
 export interface IUserInfo extends Document {
-  firsName: string
+  firstName: string
   lastName: string
   middleName: string
   preferredName: string

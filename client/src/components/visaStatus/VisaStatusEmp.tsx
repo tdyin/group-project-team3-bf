@@ -1,6 +1,53 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-export default function visaStatusEmp() {
+const VisaStatusEmp: React.FC = () => {
+
+  const [isOpt, setIsOpt] = useState(false);
+  const [optReceipt, setOptReceipt] = useState('pending');
+  const [optEad, setOptEad] = useState('');
+  const [i983, setI983] = useState('');
+  const [i20, setI20] = useState('');
+
+  // useEffect(() => {
+  //   axios.get(`http://localhost:8080/emp/visa/${document.cookie._id}`)
+  //     .then((data) => {
+  //       if (data['legal']['visaTitle'] === 'F1(CPT/OPT)')
+  //       setIsOpt(true);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err)
+  //     })
+  // },[])
+
+
+
   return (
-    <div>asd</div>
+    <div>
+      {/* {isOpt === true && */}
+      <div>OPT Receipt Status:
+        {optReceipt === 'pending' && <div>Waiting for HR to approve your OPT Receipt</div>}
+        {optReceipt === 'approved' && <div>Please upload a copy of your OPT EAD</div>}
+        {optReceipt === 'rejected' && <div>See HR's feedback: not done yet</div>}
+      </div><br></br>
+      {optReceipt === 'approved' && <div>OPT EAD Status:
+        {optEad === 'pending' && <div>Waiting for HR to approve your OPT EAD</div>}
+        {optEad === 'approved' && <div>“Please download and fill out the I-983 form</div>}
+        {optEad === 'rejected' && <div>See HR's feedback: not done yet</div>}
+      </div>}<br></br>
+      {optEad === 'approved' && <div>I983 Status:
+        {i983 === 'pending' && <div>Waiting for HR to approve and sign your I-983</div>}
+        {i983 === 'approved' && <div> “Please send the I-983 along with all necessary documents to your school and upload the new I-20</div>}
+        {i983 === 'rejected' && <div>See HR's feedback: not done yet</div>}
+      </div>}<br></br>
+      {i983 === 'approved' && <div>I20 Status:
+        {i20 === 'pending' && <div>Waiting for HR to approve your I-20</div>}
+        {i20 === 'approved' && <div>All documents have been approved</div>}
+        {i20 === 'rejected' && <div>See HR's feedback: not done yet</div>}
+      </div>}
+      {/* } */}
+    </div>
   )
 }
+
+export default VisaStatusEmp

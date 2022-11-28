@@ -48,19 +48,6 @@ export default function LoginForm() {
       .catch((err: any) => {
         console.log(err)
       })
-
-    // try {
-    //   await axios.post('http://localhost:8080/login', values)
-    //   .then((res: any) => {
-    //     console.log(res, 'yessss')
-    //     navigate('/');
-    //   })
-    //   .catch((err: any) => {
-    //     console.log(err)
-    //   })
-    // } catch (err: any) {
-    //     console.log(err);
-    // }
   };
 
 

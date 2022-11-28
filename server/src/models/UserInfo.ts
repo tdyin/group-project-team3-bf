@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document } from 'mongoose'
 
 export interface IUserInfo extends Document {
-  firsName: string
+  firstName: string
   lastName: string
   middleName: string
   preferredName: string
@@ -12,7 +12,7 @@ export interface IUserInfo extends Document {
 }
 
 const UserInfoSchema: Schema = new Schema<IUserInfo>({
-  firsName: { type: String, require: true },
+  firstName: { type: String, require: true },
   lastName: { type: String, require: true },
   middleName: { type: String },
   preferredName: { type: String },

@@ -20,7 +20,7 @@ const RegistrationForm: React.FC = () => {
     const onSubmit = async (data: User) => {
         try {
             console.log("Sending Registration Data to Backend: ", data);
-            await axios.post('http://localhost:8080', data)
+            await axios.post('http://localhost:8080/register', data)
         } catch (err: any) {
             console.log(err);
 
@@ -46,13 +46,7 @@ const RegistrationForm: React.FC = () => {
                     variant="standard"
                     type="email"
                     id="email"
-                    {...register( "email", {
-                        required: "Please enter an E-mail",
-                        pattern: {
-                            value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                            message: "E-mail must be in xxx@yyy.zzz format"
-                                }
-                    })}
+                    {...register( "email")}
                     autoComplete="off"
                     disabled
                     defaultValue={email}
@@ -68,7 +62,7 @@ const RegistrationForm: React.FC = () => {
                     type="text"
                     id="username"
                     {...register('username', {required: "Please enter a Username", minLength: 4, maxLength: 16,
-                        pattern: {value: /^[a-zA-z0-9-_]$/, message: "Username must only contains letters and numbers"}
+                        pattern: {value: /^[a-zA-z0-9_-]$/, message: "Username must only contains letters and numbers"}
                     })
                     }
                     autoComplete="off"

@@ -6,35 +6,59 @@ import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box'
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import FormControl from '@mui/material/FormControl';
 import Modal from '@mui/material/Modal';
+import { link } from './Link';
 
 type Employment = {
-    title: string,
-    start: string,
-    end: string
+    visaTitle: string,
+    startDate: string,
+    endDate: string
 }
 
 const Employment: React.FC = () => {
     const { register, handleSubmit, formState: {errors}, reset } = useForm<Employment>();
-    const [title, setTitle] = useState("");
-    const [start, setStart] = useState("");
-    const [end, setEnd] = useState("");
-
+    const [visaTitle, setTitle] = useState("");
+    const [startDate, setStart] = useState("");
+    const [endDate, setEnd] = useState("");
+    const [defaultData, setDefaultData] = useState<Employment>({
+        visaTitle: "",
+        startDate: "",
+        endDate: ""
+    })
     //Disable fields until Edit button clicked
     const [disabled, setDisabled] = useState(true);
 
     //MAKE SURE TO EDIT THIS
     const onSubmit = async (data: Employment) => {
         try {
+            setDisabled(true);
             console.log("Sending Registration Data to Backend: ", data);
-            await axios.put('http://localhost:8080/emp/legal', data)
+            await axios.put(`${link}/legal`, data)
         } catch (err: any) {
             console.log(err);
-
         }
     }
+
+    //GET Data
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                await axios.get<Employment>(`${link}/legal`)
+                .then ((data: AxiosResponse) => {
+                    console.log(data.data);
+                    setDefaultData(data.data);
+                    setTitle(data.data.visaTitle);
+                    setStart(data.data.startDate);
+                    setEnd(data.data.endDate);
+                })
+            } catch (err) {
+                console.log("Error Log: ", err)
+            }
+        }
+        getData();
+    }, [])
 
     //For Modals
     const [open, setOpen] = useState(false);
@@ -48,11 +72,12 @@ const Employment: React.FC = () => {
 
     const handleReset = () => {
         reset({
-            title: title,
-            start: start,
-            end: end
+            visaTitle: defaultData.visaTitle,
+            startDate: defaultData.startDate,
+            endDate: defaultData.endDate
         });
         setOpen(false);
+        setDisabled(true);
     }
 
     return (
@@ -63,55 +88,58 @@ const Employment: React.FC = () => {
                     size="small"
                     variant="standard"
                     type="text"
-                    id="title"
-                    {...register( "title")}
+                    id="visaTitle"
+                    {...register( "visaTitle")}
                     fullWidth
                     disabled={disabled}
-                    defaultValue={title}
+                    value={visaTitle}
                     style={{marginTop: "2rem"}}
+                    onChange={(e) => setTitle(e.target.value)}
                 >
-                    <MenuItem value="CPT">
-                        CPT
-                    </MenuItem>
-                    <MenuItem value="EAD">
-                        EAD
-                    </MenuItem>
                     <MenuItem value="H1-B">
                         H1-B
                     </MenuItem>
-                    <MenuItem value="OPT">
-                        OPT
+                    <MenuItem value="L2">
+                        L2
+                    </MenuItem>
+                    <MenuItem value="F1(CPT/OPT)">
+                        F1 (CPT / OPT)
+                    </MenuItem>
+                    <MenuItem value="H4">
+                        H4
                     </MenuItem>
                 </TextField>
-                <ErrorMessage errors={errors} name="title" render={({ message }) => <p>{message}</p>} />
+                <ErrorMessage errors={errors} name="visaTitle" render={({ message }) => <p>{message}</p>} />
 
                 <TextField 
                     label="Visa Start Date" 
                     size="small"
                     variant="standard"
                     type="date"
-                    id="start"
-                    {...register( "start")}
+                    id="startDate"
+                    {...register( "startDate")}
                     fullWidth
                     disabled={disabled}
-                    defaultValue={start}
+                    value={startDate}
                     style={{marginTop: "2rem"}}
+                    onChange={(e) => setStart(e.target.value)}
                 />
-                <ErrorMessage errors={errors} name="start" render={({ message }) => <p>{message}</p>} />
+                <ErrorMessage errors={errors} name="startDate" render={({ message }) => <p>{message}</p>} />
 
                 <TextField 
                     label="Visa Expiration Date" 
                     size="small"
                     variant="standard"
                     type="date"
-                    id="end"
-                    {...register( "end")}
+                    id="endDate"
+                    {...register( "endDate")}
                     fullWidth
                     disabled={disabled}
-                    defaultValue={end}
+                    value={endDate}
                     style={{marginTop: "2rem"}}
+                    onChange={(e) => setEnd(e.target.value)}
                 />
-                <ErrorMessage errors={errors} name="end" render={({ message }) => <p>{message}</p>} />
+                <ErrorMessage errors={errors} name="endDate" render={({ message }) => <p>{message}</p>} />
 
 
                 { disabled === true ? 
@@ -138,13 +166,13 @@ const Employment: React.FC = () => {
                                 pb: 3,
                                 color: 'white'
                             }}>
-                                    <Typography>Are you sure you want to reset the fields?</Typography>
+                                    <Typography>Are you sure you want to reset the fields and cancel editing?</Typography>
                                     <Button onClick={handleReset}>Reset</Button>
                                     <Button onClick={handleButtonClose}>Cancel</Button>
                                 </Box>
                                 
                         </Modal>
-                        <Button type="submit" onClick={() => setDisabled(true)}>Update</Button>
+                        <Button type="submit">Update</Button>
                     </>
                 }
         </FormControl>

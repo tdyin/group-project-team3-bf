@@ -5,12 +5,13 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box'
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import FormControl from '@mui/material/FormControl';
 import Modal from '@mui/material/Modal';
+import { link } from './Link';
 
 type Address = {
-    bldgapt: string,
+    bldgApt: string,
     street: string,
     city: string,
     state: string,
@@ -19,20 +20,30 @@ type Address = {
 
 const Address: React.FC = () => {
     const { register, handleSubmit, formState: {errors}, reset } = useForm<Address>();
-    const [bldgapt, setBldgapt] = useState("");
+    const [bldgApt, setBldgapt] = useState("");
     const [street, setStreet] = useState("");
     const [city, setCity] = useState("");
     const [state, setState] = useState("");
     const [zip, setZip] = useState("");
+    const [defaultData, setDefaultData] = useState<Address>({
+        bldgApt: "",
+        street: "",
+        city: "",
+        state: "",
+        zip: ""
+    });
 
+    const [exampleState, setExampleState] = useState([]);
+    
     //Disable fields until Edit button clicked
     const [disabled, setDisabled] = useState(true);
 
     //Edit Data
     const onSubmit = async (data: Address) => {
         try {
+            setDisabled(true);
             console.log("Sending Registration Data to Backend: ", data);
-            await axios.put('http://localhost:8080/emp/info/address', data)
+            await axios.put(`${link}/address`, data)
         } catch (err: any) {
             console.log(err);
         }
@@ -42,17 +53,18 @@ const Address: React.FC = () => {
     useEffect(() => {
         const getData = async () => {
             try {
-                await axios.get('http://localhost:8080/emp/info/address')
-                .then((data: any) => {
-                    console.log(data);
-                    setBldgapt(data.bldgApt);
-                    setStreet(data.street);
-                    setCity(data.city);
-                    setState(data.state);
-                    setZip(data.zip);
+                await axios.get<Address>(`${link}/address`)
+                .then((data: AxiosResponse) => {
+                    setDefaultData(data.data);
+                    console.log(data.data);
+                    setBldgapt(data.data.bldgApt);
+                    setStreet(data.data.street);
+                    setCity(data.data.city);
+                    setState(data.data.state);
+                    setZip(data.data.zip); 
                 })
             } catch (err) {
-                console.log("This is console log", err);
+                console.log("Error Log: ", err);
             }
         }
 
@@ -70,13 +82,14 @@ const Address: React.FC = () => {
 
     const handleReset = () => {
         reset({
-            bldgapt: bldgapt,
-            street: street,
-            city: city,
-            state: state,
-            zip: zip
+            bldgApt: defaultData.bldgApt,
+            street: defaultData.street,
+            city: defaultData.city,
+            state: defaultData.state,
+            zip: defaultData.zip
         });
         setOpen(false);
+        setDisabled(true);
     }
 
     return (
@@ -88,7 +101,7 @@ const Address: React.FC = () => {
                     variant="standard"
                     type="text"
                     id="bldgapt"
-                    {...register( "bldgapt", 
+                    {...register( "bldgApt", 
                         { 
                             pattern: {
                                         value: /^[a-zA-Z0-9-]$/,
@@ -98,10 +111,11 @@ const Address: React.FC = () => {
                         )}
                     fullWidth
                     disabled={disabled}
-                    defaultValue={bldgapt}
+                    value={bldgApt}
                     style={{marginTop: "2rem"}}
+                    onChange={(e: any) => setBldgapt(e.target.value)}
                 />
-                <ErrorMessage errors={errors} name="bldgapt" render={({ message }) => <p>{message}</p>} />
+                <ErrorMessage errors={errors} name="bldgApt" render={({ message }) => <p>{message}</p>} />
 
                 <TextField 
                     label="Street Address" 
@@ -120,8 +134,9 @@ const Address: React.FC = () => {
                         )}
                     fullWidth
                     disabled={disabled}
-                    defaultValue={bldgapt}
+                    value={street}
                     style={{marginTop: "2rem"}}
+                    onChange={(e:any) => setStreet(e.target.value)}
                 />
                 <ErrorMessage errors={errors} name="street" render={({ message }) => <p>{message}</p>} />
 
@@ -142,10 +157,34 @@ const Address: React.FC = () => {
                         )}
                     fullWidth
                     disabled={disabled}
-                    defaultValue={bldgapt}
+                    value={city}
                     style={{marginTop: "2rem"}}
+                    onChange={(e: any) => setCity(e.target.value)}
                 />
                 <ErrorMessage errors={errors} name="city" render={({ message }) => <p>{message}</p>} />
+
+                <TextField 
+                    label="State" 
+                    size="small"
+                    variant="standard"
+                    type="text"
+                    id="statey"
+                    {...register( "state", 
+                        { 
+                            required: "Please enter a State",
+                            pattern: {
+                                        value: /^[a-zA-Z]$/,
+                                        message: "State can only contain letters"
+                            }   
+                        }
+                        )}
+                    fullWidth
+                    disabled={disabled}
+                    value={state}
+                    style={{marginTop: "2rem"}}
+                    onChange={(e: any) => setState(e.target.value)}
+                />
+                <ErrorMessage errors={errors} name="state" render={({ message }) => <p>{message}</p>} />
 
                 <TextField 
                     label="Postal / Zip Code" 
@@ -164,8 +203,9 @@ const Address: React.FC = () => {
                         )}
                     fullWidth
                     disabled={disabled}
-                    defaultValue={bldgapt}
+                    value={zip}
                     style={{marginTop: "2rem"}}
+                    onChange={(e: any) => setZip(e.target.value)}
                 />
                 <ErrorMessage errors={errors} name="city" render={({ message }) => <p>{message}</p>} />
 
@@ -193,13 +233,13 @@ const Address: React.FC = () => {
                                 pb: 3,
                                 color: 'white'
                             }}>
-                                    <Typography>Are you sure you want to reset the fields?</Typography>
+                                    <Typography>Are you sure you want to reset the fields and cancel editing?</Typography>
                                     <Button onClick={handleReset}>Reset</Button>
                                     <Button onClick={handleButtonClose}>Cancel</Button>
                                 </Box>
                                 
                         </Modal>
-                        <Button type="submit" onClick={() => setDisabled(true)}>Update</Button>
+                        <Button type="submit">Update</Button>
                     </>
                 }
         </FormControl>

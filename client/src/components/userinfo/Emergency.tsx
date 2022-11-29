@@ -6,9 +6,10 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box'
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import FormControl from '@mui/material/FormControl';
 import Modal from '@mui/material/Modal';
+import { link } from './Link'
 
 type Emergency = {
     firstName: string,
@@ -27,6 +28,14 @@ const Emergency: React.FC = () =>{
     const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
     const [relationship, setRelationship] = useState("");
+    const [defaultData, setDefaultData] = useState<Emergency>({
+        firstName: "",
+        lastName: "",
+        middleName: "",
+        phone: "",
+        email: "",
+        relationship: ""
+    })
 
     //Disable Fields until Edit button clicked
     const [disabled, setDisabled] = useState(true);
@@ -34,14 +43,35 @@ const Emergency: React.FC = () =>{
     //MAKE SURE TO EDIT THIS
     const onSubmit = async (data: Emergency) => {
         try {
+            setDisabled(true);
             console.log("Sending Registration Data to Backend: ", data);
-            await axios.put('http://localhost:8080/emp/info/emergency', data)
+            await axios.put(`${link}/emergency`, data)
         } catch (err: any) {
             console.log(err);
 
         }
     }
 
+    //GET Data
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                await axios.get<Emergency>(`${link}/emergency`)
+                .then((data: AxiosResponse) => {
+                    setDefaultData(data.data);
+                    console.log(data.data);
+                    setFirstName(data.data.firstName);
+                    setLastName(data.data.lastName);
+                    setMiddleName(data.data.middleName);
+                    setPhone(data.data.phone);
+                    setEmail(data.data.email);
+                    setRelationship(data.data.relationship);
+                })
+            } catch (err) {
+                console.log("Error Log: ", err);
+            }
+        }
+    }, [])
     //For Modals
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -54,14 +84,15 @@ const Emergency: React.FC = () =>{
 
     const handleReset = () => {
         reset({
-            firstName: firstName,
-            lastName: lastName,
-            middleName: middleName,
-            email: email,
-            phone: phone,
-            relationship: relationship
+            firstName: defaultData.firstName,
+            lastName: defaultData.lastName,
+            middleName: defaultData.middleName,
+            email: defaultData.email,
+            phone: defaultData.phone,
+            relationship: defaultData.relationship
         });
         setOpen(false);
+        setDisabled(true);
     }
 
     return (
@@ -84,8 +115,9 @@ const Emergency: React.FC = () =>{
                     )}
                 fullWidth
                 disabled={disabled}
-                defaultValue={firstName}
+                value={firstName}
                 style={{marginTop: "2rem"}}
+                onChange={(e) => setFirstName(e.target.value)}
             />
             <ErrorMessage errors={errors} name="firstName" render={({ message }) => <p>{message}</p>} />
 
@@ -103,8 +135,9 @@ const Emergency: React.FC = () =>{
                 })}
                 fullWidth
                 disabled={disabled}
-                defaultValue={middleName}
+                value={middleName}
                 style={{marginTop: "2rem"}}
+                onChange={(e) => setMiddleName(e.target.value)}
             />
             <ErrorMessage errors={errors} name="middleName" render={({ message }) => <p>{message}</p>} />
 
@@ -123,8 +156,9 @@ const Emergency: React.FC = () =>{
                     )}
                 fullWidth
                 disabled={disabled}
-                defaultValue={lastName}
+                value={lastName}
                 style={{marginTop: "2rem"}}
+                onChange={(e) => setLastName(e.target.value)}
             />
             <ErrorMessage errors={errors} name="lastName" render={({ message }) => <p>{message}</p>} />
 
@@ -143,9 +177,10 @@ const Emergency: React.FC = () =>{
                 })}
                 autoComplete="off"
                 disabled={disabled}
-                defaultValue={email}
+                value={email}
                 fullWidth
                 style={{marginTop: "2rem"}}
+                onChange={(e) => setEmail(e.target.value)}
             />
             <ErrorMessage errors={errors} name="email" render={({ message }) => <p>{message}</p>} />
 
@@ -166,8 +201,9 @@ const Emergency: React.FC = () =>{
                         )}
                     fullWidth
                     disabled={disabled}
-                    defaultValue={phone}
+                    value={phone}
                     style={{marginTop: "2rem"}}
+                    onChange={(e) => setPhone(e.target.value)}
                 />
             <ErrorMessage errors={errors} name="phone" render={({ message }) => <p>{message}</p>} />
 
@@ -186,8 +222,9 @@ const Emergency: React.FC = () =>{
                 })}
                 fullWidth
                 disabled={disabled}
-                defaultValue={relationship}
+                value={relationship}
                 style={{marginTop: "2rem"}}
+                onChange={(e) => setRelationship(e.target.value)}
             />
             <ErrorMessage errors={errors} name="relationship" render={({ message }) => <p>{message}</p>} />
 
@@ -215,13 +252,13 @@ const Emergency: React.FC = () =>{
                                 pb: 3,
                                 color: 'white'
                             }}>
-                                    <Typography>Are you sure you want to reset the fields?</Typography>
+                                    <Typography>Are you sure you want to reset the fields and cancel editing?</Typography>
                                     <Button onClick={handleReset}>Reset</Button>
                                     <Button onClick={handleButtonClose}>Cancel</Button>
                                 </Box>
                                 
                         </Modal>
-                        <Button type="submit" onClick={() => setDisabled(true)}>Update</Button>
+                        <Button type="submit">Update</Button>
                     </>
                 }
         </FormControl>

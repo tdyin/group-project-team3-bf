@@ -40,7 +40,7 @@ export default function LoginForm() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log(values)
-    axios.post('/login', values)
+    axios.post('http://localhost:8080/login', values)
       .then((res: any) => {
         console.log(res)
         navigate('/');
@@ -49,8 +49,6 @@ export default function LoginForm() {
         console.log(err)
       })
   };
-
-
 
   return (
       <Container component="main" maxWidth="xs">

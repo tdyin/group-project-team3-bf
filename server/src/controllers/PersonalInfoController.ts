@@ -44,15 +44,15 @@ export const get_userinfo = async (req: Request, res: Response) => {
     try {
         const token: any = req.cookies.token;
         const verify: any = await jwt.verify(token, key);
-    
+
         const findUser = await User.findOne({ username: verify.username });
-    
+
         if (!findUser) {
             res.status(400).send("Cannot find user");
         }
-    
+
         const filter = findUser?.userInfo;
-    
+
         //Send User Info JSON Data
         const foundData = await UserInfo.findOne({_id: filter});
 
@@ -137,15 +137,15 @@ export const get_contact = async (req: Request, res: Response) => {
     try {
         const token: any = req.cookies.token;
         const verify: any = await jwt.verify(token, key);
-    
+
         const findUser = await User.findOne({ username: verify.username });
-    
+
         if (!findUser) {
             res.status(400).send("Cannot find user");
         }
-    
+
         const filter = findUser?.contact;
-    
+
         //Send Contact JSON Data
         const foundData = await Contact.findOne({_id: filter});
 
@@ -185,15 +185,15 @@ export const get_emergency = async (req: Request, res: Response) => {
     try {
         const token: any = req.cookies.token;
         const verify: any = await jwt.verify(token, key);
-    
+
         const findUser = await User.findOne({ username: verify.username });
-    
+
         if (!findUser) {
             res.status(400).send("Cannot find user");
         }
-    
+
         const filter = findUser?.emContact;
-    
+
         //Send Emergency JSON Data
         const foundData = await EmContact.findOne({_id: filter});
 
@@ -218,7 +218,7 @@ export const put_legal = async (req: Request, res: Response) => {
         }
 
         const filter = findUser?.legal
-        
+
         await Legal.findOneAndUpdate(filter, updateData);
     } catch (err) {
         res.status(404).send(err);
@@ -229,15 +229,15 @@ export const get_legal = async (req: Request, res: Response) => {
     try {
         const token: any = req.cookies.token;
         const verify: any = await jwt.verify(token, key);
-    
+
         const findUser = await User.findOne({ username: verify.username });
-    
+
         if (!findUser) {
             res.status(400).send("Cannot find user");
         }
-    
+
         const filter = findUser?.legal;
-    
+
         //Send Legal JSON Data
         const foundData = await Legal.findOne({_id: filter});
 
@@ -274,20 +274,50 @@ export const get_document = async (req: Request, res: Response) => {
     try {
         const token: any = req.cookies.token;
         const verify: any = await jwt.verify(token, key);
-    
+
         const findUser = await User.findOne({ username: verify.username });
-        
+
         if (!findUser) {
             res.status(400).send("Cannot find user");
         }
-    
+
         const filter = findUser?.userDocs;
-    
+
         //Send Document JSON Data
         const foundData = await UserDocs.findOne({_id: filter});
 
         res.status(200).send(foundData);
     } catch (err) {
+        res.status(400).send(err);
+    }
+}
+
+
+
+//---------
+export const getAll = async(req: Request, res: Response) => {
+    try{
+        const users = await User.find({});
+        res.send(users);
+    } catch(err) {
+        res.status(400).send(err);
+    }
+}
+
+export const getUserDoc = async(req: Request, res: Response) => {
+    try{
+        const data = [];
+        const user = await User.find({ username: 'user' });
+        console.log(user)
+        const userLegalVisa = user[0].legal.valueOf()
+        const userDocId = user[0].userDocs.valueOf()
+        const visaStatus = await Legal.find({ _id: userLegalVisa })
+        const profile = await UserDocs.find({ _id: userDocId })
+        data.push(visaStatus[0]);
+        data.push(profile[0]);
+        console.log(data)
+        res.send(data);
+    } catch(err) {
         res.status(400).send(err);
     }
 }

@@ -1,10 +1,13 @@
 import express, { Express, Request, Response } from 'express'
 import connectDB from './config/db'
-import routes from './routes'
+import routes from './routes';
 import dotenv from 'dotenv'
+import cors from 'cors';
+import { corsOptions } from './config/cors'
 dotenv.config()
 
 const { PORT } = process.env
+console.log(PORT);
 
 const app: Express = express()
 
@@ -13,6 +16,7 @@ connectDB()
 // Middleawre
 app.use('/', express.json())
 app.use(express.urlencoded({ extended: false }))
+app.use(cors(corsOptions));
 
 // Routes
 

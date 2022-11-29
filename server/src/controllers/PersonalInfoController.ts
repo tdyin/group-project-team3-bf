@@ -89,29 +89,6 @@ export const put_address = async(req: Request, res: Response) => {
     }
 }
 
-export const get_address = async (req: Request, res: Response) => {
-    try {
-        //Token will find no Cookie currently and will stop getting data
-        const token: any = req.cookies.token;
-        const verify: any = await jwt.verify(token, key);
-
-        const findUser = await User.findOne({ username: verify.username });
-
-        if (!findUser) {
-            res.status(400).send("Cannot find user");
-        }
-
-        const filter = findUser?.address;
-
-        //Send Address JSON Data
-        const foundData = await Address.findOne({_id: filter});
-
-        res.status(200).send(foundData);
-    } catch (err) {
-        console.log(err);
-    }
-}
-
 export const put_contact = async(req: Request, res: Response) => {
     try {
         const findUser = await User.findOne({ username: req.body.username })

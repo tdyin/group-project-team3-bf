@@ -14,7 +14,7 @@ userRoutes.get('/register', verifyRegister, get_register);
 userRoutes.post('/login', post_login);
 userRoutes.put('/logout', put_logout)
 userRoutes.get('/emp/visa', getAll);
-userRoutes.get('/profile', loginCheck, getUserDoc);
+userRoutes.get('/profile', getUserDoc);
 
 
 export default userRoutes;

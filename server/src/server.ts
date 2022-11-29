@@ -1,13 +1,14 @@
 import express, { Express, Request, Response } from 'express'
 import connectDB from './config/db'
-import routes from './routes'
+import routes from './routes';
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
-
+import { corsOptions } from './config/cors'
 dotenv.config()
 var cors = require('cors')
 
 const { PORT } = process.env
+console.log(PORT);
 
 const app: Express = express()
 
@@ -19,6 +20,7 @@ app.use(cors())
 app.use('/', express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
+app.use(cors(corsOptions));
 
 // Routes
 

@@ -10,7 +10,7 @@ const VisaStatusEmp: React.FC = () => {
   const [i20, setI20] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:8080/profile')
+    axios.get('http://localhost:8080/emp/info/docStatus')
       .then((data) => {
         if(data.data[0].visaTitle === 'F1(CPT/OPT)') {
           setIsOpt(true)

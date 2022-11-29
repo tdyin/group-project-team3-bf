@@ -102,34 +102,5 @@ export const put_logout = async(req: Request, res: Response) => {
 
 }
 
-export const getAll = async(req: Request, res: Response) => {
-    try{
-        const users = await User.find({});
-        res.send(users);
-    } catch(err) {
-        res.status(400).send(err);
-    }
-}
-
-export const getUserDoc = async(req: Request, res: Response) => {
-    try{
-        const data = [];
-        const user = await User.find({ username: 'user' });
-        console.log(user)
-        const userLegalVisa = user[0].legal.valueOf()
-        const userDocId = user[0].userDocs.valueOf()
-        const visaStatus = await Legal.find({ _id: userLegalVisa })
-        const profile = await UserDocs.find({ _id: userDocId })
-        data.push(visaStatus[0]);
-        data.push(profile[0]);
-        console.log(data)
-        res.send(data);
-
-
-    } catch(err) {
-        res.status(400).send(err);
-    }
-}
-
 
 

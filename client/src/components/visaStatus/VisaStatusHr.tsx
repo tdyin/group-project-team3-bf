@@ -5,7 +5,7 @@ const VisaStatusHr: React.FC = () => {
   const [users, setUsers] = useState([])
 
   useEffect(() => {
-    axios.get('http://localhost:8080/emp/visa')
+    axios.get('http://localhost:8080/emp/info/visa')
       .then((data) => {
         setUsers(data.data);
       })

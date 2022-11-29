@@ -3,9 +3,10 @@ import connectDB from './config/db'
 import routes from './routes';
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
+import cors from 'cors'
 import { corsOptions } from './config/cors'
 dotenv.config()
-var cors = require('cors')
+
 
 const { PORT } = process.env
 console.log(PORT);
@@ -16,7 +17,6 @@ connectDB()
 
 
 // Middleawre
-app.use(cors())
 app.use('/', express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())

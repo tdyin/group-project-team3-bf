@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { put_userinfo, put_address, put_contact, put_document, put_emergency, put_legal,
-        get_address, get_contact, get_document, get_emergency, get_legal, get_userinfo
+        get_address, get_contact, get_document, get_emergency, get_legal, get_userinfo, getAll, getUserDoc
     } from '../controllers/PersonalInfoController';
 
 //Set variable to import
@@ -21,5 +21,9 @@ personalRoutes.get('/emp/info/contact', get_contact);
 personalRoutes.get('/emp/info/document', get_document);
 personalRoutes.get('/emp/info/emergency', get_emergency);
 personalRoutes.get('/emp/info/legal', get_legal);
+
+//adjust later
+personalRoutes.get('/emp/info/visa', getAll);
+personalRoutes.get('/emp/info/docStatus', getUserDoc);
 
 export default personalRoutes;

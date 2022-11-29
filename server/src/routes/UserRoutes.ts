@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { post_register, get_register, post_login, put_logout, getAll, getUserDoc } from '../controllers/UserController';
+import { post_register, get_register, post_login, put_logout } from '../controllers/UserController';
 import verifyRegister from '../middleware/registerCheck';
 import loginCheck from '../middleware/loginCheck'
 
@@ -13,8 +13,7 @@ userRoutes.get('/register', verifyRegister, get_register);
 
 userRoutes.post('/login', post_login);
 userRoutes.put('/logout', put_logout)
-userRoutes.get('/emp/visa', getAll);
-userRoutes.get('/profile', getUserDoc);
+
 
 
 export default userRoutes;

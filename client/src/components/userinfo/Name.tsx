@@ -6,16 +6,17 @@ import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box'
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import FormControl from '@mui/material/FormControl';
 import Modal from '@mui/material/Modal';
+import { link } from './Link'
 
 type User = {
     firstName: string,
     lastName: string,
     middleName: string,
     preferredName: string,
-    profilePicture: string,
+    profilePic: string,
     email: string,
     ssn: string,
     dob: string,
@@ -28,11 +29,23 @@ const Name: React.FC = () => {
     const [lastName, setLastName] = useState("");
     const [middleName, setMiddleName] = useState("");
     const [preferredName, setPreferredName] = useState("");
-    const [profilePicture, setProfilePicture] = useState("");
+    const [profilePic, setProfilePic] = useState("");
     const [email, setEmail] = useState("");
     const [ssn, setSSN] = useState("");
     const [dob, setDob] = useState("");
     const [gender, setGender] = useState("");
+
+    const [defaultData, setDefaultData] = useState<User>({
+        firstName: "",
+        lastName: "",
+        middleName: "",
+        preferredName: "",
+        profilePic: "",
+        email: "",
+        ssn: "",
+        dob: "",
+        gender: ""
+    })
 
     //Disable editing form until Edit button is clicked
     const [disabled, setDisabled] = useState(true);
@@ -49,27 +62,55 @@ const Name: React.FC = () => {
 
     const handleReset = () => {
         reset({
-            firstName: firstName,
-            lastName: lastName,
-            middleName: middleName,
-            preferredName: preferredName,
-            email: email,
-            ssn: ssn,
-            dob: dob,
-            gender: gender
+            firstName: defaultData.firstName,
+            lastName: defaultData.lastName,
+            middleName: defaultData.middleName,
+            preferredName: defaultData.preferredName,
+            profilePic: defaultData.profilePic,
+            email: defaultData.email,
+            ssn: defaultData.ssn,
+            dob: defaultData.dob,
+            gender: defaultData.gender
         });
         setOpen(false);
+        setDisabled(true);
     }
 
     const onSubmit = async (data: User) => {
         try {
+            setDisabled(true);
             console.log("Sending Registration Data to Backend: ", data);
-            await axios.put('http://localhost:8080/emp/info/userinfo', data)
+            await axios.put(`${link}/userinfo`, data)
         } catch (err: any) {
             console.log(err);
 
         }
     }
+
+    //GET Data
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                await axios.get<User>(`${link}/userinfo`)
+                .then((data: AxiosResponse) => {
+                    console.log(data.data);
+                    setDefaultData(data.data);
+                    setFirstName(data.data.firstName);
+                    setLastName(data.data.lastName);
+                    setMiddleName(data.data.middleName);
+                    setPreferredName(data.data.preferredName);
+                    setEmail(data.data.email);
+                    setProfilePic(data.data.profilePic);
+                    setSSN(data.data.ssn);
+                    setDob(data.data.dob);
+                    setGender(data.data.gender);
+                })
+            } catch (err) {
+                console.log("Error Log: " , err);
+            }
+        }
+        getData();
+    }, [])
 
     return (
         <FormControl onSubmit={handleSubmit(onSubmit)} sx={{display: "block", flexDirection: "column", alignItems: "center", width: "50em"}}>
@@ -90,8 +131,9 @@ const Name: React.FC = () => {
                     )}
                 fullWidth
                 disabled={disabled}
-                defaultValue={firstName}
+                value={firstName}
                 style={{marginTop: "2rem"}}
+                onChange={(e) => setFirstName(e.target.value)}
             />
             <ErrorMessage errors={errors} name="firstName" render={({ message }) => <p>{message}</p>} />
 
@@ -109,8 +151,9 @@ const Name: React.FC = () => {
                 })}
                 fullWidth
                 disabled={disabled}
-                defaultValue={middleName}
+                value={middleName}
                 style={{marginTop: "2rem"}}
+                onChange={(e) => setMiddleName(e.target.value)}
             />
             <ErrorMessage errors={errors} name="middleName" render={({ message }) => <p>{message}</p>} />
 
@@ -129,8 +172,9 @@ const Name: React.FC = () => {
                     )}
                 fullWidth
                 disabled={disabled}
-                defaultValue={lastName}
+                value={lastName}
                 style={{marginTop: "2rem"}}
+                onChange={(e) => setLastName(e.target.value)}
             />
             <ErrorMessage errors={errors} name="lastName" render={({ message }) => <p>{message}</p>} />
 
@@ -148,8 +192,9 @@ const Name: React.FC = () => {
                 })}
                 fullWidth
                 disabled={disabled}
-                defaultValue={preferredName}
+                value={preferredName}
                 style={{marginTop: "2rem"}}
+                onChange={(e) => setPreferredName(e.target.value)}
             />
             <ErrorMessage errors={errors} name="preferredName" render={({ message }) => <p>{message}</p>} />
 
@@ -172,9 +217,10 @@ const Name: React.FC = () => {
                 })}
                 autoComplete="off"
                 disabled={disabled}
-                defaultValue={email}
+                value={email}
                 fullWidth
                 style={{marginTop: "2rem"}}
+                onChange={(e) => setEmail(e.target.value)}
             />
             <ErrorMessage errors={errors} name="email" render={({ message }) => <p>{message}</p>} />
 
@@ -192,8 +238,9 @@ const Name: React.FC = () => {
                 })}
                 fullWidth
                 disabled={disabled}
-                defaultValue={ssn}
+                value={ssn}
                 style={{marginTop: "2rem"}}
+                onChange={(e) => setSSN(e.target.value)}
             />
             <ErrorMessage errors={errors} name="ssn" render={({ message }) => <p>{message}</p>} />
 
@@ -206,8 +253,9 @@ const Name: React.FC = () => {
                 {...register( "dob")}
                 fullWidth
                 disabled={disabled}
-                defaultValue={dob}
+                value={dob}
                 style={{marginTop: "2rem"}}
+                onChange={(e) => setDob(e.target.value)}
             />
             <ErrorMessage errors={errors} name="dob" render={({ message }) => <p>{message}</p>} />
 
@@ -220,8 +268,9 @@ const Name: React.FC = () => {
                 {...register( "gender")}
                 fullWidth
                 disabled={disabled}
-                defaultValue={gender}
+                value={gender}
                 style={{marginTop: "2rem"}}
+                onChange={(e) => setGender(e.target.value)}
             >
                 <MenuItem value="Male">
                     Male
@@ -259,13 +308,13 @@ const Name: React.FC = () => {
                                 pb: 3,
                                 color: 'white'
                             }}>
-                                    <Typography>Are you sure you want to reset the fields?</Typography>
+                                    <Typography>Are you sure you want to reset the fields and cancel editing?</Typography>
                                     <Button onClick={handleReset}>Reset</Button>
                                     <Button onClick={handleButtonClose}>Cancel</Button>
                                 </Box>
                                 
                         </Modal>
-                        <Button type="submit" onClick={() => setDisabled(true)}>Update</Button>
+                        <Button type="submit">Update</Button>
                     </>
                 }
         </FormControl>

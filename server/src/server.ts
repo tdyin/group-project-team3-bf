@@ -23,7 +23,7 @@ app.use(cookieParser())
 app.use(cors(corsOptions));
 
 // Routes
-
+app.use('/', routes);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Express + TypeScript Server')

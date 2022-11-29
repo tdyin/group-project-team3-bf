@@ -9,30 +9,55 @@ import Box from '@mui/material/Box'
 import axios from 'axios';
 import FormControl from '@mui/material/FormControl';
 import Modal from '@mui/material/Modal';
+import { link } from './Link'
 
 type Contact = {
-    cell: string,
-    work: string
+    cellPhone: string,
+    workPhone: string
 }
 
 const Contact: React.FC = () => {
     const { register, handleSubmit, formState: {errors}, reset } = useForm<Contact>();
-    const [cell, setCell] = useState("");
+    const [cellPhone, setCell] = useState("");
     const [work, setWork] = useState("");
+    const [defaultData, setDefaultData] = useState<Contact>({
+        cellPhone: "",
+        workPhone: ""
+    })
 
     //Disable Fields until Edit button clicked
     const [disabled, setDisabled] = useState(true);
 
-    //MAKE SURE TO EDIT THIS
+    //Edit Data
     const onSubmit = async (data: Contact) => {
         try {
+            setDisabled(true);
             console.log("Sending Registration Data to Backend: ", data);
-            await axios.put('http://localhost:8080/emp/info/contact', data)
+            await axios.put(`${link}/contact`, data)
         } catch (err: any) {
             console.log(err);
 
         }
     }
+
+    //GET Data
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                await axios.get(`${link}/contact`)
+                .then((data: any) => {
+                    setDefaultData(data.data);
+                    console.log(data.data);
+                    setCell(data.data.cellPhone);
+                    setWork(data.data.workPhone);
+                })
+            } catch (err) {
+                console.log("Error Log: ", err)
+            }
+        }
+
+        getData();
+    }, [])
 
     //For Modals
     const [open, setOpen] = useState(false);
@@ -46,10 +71,11 @@ const Contact: React.FC = () => {
 
     const handleReset = () => {
         reset({
-            cell: cell,
-            work: work
+            cellPhone: defaultData.cellPhone,
+            workPhone: defaultData.workPhone
         });
         setOpen(false);
+        setDisabled(true);
     }
 
     return (
@@ -59,8 +85,8 @@ const Contact: React.FC = () => {
                         size="small"
                         variant="standard"
                         type="text"
-                        id="cell"
-                        {...register( "cell", 
+                        id="cellPhone"
+                        {...register( "cellPhone", 
                             { 
                                 required: "Please input a Phone number",
                                 pattern: {
@@ -71,18 +97,19 @@ const Contact: React.FC = () => {
                             )}
                         fullWidth
                         disabled={disabled}
-                        defaultValue={cell}
+                        value={cellPhone}
                         style={{marginTop: "2rem"}}
+                        onChange={(e) => setCell(e.target.value)}
                     />
-                <ErrorMessage errors={errors} name="cell" render={({ message }) => <p>{message}</p>} />
+                <ErrorMessage errors={errors} name="cellPhone" render={({ message }) => <p>{message}</p>} />
 
                 <TextField 
                         label="Work Phone Number" 
                         size="small"
                         variant="standard"
                         type="text"
-                        id="work"
-                        {...register( "work", 
+                        id="workPhone"
+                        {...register( "workPhone", 
                             { 
                                 pattern: {
                                             value: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,
@@ -92,10 +119,11 @@ const Contact: React.FC = () => {
                             )}
                         fullWidth
                         disabled={disabled}
-                        defaultValue={work}
+                        value={work}
                         style={{marginTop: "2rem"}}
+                        onChange={(e) => setWork(e.target.value)}
                     />
-                <ErrorMessage errors={errors} name="work" render={({ message }) => <p>{message}</p>} />
+                <ErrorMessage errors={errors} name="workPhone" render={({ message }) => <p>{message}</p>} />
 
                 { disabled === true ? 
                     <Button type="button" onClick={() => setDisabled(false)}>Edit</Button>
@@ -121,13 +149,13 @@ const Contact: React.FC = () => {
                                 pb: 3,
                                 color: 'white'
                             }}>
-                                    <Typography>Are you sure you want to reset the fields?</Typography>
+                                    <Typography>Are you sure you want to reset the fields and cancel editing?</Typography>
                                     <Button onClick={handleReset}>Reset</Button>
                                     <Button onClick={handleButtonClose}>Cancel</Button>
                                 </Box>
                                 
                         </Modal>
-                        <Button type="submit" onClick={() => setDisabled(true)}>Update</Button>
+                        <Button type="submit">Update</Button>
                     </>
                 }
         </FormControl>

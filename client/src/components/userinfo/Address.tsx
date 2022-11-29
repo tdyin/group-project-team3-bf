@@ -28,7 +28,7 @@ const Address: React.FC = () => {
     //Disable fields until Edit button clicked
     const [disabled, setDisabled] = useState(true);
 
-    //MAKE SURE TO EDIT THIS
+    //Edit Data
     const onSubmit = async (data: Address) => {
         try {
             console.log("Sending Registration Data to Backend: ", data);
@@ -38,6 +38,26 @@ const Address: React.FC = () => {
         }
     }
 
+    //GET Data
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                await axios.get('http://localhost:8080/emp/info/address')
+                .then((data: any) => {
+                    console.log(data);
+                    setBldgapt(data.bldgApt);
+                    setStreet(data.street);
+                    setCity(data.city);
+                    setState(data.state);
+                    setZip(data.zip);
+                })
+            } catch (err) {
+                console.log("This is console log", err);
+            }
+        }
+
+        getData();
+    }, [])
     //For Modals
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);

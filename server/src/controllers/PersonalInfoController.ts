@@ -6,6 +6,9 @@ import Contact from '../models/Contact';
 import EmContact from '../models/EmContact';
 import Legal from '../models/Legal';
 import UserDocs from '../models/UserDocs';
+import jwt from 'jsonwebtoken';
+
+const key: any = process.env.JWT_KEY;
 
 export const put_userinfo = async(req: Request, res: Response) => {
     try {
@@ -37,6 +40,32 @@ export const put_userinfo = async(req: Request, res: Response) => {
     }
 }
 
+export const get_userinfo = async (req: Request, res: Response) => {
+    try {
+        const token: any = req.cookies.token;
+        const verify: any = await jwt.verify(token, key);
+    
+        const findUser = await User.findOne({ username: verify.username });
+    
+        if (!findUser) {
+            res.status(400).send("Cannot find user");
+        }
+    
+        const filter = findUser?.userInfo;
+    
+        //Send User info JSON Data
+        await UserInfo.findOne(filter, (err: any, data: any) => {
+            if(err) {
+                res.status(400).send(err);
+            }
+            res.status(200).json(data);
+        })
+    } catch (err) {
+        res.status(400).send(err);
+    }
+
+}
+
 export const put_address = async(req: Request, res: Response) => {
     try {
         const findUser = await User.findOne({ username: req.body.username });
@@ -63,6 +92,34 @@ export const put_address = async(req: Request, res: Response) => {
     }
 }
 
+export const get_address = async (req: Request, res: Response) => {
+    try {
+        const token: any = req.cookies.token;
+        const verify: any = await jwt.verify(token, key);
+        //username: verify.username
+        const findUser = await User.findOne({ username: "user" });
+        console.log(findUser);
+
+        if (!findUser) {
+            res.status(400).send("Cannot find user");
+        }
+
+        const filter = findUser?.address;
+
+        //Send Address JSON Data
+        await Address.findOne(filter, (err: any, data: any) => {
+            console.log(data);
+            
+            if(err) {
+                res.status(400).send(err);
+            }
+            res.status(200).json(data);
+        })
+    } catch (err) {
+        res.status(400).send(err);
+    }
+}
+
 export const put_contact = async(req: Request, res: Response) => {
     try {
         const findUser = await User.findOne({ username: req.body.username })
@@ -81,6 +138,31 @@ export const put_contact = async(req: Request, res: Response) => {
         await Contact.findOneAndUpdate(filter, updateData);
     } catch (err) {
         res.status(404).send(err);
+    }
+}
+
+export const get_contact = async (req: Request, res: Response) => {
+    try {
+        const token: any = req.cookies.token;
+        const verify: any = await jwt.verify(token, key);
+    
+        const findUser = await User.findOne({ username: verify.username });
+    
+        if (!findUser) {
+            res.status(400).send("Cannot find user");
+        }
+    
+        const filter = findUser?.contact;
+    
+        //Send User info JSON Data
+        await Contact.findOne(filter, (err: any, data: any) => {
+            if(err) {
+                res.status(400).send(err);
+            }
+            res.status(200).json(data);
+        })
+    } catch (err) {
+        res.status(400).send(err);
     }
 }
 
@@ -106,7 +188,32 @@ export const put_emergency = async(req: Request, res: Response) => {
 
         await EmContact.findOneAndUpdate(filter, updateData);
     } catch (err) {
+        res.status(400).send(err);
+    }
+}
 
+export const get_emergency = async (req: Request, res: Response) => {
+    try {
+        const token: any = req.cookies.token;
+        const verify: any = await jwt.verify(token, key);
+    
+        const findUser = await User.findOne({ username: verify.username });
+    
+        if (!findUser) {
+            res.status(400).send("Cannot find user");
+        }
+    
+        const filter = findUser?.emContact;
+    
+        //Send User info JSON Data
+        await EmContact.findOne(filter, (err: any, data: any) => {
+            if(err) {
+                res.status(400).send(err);
+            }
+            res.status(200).json(data);
+        })
+    } catch (err) {
+        res.status(400).send(err);
     }
 }
 
@@ -132,6 +239,31 @@ export const put_legal = async (req: Request, res: Response) => {
     }
 }
 
+export const get_legal = async (req: Request, res: Response) => {
+    try {
+        const token: any = req.cookies.token;
+        const verify: any = await jwt.verify(token, key);
+    
+        const findUser = await User.findOne({ username: verify.username });
+    
+        if (!findUser) {
+            res.status(400).send("Cannot find user");
+        }
+    
+        const filter = findUser?.legal;
+    
+        //Send User info JSON Data
+        await Legal.findOne(filter, (err: any, data: any) => {
+            if(err) {
+                res.status(400).send(err);
+            }
+            res.status(200).json(data);
+        })
+    } catch (err) {
+        res.status(400).send(err);
+    }
+}
+
 export const put_document = async (req: Request, res: Response) => {
     try {
         const findUser = await User.findOne({ username: req.body.username });
@@ -152,5 +284,30 @@ export const put_document = async (req: Request, res: Response) => {
 
     } catch (err) {
         res.status(404).send(err);
+    }
+}
+
+export const get_document = async (req: Request, res: Response) => {
+    try {
+        const token: any = req.cookies.token;
+        const verify: any = await jwt.verify(token, key);
+    
+        const findUser = await User.findOne({ username: verify.username });
+    
+        if (!findUser) {
+            res.status(400).send("Cannot find user");
+        }
+    
+        const filter = findUser?.userDocs;
+    
+        //Send User info JSON Data
+        await UserDocs.findOne(filter, (err: any, data: any) => {
+            if(err) {
+                res.status(400).send(err);
+            }
+            res.status(200).json(data);
+        })
+    } catch (err) {
+        res.status(400).send(err);
     }
 }

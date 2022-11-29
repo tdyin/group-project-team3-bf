@@ -29,8 +29,6 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Express + TypeScript Server')
 })
 
-app.use('/', routes.userRoutes)
-
 app.all('*', (req, res) => {
   res.status(400).json({
     msg: `The URI ${req.url} is not valid.`,

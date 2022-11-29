@@ -96,8 +96,9 @@ export const get_address = async (req: Request, res: Response) => {
     try {
         const token: any = req.cookies.token;
         const verify: any = await jwt.verify(token, key);
-
-        const findUser = await User.findOne({ username: verify.username });
+        //username: verify.username
+        const findUser = await User.findOne({ username: "user" });
+        console.log(findUser);
 
         if (!findUser) {
             res.status(400).send("Cannot find user");
@@ -107,6 +108,8 @@ export const get_address = async (req: Request, res: Response) => {
 
         //Send Address JSON Data
         await Address.findOne(filter, (err: any, data: any) => {
+            console.log(data);
+            
             if(err) {
                 res.status(400).send(err);
             }

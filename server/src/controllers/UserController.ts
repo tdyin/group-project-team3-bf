@@ -56,30 +56,67 @@ export const get_register = async (req: Request, res: Response) => {
 
 
 export const post_login = async(req: Request, res: Response) => {
-    try{
-        const hashPass = await bcrypt.hash(req.body.password, 10);
-        const user = await User.find({username: req.body.username, password: hashPass});
 
+    try{
+        const user = await User.find({username: req.body.username});
         if (user.length === 0) {
-            res.status(404).send('Invalid username/password');
+            res.status(404).send(`${req.body.username} is not exist`);
         } else {
-            res.setHeader(
-                'Set-Cookie',
-                `isLoggedin=true;
-                _id=${user[0]._id};
-                username=${user[0].username};
-                isHr=true;
-                max-age=1800;
-                HttpOnly
-                `
-            );
-            // req.session.username = req.body.username;
-            // req.session.user_id = user.id;
-            // req.session.isLoggedIn = true;
-            res.status(200).send('You are logged in')
+            bcrypt.compare(req.body.password, user[0].password, (err, data) => {
+                if (err) {
+                    throw err
+                }
+                if (data) {
+                    // console.log('this is user',user[0], user[0].username)
+                    console.log(process.env.JWT_KEY);
+                    const key: any = process.env.JWT_KEY;
+                    const token: any = jwt.sign({
+                        id: user[0]._id,
+                        username: user[0].username,
+                    }, key, {expiresIn: '5m'});
+                    console.log(token)
+                    res.cookie('token', token, {httpOnly: true});
+                    // console.log('this is cookies',req.cookies)
+                    res.send('you are loggined successfully');
+                } else {
+                    res.status(401).send('Invalid password')
+                }
+            })
         }
     } catch(err) {
         res.status(400).send(err);
     }
 }
+
+export const put_logout = async(req: Request, res: Response) => {
+  const authHeader: any = req.headers["authorization"];
+  jwt.sign(authHeader, "", { expiresIn: 1 } , (logout, err) => {
+  if (logout) {
+        res.send({msg : 'You have been Logged Out' });
+    } else {
+        res.send({msg:'Error'});
+    }
+  });
+
+}
+
+export const getAll = async(req: Request, res: Response) => {
+    try{
+        const users = await User.find({});
+        res.send(users);
+    } catch(err) {
+        res.status(400).send(err);
+    }
+}
+
+export const getUserDoc = async(req: Request, res: Response) => {
+    try{
+        const user = await User.find({ username: req.body.token.username});
+        res.send(user);
+    } catch(err) {
+        res.status(400).send(err);
+    }
+}
+
+
 

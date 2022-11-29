@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cors(corsOptions));
 
 // Routes
-
+app.use('/', routes);
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Express + TypeScript Server')

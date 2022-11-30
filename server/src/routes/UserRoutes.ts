@@ -9,11 +9,10 @@ const userRoutes = Router();
 //Registration
 userRoutes.post('/register', post_register);
 userRoutes.get('/register', verifyRegister, get_register);
+userRoutes.get('/register/:token', verifyRegister, get_register);
 
-
+//Login and Logout
 userRoutes.post('/login', post_login);
 userRoutes.put('/logout', put_logout)
-
-
 
 export default userRoutes;

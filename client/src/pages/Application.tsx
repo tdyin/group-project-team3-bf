@@ -1,50 +1,23 @@
-import React, { FormEvent } from 'react'
-import axios from 'axios'
-import Button from '@mui/material/Button'
-import useMultiForm from '../utils/useMultiForm'
-import Address from '../components/application/Address'
-import UserInfo from '../components/application/UserInfo'
-import Contact from '../components/application/Contact'
-import Car from '../components/application/Car'
-import Legal from '../components/application/Legal'
-import ReferInfo from '../components/application/ReferInfo'
-import EmeContact from '../components/application/EmeContact'
+import { styled } from '@mui/material/styles'
+import Box from '@mui/material/Box'
+import Paper from '@mui/material/Paper'
+import Grid from '@mui/material/Grid'
+import { Typography } from '@mui/material'
+import Forms from '../components/application/Forms'
 
-export default function Application() {
-  const { steps, currentStep, step, isFirst, isLast, backStep, nextStep } =
-    useMultiForm([
-      <UserInfo />,
-      <Contact />,
-      <Car />,
-      <Legal />,
-      <ReferInfo />,
-      <EmeContact />,
-      <Address />,
-    ])
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}))
 
-  const onSubmit = async (e: FormEvent) => {
-    e.preventDefault()
-  }
+export default function BasicGrid() {
 
   return (
-    <div>
-      <div>
-        <form onSubmit={onSubmit}>
-          <div>
-            {currentStep + 1} / {steps.length}
-          </div>
-          {step}
-          <div></div>
-          {!isFirst && (
-            <Button type='button' onClick={backStep}>
-              Previous
-            </Button>
-          )}
-          <Button type='submit' onClick={nextStep}>
-            {isLast ? 'Register' : 'Next'}
-          </Button>
-        </form>
-      </div>
-    </div>
+    <Box sx={{ padding: '1rem' }}>
+      
+    </Box>
   )
 }

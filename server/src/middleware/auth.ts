@@ -19,7 +19,7 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
         }
 
         //Verify token
-        const verify: any = await jwt.verify(token, process.env.JWT_KEY!);
+        const verify: any = await jwt.verify(token, process.env.JWT_KEY);
 
         if(!verify) {
             res.status(401).send({message: "401 Forbidden. You are not authorized to view this link"});

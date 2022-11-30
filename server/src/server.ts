@@ -7,14 +7,9 @@ import cors from 'cors'
 import { corsOptions } from './config/cors'
 dotenv.config()
 
-
 const { PORT } = process.env
-console.log(PORT);
-
 const app: Express = express()
-
 connectDB()
-
 
 // Middleawre
 app.use('/', express.json())
@@ -24,10 +19,6 @@ app.use(cors(corsOptions));
 
 // Routes
 app.use('/', routes);
-
-app.get('/', (req: Request, res: Response) => {
-  res.send('Express + TypeScript Server')
-})
 
 app.all('*', (req, res) => {
   res.status(400).json({

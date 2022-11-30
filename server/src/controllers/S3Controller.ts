@@ -11,11 +11,11 @@ export const getSignedDownloadUrl = async (req: Request, res: Response) => {
   }
 }
 
-
 export const getSignedUploadUrl = async (req: Request, res: Response) => {
   try {
     const { fileName, bucket } = req.body
-
+    const url = await putFileSignedUrl(bucket, fileName)
+    res.status(200).send(url)
   } catch (error) {
     console.log(error)
   }

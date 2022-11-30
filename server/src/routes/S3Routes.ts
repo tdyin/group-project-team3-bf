@@ -6,7 +6,7 @@ import {
 
 const s3Routes = Router()
 
-s3Routes.get('/download', getSignedDownloadUrl)
-s3Routes.get('/upload', getSignedUploadUrl)
+s3Routes.post('/s3/download', getSignedDownloadUrl)
+s3Routes.post('/s3/upload', getSignedUploadUrl)
 
 export default s3Routes

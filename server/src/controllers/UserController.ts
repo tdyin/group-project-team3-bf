@@ -76,10 +76,7 @@ export const post_login = async(req: Request, res: Response) => {
                         id: user[0]._id,
                         username: user[0].username,
                     }, key, {expiresIn: '5m'});
-                    console.log(token)
-                    res.cookie('token', token, {httpOnly: true});
-                    // console.log('this is cookies',req.cookies)
-                    res.send('you are loggined successfully');
+                    res.send(token)
                 } else {
                     res.status(401).send('Invalid password')
                 }

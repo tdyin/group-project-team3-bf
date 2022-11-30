@@ -12,7 +12,10 @@ const VisaStatusEmp: React.FC = () => {
   const [i20, setI20] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:8080/emp/info/docStatus')
+    const token = localStorage.getItem('token');
+    axios.get('http://localhost:8080/emp/info/docStatus', {headers: {
+      'authorization': token
+    }})
       .then((data) => {
         if(data.data[0].visaTitle === 'F1(CPT/OPT)') {
           setIsOpt(true)
@@ -55,7 +58,7 @@ const VisaStatusEmp: React.FC = () => {
             {optReceipt === 'approved' && <div>Please upload a copy of your OPT EAD</div>}
             {optReceipt === 'rejected' && <div>See HR's feedback: not done yet</div>}
             <br></br>
-            <button type='button' id='ead' onClick={upLoadDoc} disabled={optReceipt!=='approved'}>Upload OPT EAD</button>
+            <button type='button' id='ead' onClick={upLoadDoc} disabled={optReceipt!=='approved' || optEad==='approved'}>Upload OPT EAD</button>
           </div>
         </div>
         {/* } */}
@@ -67,7 +70,7 @@ const VisaStatusEmp: React.FC = () => {
           {optEad === 'approved' && <div>“Please download and fill out the I-983 form</div>}
           {optEad === 'rejected' && <div>See HR's feedback: not done yet</div>}
           <br></br>
-          <button type='button' id='i983' onClick={upLoadDoc} disabled={optEad!=='approved'}>Upload I983 document</button>
+          <button type='button' id='i983' onClick={upLoadDoc} disabled={optEad!=='approved' || i983==='approved'}>Upload I983 document</button>
         </div>
         }
         <br></br>
@@ -76,7 +79,7 @@ const VisaStatusEmp: React.FC = () => {
           {i983 === 'approved' && <div> “Please send the I-983 along with all necessary documents to your school and upload the new I-20</div>}
           {i983 === 'rejected' && <div>See HR's feedback: not done yet</div>}
           <br></br>
-          <button type='button' id='i20' onClick={upLoadDoc} disabled={i983!=='approved'}>Upload I20 document</button>
+          <button type='button' id='i20' onClick={upLoadDoc} disabled={i983!=='approved' || i20==='approved'}>Upload I20 document</button>
         </div>}<br></br>
         {i20 !== '' && <div>I20 Status:
           {i20 === 'pending' && <div>Waiting for HR to approve your I-20</div>}

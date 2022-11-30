@@ -306,7 +306,7 @@ export const getAll = async(req: Request, res: Response) => {
 export const getUserDoc = async(req: Request, res: Response) => {
     try{
         const data = [];
-        const user = await User.find({ username: 'user' });
+        const user = await User.find({ username: req.body.username});
         const userLegalVisa = user[0].legal.valueOf()
         const userDocId = user[0].userDocs.valueOf()
         const visaStatus = await Legal.find({ _id: userLegalVisa })

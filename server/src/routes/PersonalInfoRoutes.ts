@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import { put_userinfo, put_address, put_contact, put_document, put_emergency, put_legal,
         get_address, get_contact, get_document, get_emergency, get_legal, get_userinfo, getAll, getUserDoc
     } from '../controllers/PersonalInfoController';
-import loginCheck from '../middleware/loginCheck';
+import verifyToken from '../middleware/auth';
 
 //Set variable to import
 const personalRoutes = Router();
@@ -25,6 +25,6 @@ personalRoutes.get('/emp/info/legal', get_legal);
 
 //adjust later
 personalRoutes.get('/emp/info/visa', getAll);
-personalRoutes.get('/emp/info/docStatus', loginCheck, getUserDoc);
+personalRoutes.get('/emp/info/docStatus', verifyToken, getUserDoc);
 
 export default personalRoutes;

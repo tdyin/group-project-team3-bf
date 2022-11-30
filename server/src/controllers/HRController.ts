@@ -38,7 +38,7 @@ export const post_email = async (req: Request, res: Response) => {
         email: email,
         name: name,
         status: status,
-        link: token
+        token: token
     })
 
     //Save Status Data

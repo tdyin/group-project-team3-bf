@@ -8,7 +8,6 @@ import Legal from '../models/Legal';
 import UserDocs from '../models/UserDocs';
 import jwt from 'jsonwebtoken';
 
-const key: any = process.env.JWT_KEY;
 
 export const put_userinfo = async(req: Request, res: Response) => {
     try {
@@ -43,7 +42,7 @@ export const put_userinfo = async(req: Request, res: Response) => {
 export const get_userinfo = async (req: Request, res: Response) => {
     try {
         const token: any = req.cookies.token;
-        const verify: any = await jwt.verify(token, key);
+        const verify: any = await jwt.verify(token, process.env.JWT_KEY);
 
         const findUser = await User.findOne({ username: verify.username });
 
@@ -93,7 +92,7 @@ export const get_address = async (req: Request, res: Response) => {
     try {
         //Token will find no Cookie currently and will stop getting data
         const token: any = req.cookies.token;
-        const verify: any = await jwt.verify(token, key);
+        const verify: any = await jwt.verify(token, process.env.JWT_KEY);
 
         const findUser = await User.findOne({ username: verify.username });
 
@@ -136,7 +135,7 @@ export const put_contact = async(req: Request, res: Response) => {
 export const get_contact = async (req: Request, res: Response) => {
     try {
         const token: any = req.cookies.token;
-        const verify: any = await jwt.verify(token, key);
+        const verify: any = await jwt.verify(token, process.env.JWT_KEY);
 
         const findUser = await User.findOne({ username: verify.username });
 
@@ -184,7 +183,7 @@ export const put_emergency = async(req: Request, res: Response) => {
 export const get_emergency = async (req: Request, res: Response) => {
     try {
         const token: any = req.cookies.token;
-        const verify: any = await jwt.verify(token, key);
+        const verify: any = await jwt.verify(token, process.env.JWT_KEY);
 
         const findUser = await User.findOne({ username: verify.username });
 
@@ -228,7 +227,7 @@ export const put_legal = async (req: Request, res: Response) => {
 export const get_legal = async (req: Request, res: Response) => {
     try {
         const token: any = req.cookies.token;
-        const verify: any = await jwt.verify(token, key);
+        const verify: any = await jwt.verify(token, process.env.JWT_KEY);
 
         const findUser = await User.findOne({ username: verify.username });
 
@@ -273,7 +272,7 @@ export const put_document = async (req: Request, res: Response) => {
 export const get_document = async (req: Request, res: Response) => {
     try {
         const token: any = req.cookies.token;
-        const verify: any = await jwt.verify(token, key);
+        const verify: any = await jwt.verify(token, process.env.JWT_KEY);
 
         const findUser = await User.findOne({ username: verify.username });
 

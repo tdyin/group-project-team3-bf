@@ -1,50 +1,54 @@
-import React, { FormEvent } from 'react'
+import Box from '@mui/material/Box'
 import axios from 'axios'
-import Button from '@mui/material/Button'
-import useMultiForm from '../utils/useMultiForm'
-import Address from '../components/application/Address'
-import UserInfo from '../components/application/UserInfo'
-import Contact from '../components/application/Contact'
-import Car from '../components/application/Car'
-import Legal from '../components/application/Legal'
-import ReferInfo from '../components/application/ReferInfo'
-import EmeContact from '../components/application/EmeContact'
+import { useForm } from 'react-hook-form'
+import Forms from '../components/application/Forms'
 
 export default function Application() {
-  const { steps, currentStep, step, isFirst, isLast, backStep, nextStep } =
-    useMultiForm([
-      <UserInfo />,
-      <Contact />,
-      <Car />,
-      <Legal />,
-      <ReferInfo />,
-      <EmeContact />,
-      <Address />,
-    ])
+  const { register, handleSubmit } = useForm()
 
-  const onSubmit = async (e: FormEvent) => {
-    e.preventDefault()
+  const onSubmit = async (data: any) => {
+    const file = data.file[0]
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    const fileData = {
+      bucket: 'bf-t3-test-bucket',
+      fileName: 'test1.pdf',
+    }
+    // Get signed url
+    await axios
+      .post('/s3/upload', fileData)
+      .then((res) =>
+        axios.put(res.data, file, {
+          headers: {
+            'Access-Control-Allow-Origin': '*',
+            'Content-Type': file.type,
+          },
+        })
+      )
+      .catch((err) => console.log(err))
+  }
+
+  const handleDownload = async () => {
+    const fileData = {
+      bucket: 'bf-t3-test-bucket',
+      fileName: 'test.pdf',
+    }
+
+    const url = await axios.post('s3/download', fileData)
+
+    axios.get(url.data)
   }
 
   return (
-    <div>
-      <div>
-        <form onSubmit={onSubmit}>
-          <div>
-            {currentStep + 1} / {steps.length}
-          </div>
-          {step}
-          <div></div>
-          {!isFirst && (
-            <Button type='button' onClick={backStep}>
-              Previous
-            </Button>
-          )}
-          <Button type='submit' onClick={nextStep}>
-            {isLast ? 'Register' : 'Next'}
-          </Button>
-        </form>
-      </div>
-    </div>
+    <Box sx={{ padding: '1rem' }}>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <input type='file' {...register('file')} />
+        <input type='submit' />
+      </form>
+      <br />
+      <button onClick={handleDownload}>Download</button>
+    </Box>
   )
 }

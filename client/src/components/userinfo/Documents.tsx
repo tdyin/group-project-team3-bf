@@ -9,7 +9,7 @@ import Box from '@mui/material/Box'
 import axios, { AxiosResponse } from 'axios';
 import FormControl from '@mui/material/FormControl';
 import Modal from '@mui/material/Modal';
-import { link } from './Link';
+import { link } from '../Link';
 
 type Documents = {
     driverLicense: string,
@@ -30,9 +30,11 @@ const Documents: React.FC = () =>{
 
     //Edit Data
     const onSubmit = async (data: Documents) => {
+        const token = localStorage.getItem('token');
+        
         try {
             setDisabled(true);
-            console.log("Sending Registration Data to Backend: ", data);
+            console.log("Sending Registration Data to Backend: ", data, {headers: { 'authorization': token }});
             await axios.put(`${link}/document`, data)
         } catch (err: any) {
             console.log(err);
@@ -42,9 +44,10 @@ const Documents: React.FC = () =>{
 
     //GET Data
     useEffect(() => {
+        const token = localStorage.getItem('token');
         const getData = async () => {
             try {
-                await axios.get<Documents>(`${link}/document`)
+                await axios.get<Documents>(`${link}/document`, {headers: {'authorization': token}})
                 .then((data: AxiosResponse) => {
                     console.log(data.data);
                     setDefaultData(data.data);
@@ -79,7 +82,7 @@ const Documents: React.FC = () =>{
     }
 
     return (
-        <FormControl onSubmit={handleSubmit(onSubmit)} sx={{display: "block", flexDirection: "column", alignItems: "center", width: "50em"}}>
+        <FormControl sx={{display: "block", flexDirection: "column", alignItems: "center", width: "50em"}}>
                 {/**
                  * Map Licenses and Work Auths from backend?
                  * Add Work Auth
@@ -129,7 +132,7 @@ const Documents: React.FC = () =>{
                                 </Box>
                                 
                         </Modal>
-                        <Button type="submit">Update</Button>
+                        <Button type="submit" onClick={handleSubmit(onSubmit)} >Update</Button>
                     </>
                 }
         </FormControl>

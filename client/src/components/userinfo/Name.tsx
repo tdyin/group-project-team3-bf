@@ -9,7 +9,7 @@ import Box from '@mui/material/Box'
 import axios, { AxiosResponse } from 'axios';
 import FormControl from '@mui/material/FormControl';
 import Modal from '@mui/material/Modal';
-import { link } from './Link'
+import { link } from '../Link'
 
 type User = {
     firstName: string,
@@ -77,9 +77,11 @@ const Name: React.FC = () => {
     }
 
     const onSubmit = async (data: User) => {
+        const token = localStorage.getItem('token');
+
         try {
             setDisabled(true);
-            console.log("Sending Registration Data to Backend: ", data);
+            console.log("Sending Registration Data to Backend: ", data, {headers: { 'authorization': token }});
             await axios.put(`${link}/userinfo`, data)
         } catch (err: any) {
             console.log(err);
@@ -89,9 +91,10 @@ const Name: React.FC = () => {
 
     //GET Data
     useEffect(() => {
+        const token = localStorage.getItem('token');
         const getData = async () => {
             try {
-                await axios.get<User>(`${link}/userinfo`)
+                await axios.get<User>(`${link}/userinfo`, {headers: {'authorization': token}})
                 .then((data: AxiosResponse) => {
                     console.log(data.data);
                     setDefaultData(data.data);
@@ -113,7 +116,7 @@ const Name: React.FC = () => {
     }, [])
 
     return (
-        <FormControl onSubmit={handleSubmit(onSubmit)} sx={{display: "block", flexDirection: "column", alignItems: "center", width: "50em"}}>
+        <FormControl sx={{display: "block", flexDirection: "column", alignItems: "center", width: "50em"}}>
             <TextField 
                 label="First Name" 
                 size="small"
@@ -314,7 +317,7 @@ const Name: React.FC = () => {
                                 </Box>
                                 
                         </Modal>
-                        <Button type="submit">Update</Button>
+                        <Button type="submit" onClick={handleSubmit(onSubmit)} >Update</Button>
                     </>
                 }
         </FormControl>

@@ -1,5 +1,6 @@
 import { Box, Button, Grid, Paper, Typography } from '@mui/material'
 import { useState } from 'react'
+import { useForm, SubmitHandler } from 'react-hook-form'
 import Forms from '../components/application/Forms'
 import Steps from '../components/application/Steps'
 
@@ -18,11 +19,11 @@ export default function Application() {
   const [activeStep, setActiveStep] = useState(0)
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1)
+    setActiveStep((prevState) => prevState + 1)
   }
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1)
+    setActiveStep((prevState) => prevState - 1)
   }
 
   return (
@@ -32,31 +33,16 @@ export default function Application() {
       </Typography>
       <Paper sx={{ p: 3 }}>
         <Grid container spacing={2}>
-          <Grid item xs={3}>
+          <Grid item xs={4}>
             <Steps steps={steps} activeStep={activeStep} />
           </Grid>
-          <Grid item xs={6}>
-            <Forms activeStep={activeStep} />
-          </Grid>
-          <Grid item xs={3}>
-            {activeStep !== steps.length && (
-              <Box marginLeft={2}>
-                <Button
-                  variant='contained'
-                  onClick={handleNext}
-                  sx={{ mt: 1, mr: 1 }}
-                >
-                  {activeStep === steps.length - 1 ? 'Finish' : 'Continue'}
-                </Button>
-                <Button
-                  disabled={activeStep === 0}
-                  onClick={handleBack}
-                  sx={{ mt: 1, mr: 1 }}
-                >
-                  Back
-                </Button>
-              </Box>
-            )}
+          <Grid item xs={8}>
+            <Forms
+              steps={steps}
+              activeStep={activeStep}
+              handleNext={handleNext}
+              handleBack={handleBack}
+            />
           </Grid>
         </Grid>
       </Paper>

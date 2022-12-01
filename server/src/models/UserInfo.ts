@@ -8,7 +8,7 @@ export interface IUserInfo extends Document {
   profilePic: string
   ssn: string
   dob: Date
-  gender: 'Male' | 'Female' | 'I do not wish to answer.' | string
+  gender: 'male' | 'female' | string
 }
 
 const UserInfoSchema: Schema = new Schema<IUserInfo>({

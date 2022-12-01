@@ -59,11 +59,11 @@ export const post_email = async (req: Request, res: Response) => {
         to: `${email}`,
         subject: 'Register an Account to begin Onboarding',
         text: 
-            `
-                <p>Hello ${name},</p>
-                <p>You are receiving this e-mail as an invitation to register with our company</p>
-                <p>Please click <a href=http://localhost:3000/register/${token}>HERE</a> to begin your application process.</p>
-            `
+                `Hello ${name},\n\n` +
+                `You are receiving this e-mail as an invitation to register with our company\n` + 
+                `Please click http://localhost:3000/register/${token} \n` +
+                `to begin your application process.`
+            
     }
 
     transport.sendMail(mailConfig, (err: any, info: any) => {
@@ -72,6 +72,7 @@ export const post_email = async (req: Request, res: Response) => {
         }
         else {
             console.log("E-mail successfully sent: ", info);
+            res.status(200).send(token);
         }
     })
 }

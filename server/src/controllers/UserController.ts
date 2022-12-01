@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import User from '../models/User';
+import Status from '../models/Status';
 import { createDefaultDocs } from '../utils/dbUtils';
 
 
@@ -40,6 +41,10 @@ export const post_register = async(req : Request, res: Response) => {
             email: user.email
         }, key, {expiresIn: "30m"});
 
+        const update = {status: true}
+        //Update Status Model to show that user has registered
+        await Status.findOneAndUpdate({email: req.body.email}, update)
+
         //Set Status
         res.status(200).cookie('token', token, {httpOnly: true})
     } catch (err) {
@@ -48,10 +53,11 @@ export const post_register = async(req : Request, res: Response) => {
 }
 
 export const get_register = async (req: Request, res: Response) => {
-    const token: any = req.cookies.token;
+    const {token}: any = req.params;
+    console.log(token);
     const verify: any = await jwt.verify(token, process.env.JWT_KEY);
 
-    //Open token and send Email to Register link
+    //Open token and send Email to Register link if E-mail exists
     if(verify.email) {
         res.redirect('/register')
     }

@@ -1,15 +1,11 @@
-import { Stack, TextField } from '@mui/material/'
+import { Stack, TextField, Typography } from '@mui/material/'
 
 export default function ReferInfo() {
   return (
-    <Stack
-      component='form'
-      spacing={3}
-      sx={{
-        padding: '1rem',
-        width: '350px',
-      }}
-    >
+    <Stack component='form' spacing={3}>
+      <Typography variant='h6' gutterBottom>
+        Optional
+      </Typography>
       <TextField label='First Name' type='text' name='firstName' />
       <TextField label='Last Name' type='text' name='lastName' />
       <TextField label='Middle Name' type='text' name='middleName' />

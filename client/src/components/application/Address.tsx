@@ -2,14 +2,7 @@ import { Stack, TextField } from '@mui/material/'
 
 export default function Address() {
   return (
-    <Stack
-      component='form'
-      spacing={3}
-      sx={{
-        padding: '1rem',
-        width: '350px',
-      }}
-    >
+    <Stack component='form' spacing={3}>
       <TextField label='Street' type='text' name='street' />
       <TextField label='Bldg/Apt' type='text' name='bldgApt' />
       <TextField label='City' type='text' name='city' />

@@ -1,6 +1,3 @@
-import { FormEvent } from 'react'
-import Button from '@mui/material/Button'
-import useMultiForm from '../../utils/useMultiForm'
 import Address from './Address'
 import Car from './Car'
 import Contact from './Contact'
@@ -8,42 +5,24 @@ import EmeContact from './EmeContact'
 import Legal from './Legal'
 import ReferInfo from './ReferInfo'
 import UserInfo from './UserInfo'
+import Summary from './Summary'
+import { Box } from '@mui/material'
 
-export default function Forms() {
-  const { steps, currentStep, step, isFirst, isLast, backStep, nextStep } =
-    useMultiForm([
-      <UserInfo />,
-      <Contact />,
-      <Car />,
-      <Legal />,
-      <ReferInfo />,
-      <EmeContact />,
-      <Address />,
-    ])
+type Props = {
+  activeStep: number
+}
 
-  const onSubmit = async (e: FormEvent) => {
-    e.preventDefault()
-  }
-
+export default function Forms({ activeStep }: Props) {
   return (
-    <div>
-      <div>
-        <form onSubmit={onSubmit}>
-          <div>
-            {currentStep + 1} / {steps.length}
-          </div>
-          {step}
-          <div></div>
-          {!isFirst && (
-            <Button type='button' onClick={backStep}>
-              Previous
-            </Button>
-          )}
-          <Button type='submit' onClick={nextStep}>
-            {isLast ? 'Register' : 'Next'}
-          </Button>
-        </form>
-      </div>
-    </div>
+    <Box>
+      {activeStep === 0 && <UserInfo />}
+      {activeStep === 1 && <Address />}
+      {activeStep === 2 && <Contact />}
+      {activeStep === 3 && <Car />}
+      {activeStep === 4 && <Legal />}
+      {activeStep === 5 && <ReferInfo />}
+      {activeStep === 6 && <EmeContact />}
+      {activeStep === 7 && <Summary />}
+    </Box>
   )
 }

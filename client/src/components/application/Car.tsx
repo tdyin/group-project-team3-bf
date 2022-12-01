@@ -1,4 +1,5 @@
 import {
+  Button,
   FormControl,
   FormControlLabel,
   Radio,
@@ -11,30 +12,26 @@ import { useState } from 'react'
 
 export default function Car() {
   const [ifLicense, setifLicense] = useState('no')
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setifLicense((event.target as HTMLInputElement).value)
-  }
+  const [ifCar, setifCar] = useState('no')
 
   return (
-    <Stack
-      component='form'
-      spacing={3}
-      sx={{
-        padding: '1rem',
-        width: '350px',
-      }}
-    >
+    <Stack component='form' spacing={3}>
+      <Typography variant='h6' gutterBottom>
+        Optional
+      </Typography>
       <FormControl>
         <Typography variant='body1' gutterBottom>
           Do you have a driver's license?
         </Typography>
-        <RadioGroup value={ifLicense} onChange={handleChange}>
+        <RadioGroup
+          value={ifLicense}
+          onChange={(e) => setifLicense(e.target.value)}
+        >
           <FormControlLabel value='yes' control={<Radio />} label='Yes' />
           <FormControlLabel value='no' control={<Radio />} label='No' />
         </RadioGroup>
       </FormControl>
-      {ifLicense === 'yes' ? (
+      {ifLicense === 'yes' && (
         <>
           <TextField label='License Number' type='text' name='licenseNum' />
           <TextField
@@ -45,12 +42,35 @@ export default function Car() {
               shrink: true,
             }}
           />
+          <label htmlFor='btn-upload'>
+            <input
+              id='btn-upload'
+              name='btn-upload'
+              style={{ display: 'none' }}
+              type='file'
+            />
+            <Button className='btn-choose' variant='outlined' component='span'>
+              Upload driver's license
+            </Button>
+          </label>
         </>
-      ) : null}
-
-      <TextField label='Make' type='text' name='make' />
-      <TextField label='Model' type='text' name='model' />
-      <TextField label='Color' type='text' name='color' />
+      )}
+      <FormControl>
+        <Typography variant='body1' gutterBottom>
+          Do you have a car?
+        </Typography>
+        <RadioGroup value={ifCar} onChange={(e) => setifCar(e.target.value)}>
+          <FormControlLabel value='yes' control={<Radio />} label='Yes' />
+          <FormControlLabel value='no' control={<Radio />} label='No' />
+        </RadioGroup>
+      </FormControl>
+      {ifCar === 'yes' && (
+        <>
+          <TextField label='Make' type='text' name='make' />
+          <TextField label='Model' type='text' name='model' />
+          <TextField label='Color' type='text' name='color' />
+        </>
+      )}
     </Stack>
   )
 }

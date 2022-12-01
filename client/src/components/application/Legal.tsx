@@ -1,4 +1,5 @@
 import {
+  Button,
   FormControl,
   FormControlLabel,
   Radio,
@@ -15,14 +16,7 @@ export default function Legal() {
   const [visa, setVisa] = useState('')
 
   return (
-    <Stack
-      component='form'
-      spacing={3}
-      sx={{
-        padding: '1rem',
-        width: '350px',
-      }}
-    >
+    <Stack component='form' spacing={3}>
       <FormControl>
         <Typography variant='body1' gutterBottom>
           Are you a citizen or permanent resident of the U.S?
@@ -42,10 +36,13 @@ export default function Legal() {
               value={permanent}
               onChange={(e) => setPermanent(e.target.value)}
             >
+              <Typography variant='body1' gutterBottom>
+                You are:
+              </Typography>
               <FormControlLabel
                 value='Green Card'
                 control={<Radio />}
-                label='Green Card'
+                label='Green Card Holder'
               />
               <FormControlLabel
                 value='Citizen'
@@ -102,6 +99,17 @@ export default function Legal() {
               shrink: true,
             }}
           />
+          <label htmlFor='btn-upload'>
+            <input
+              id='btn-upload'
+              name='btn-upload'
+              style={{ display: 'none' }}
+              type='file'
+            />
+            <Button className='btn-choose' variant='outlined' component='span'>
+              Upload work authorization
+            </Button>
+          </label>
         </>
       )}
     </Stack>

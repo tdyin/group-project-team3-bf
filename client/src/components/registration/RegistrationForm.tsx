@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
 
 type User = {
     username: string,
@@ -16,6 +17,8 @@ type User = {
 const RegistrationForm: React.FC = () => {
     const { register, handleSubmit, formState: {errors}, watch } = useForm<User>();
     const [email, setEmail] = useState('email@email.com');
+    const { token } = useParams();
+    const navigate = useNavigate();
 
     const onSubmit = async (data: User) => {
         try {
@@ -28,15 +31,24 @@ const RegistrationForm: React.FC = () => {
     }
 
     useEffect(() => {
-        axios.get('http://localhost:8080/register')
-        .then((data: any) => {
-            setEmail(data.email);
-        })
+        const checkUrl = async () => {
+            try {
+                await axios.get(`http://localhost:8080/register/${token}`)
+                .then((data: any) => {
+                    setEmail(data.email);
+                })
+            } catch (err) {
+                console.log("Valid URL failed: " , err);
+                navigate("/forbidden")
+            }
+        }
+        checkUrl();
     }, [])
 
     return (
         <Box sx={{marginTop: 9, display: "flex", flexDirection: "column", alignItems: "center"}} >
-            <form onSubmit={handleSubmit(onSubmit)} style={{maxWidth: "20%", padding: "3rem", boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px" }}>
+            {/**Check if user has real URL*/}
+                <form onSubmit={handleSubmit(onSubmit)} style={{maxWidth: "20%", padding: "3rem", boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px" }}>
                 <Typography variant="h3">Register an Account</Typography>
                 <br/>
 

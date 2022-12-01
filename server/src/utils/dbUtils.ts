@@ -1,4 +1,5 @@
 import mongoose, { ObjectId } from 'mongoose'
+import { faker } from '@faker-js/faker'
 
 import Address from '../models/Address'
 import Car from '../models/Car'
@@ -84,6 +85,82 @@ export async function createDefaultDocs(): Promise<DocIds> {
     middleName: '',
     preferredName: '',
     ssn: '0',
+    dob: new Date(),
+    gender: '',
+  })
+
+  await Promise.all([
+    await address.save(),
+    await car.save(),
+    await contact.save(),
+    await emContact.save(),
+    await legal.save(),
+    await referInfo.save(),
+    await userDocs.save(),
+    await userInfo.save(),
+  ])
+
+  return {
+    addressId: address._id,
+    carId: car._id,
+    contactId: contact._id,
+    emContactId: emContact._id,
+    legalId: legal._id,
+    referInfoId: referInfo._id,
+    userDocsId: userDocs._id,
+    userInfoId: userInfo._id,
+  }
+}
+
+export async function createRandomDocs(): Promise<DocIds> {
+  const address = new Address({
+    street: faker.address.street(),
+    bldgApt: '',
+    city: faker.address.city(),
+    state: faker.address.state(),
+    zip: faker.address.zipCode(),
+  })
+  const car = new Car({
+    make: faker.vehicle.manufacturer(),
+    model: faker.vehicle.model(),
+    color: faker.color.human(),
+    licenseNum: faker.random.numeric(10),
+    expDate: new Date(),
+  })
+  const contact = new Contact({
+    cellPhone: faker.random.numeric(10),
+    workPhone: faker.random.numeric(10),
+  })
+  const emContact = new EmContact({
+    firstName: faker.name.firstName(),
+    lastName: faker.name.lastName(),
+    middleName: faker.name.middleName(),
+    phone: faker.random.numeric(10),
+    email: faker.internet.email(),
+    relationship: 'friend',
+  })
+  const legal = new Legal({
+    permanent: true,
+    permanentType: 'citizen',
+    visaTitle: '',
+    startDate: '',
+    endDate: '',
+  })
+  const referInfo = new ReferInfo({
+    firstName: faker.name.firstName(),
+    lastName: faker.name.lastName(),
+    middleName: faker.name.middleName(),
+    phone: faker.random.numeric(10),
+    email: faker.internet.email(),
+    relationship: 'friend',
+  })
+  const userDocs = new UserDocs({ driverlicense: '', workAuth: '' })
+  const userInfo = new UserInfo({
+    firsName: faker.name.firstName(),
+    lastName: faker.name.lastName(),
+    middleName: faker.name.middleName(),
+    preferredName: '',
+    ssn: faker.random.numeric(9),
     dob: new Date(),
     gender: '',
   })

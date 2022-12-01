@@ -53,7 +53,7 @@ export const post_email = async (req: Request, res: Response) => {
         }
     });
 
-
+    
     const mailConfig = {
         from: 'beaconfire.team3@gmail.com',
         to: `${email}`,

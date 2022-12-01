@@ -53,16 +53,18 @@ export const post_register = async(req : Request, res: Response) => {
 }
 
 export const get_register = async (req: Request, res: Response) => {
-    const {token}: any = req.params;
-    console.log(token);
-    const verify: any = await jwt.verify(token, process.env.JWT_KEY);
+    const token: any = req.params.token;
+    console.log("Backend Token Check from get_register: " , token);
 
-    //Open token and send Email to Register link if E-mail exists
-    if(verify.email) {
-        res.redirect('/register')
+    try {
+        //Open token and send Email to Register link if E-mail exists
+        const verify: any = await jwt.verify(token, process.env.JWT_KEY);
+        console.log("Email Backend get_register", verify.email)
+    } catch {
+        res.status(403).redirect("/login");
     }
-    
-    res.status(403).send("403 Forbidden");
+
+
 }
 
 

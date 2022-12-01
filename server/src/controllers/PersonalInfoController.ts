@@ -294,9 +294,9 @@ export const get_document = async (req: Request, res: Response) => {
 
 
 //---------
-export const getAll = async(req: Request, res: Response) => {
+export const getAllDoc = async(req: Request, res: Response) => {
     try{
-        const users = await User.find({});
+        const users = await User.find({}).populate('userInfo').populate('legal');
         res.send(users);
     } catch(err) {
         res.status(400).send(err);
@@ -306,14 +306,8 @@ export const getAll = async(req: Request, res: Response) => {
 export const getUserDoc = async(req: Request, res: Response) => {
     try{
         const data = [];
-        const user = await User.find({ username: req.body.username});
-        const userLegalVisa = user[0].legal.valueOf()
-        const userDocId = user[0].userDocs.valueOf()
-        const visaStatus = await Legal.find({ _id: userLegalVisa })
-        const profile = await UserDocs.find({ _id: userDocId })
-        data.push(visaStatus[0]);
-        data.push(profile[0]);
-        res.send(data);
+        const user = await User.find({ username: req.body.username}).populate('legal').populate('userDocs');
+        res.send(user);
     } catch(err) {
         res.status(400).send(err);
     }

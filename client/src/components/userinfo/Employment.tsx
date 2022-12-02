@@ -10,6 +10,8 @@ import axios, { AxiosResponse } from 'axios';
 import FormControl from '@mui/material/FormControl';
 import Modal from '@mui/material/Modal';
 import { link } from '../Link';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel'
 
 type Employment = {
     visaTitle: string,
@@ -19,9 +21,9 @@ type Employment = {
 
 const Employment: React.FC = () => {
     const { register, handleSubmit, formState: {errors}, reset } = useForm<Employment>();
-    const [visaTitle, setTitle] = useState("");
-    const [startDate, setStart] = useState("");
-    const [endDate, setEnd] = useState("");
+    const [visaTitle, setTitle] = useState(" ");
+    const [startDate, setStart] = useState(" ");
+    const [endDate, setEnd] = useState(" ");
     const [defaultData, setDefaultData] = useState<Employment>({
         visaTitle: "",
         startDate: "",
@@ -33,7 +35,7 @@ const Employment: React.FC = () => {
     //Send Data
     const onSubmit = async (data: Employment) => {
         const token = localStorage.getItem('token');
-
+        data.visaTitle = visaTitle;
         try {
             setDisabled(true);
             console.log("Sending Registration Data to Backend: ", data, {headers: { 'authorization': token }});
@@ -83,21 +85,22 @@ const Employment: React.FC = () => {
         setDisabled(true);
     }
 
+    const handleSelect = (e: any) => {
+        setTitle(e.target.value);
+    }
+
     return (
         <FormControl sx={{display: "block", flexDirection: "column", alignItems: "center", width: "50em"}}>
-
-                <TextField 
+                <InputLabel id="visaSelect" sx={{marginTop: "2rem"}}>Visa Type</InputLabel>
+                <Select
+                    labelId="visaSelect"
                     label="Visa Type" 
-                    size="small"
-                    variant="standard"
-                    type="text"
-                    id="visaTitle"
-                    {...register( "visaTitle")}
                     fullWidth
                     disabled={disabled}
                     value={visaTitle}
-                    style={{marginTop: "2rem"}}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={handleSelect}
+                    sx={{marginTop: "2rem"}}
+                    size="small"
                 >
                     <MenuItem value="H1-B">
                         H1-B
@@ -111,7 +114,10 @@ const Employment: React.FC = () => {
                     <MenuItem value="H4">
                         H4
                     </MenuItem>
-                </TextField>
+                    <MenuItem value="Other">
+                        Other
+                    </MenuItem>
+                </Select>
                 <ErrorMessage errors={errors} name="visaTitle" render={({ message }) => <p>{message}</p>} />
 
                 <TextField 

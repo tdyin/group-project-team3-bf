@@ -91,14 +91,28 @@
 // export default VisaStatusEmp
 
 
+
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 const VisaStatusHr: React.FC = () => {
   const [users, setUsers] = useState([] as any[])
 
   useEffect(() => {
-    axios.get('http://localhost:8080/emp/info/visa')
+    const token = localStorage.getItem('token');
+    axios.get('http://localhost:8080/emp/info/visa', {headers: {
+            'authorization': token
+          }})
       .then((data) => {
         console.log(data.data)
         setUsers(data.data);
@@ -108,37 +122,65 @@ const VisaStatusHr: React.FC = () => {
       })
   },[])
 
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+      backgroundColor: theme.palette.common.black,
+      color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+      fontSize: 14,
+    },
+  }));
 
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+      border: 0,
+    },
+  }));
+
+  function getRemainDay(user: any) {
+    var date1 = user['legal']['endDate'];
+    var date2 = new Date();
+    console.log(date1, date2)
+    var Difference_In_Time = date2.getTime() - date1.getTime();
+    var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+    return Difference_In_Days
+  }
 
   return (
     <>
-      <div>{users.map((user, i) => {
-        return (
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 700 }} aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>Name</StyledTableCell>
+              <StyledTableCell>Work Authorization</StyledTableCell>
+              <StyledTableCell>Next Steps</StyledTableCell>
+              <StyledTableCell>Action</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {users.map((user, i) => {
+                return (
+                  <StyledTableRow key={i}>
+                    <StyledTableCell>{user['userInfo']['firstName'] + ' ' + user['userInfo']['lastName']}</StyledTableCell>
+                    <StyledTableCell>
+                      <StyledTableRow >{user['legal']['visaTitle']}</StyledTableRow>
+                      <StyledTableRow >{user['legal']['startDate']}</StyledTableRow>
+                      <StyledTableRow >remaining days</StyledTableRow>
+                      <StyledTableRow >remaining days</StyledTableRow>
+                    </StyledTableCell>
+                  </StyledTableRow>
+                )
+            })}
 
-          <div key={i}>
-            <table>
-              <tr>
-                <th>Name</th>
-                <th>Work Authorization</th>
-                <th>Next Steps</th>
-                <th>Action</th>
-              </tr>
-              <tr>
-                <td>{user['userInfo']['firsName'] + ' ' + user['userInfo']['lastName']}</td>
-                <td>
-                  <tr>{user['legal']['visaTitle']}</tr>
-                  <tr>{user['legal']['startDate'].substring(0, 10)}</tr>
-                  <tr>Number of Days Remaining</tr>
-                </td>
-                <td></td>
-                <td></td>
-              </tr>
-
-            </table>
-          </div>
-        )
-      })
-        }</div>
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   )
 }

@@ -6,6 +6,7 @@ import { ILegal } from './Legal'
 import { IReferInfo } from './ReferInfo'
 import { IEmeContact } from './EmContact'
 import { IUserDocs } from './UserDocs'
+import { IWorkAuthStatus } from './WorkAuthStatus'
 
 export {
   IUserInfo,
@@ -16,4 +17,5 @@ export {
   IReferInfo,
   IEmeContact,
   IUserDocs,
+  IWorkAuthStatus,
 }

@@ -8,7 +8,9 @@ import {
   IReferInfo,
   IEmeContact,
   IUserDocs,
+  IWorkAuthStatus,
 } from './InterfacesIndex'
+
 
 enum stage {
   'Never submitted',
@@ -31,6 +33,7 @@ export interface IUser extends Document {
   referInfo: IReferInfo['_id']
   emContact: Array<IEmeContact['_id']>
   userDocs: IUserDocs['_id']
+  workAuthStatus: IWorkAuthStatus['_id']
 }
 
 const UserSchema: Schema = new Schema<IUser>({
@@ -49,6 +52,7 @@ const UserSchema: Schema = new Schema<IUser>({
     { type: Schema.Types.ObjectId, ref: 'EmContact', required: true },
   ],
   userDocs: { type: Schema.Types.ObjectId, ref: 'UserDocs', required: true },
+  workAuthStatus: { type: Schema.Types.ObjectId, ref: 'WorkAuthStatus', required: true },
 })
 
 export default mongoose.model<IUser>('User', UserSchema)

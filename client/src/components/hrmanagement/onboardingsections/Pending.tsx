@@ -23,6 +23,9 @@ import Documents from '../userinfo/Documents';
 import Emergency from '../userinfo/Emergency';
 import Employment from '../userinfo/Employment';
 import Name from '../userinfo/Name';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
 
 type Employees = {
     firstName: string,
@@ -120,7 +123,8 @@ interface IUserID {
 }
 
 type Feedback = {
-    feedback: string
+    feedback: string,
+    status: number
 }
 
 const ShowTabs: React.FC<IUserID> = ({userid}: any) => {
@@ -130,9 +134,17 @@ const ShowTabs: React.FC<IUserID> = ({userid}: any) => {
         setValue(newValue);
     };
 
+    //Change Status
+    const [status, setStatus] = useState(0);
+    const handleSelect = (e: any) => {
+        setStatus(e.target.value);
+    }
+
+    //Submit Feedback and Status
     const onSubmit = async (data: Feedback) => {
         const token = localStorage.getItem('token');
-
+        data.status = status;
+        
         try {
             console.log("Sending Feedback to Backend: ", data);
             await axios.post(`${hrLink}/hiring/${userid}/feedback/`, data, {headers: { 'authorization': token }});
@@ -173,6 +185,16 @@ const ShowTabs: React.FC<IUserID> = ({userid}: any) => {
                 <Documents userid={userid} />
             </TabPanel>
             <FormControl>
+                <InputLabel id="statusLabel">Application Status</InputLabel>
+                <Select
+                    labelId="statusLabel"
+                    id="status"
+                    value={status}
+                    label="Status"
+                    onChange={handleSelect}>
+                        <MenuItem value={2}>Reject</MenuItem>
+                        <MenuItem value={3}>Approve</MenuItem>
+                </Select>
                 <TextField 
                     label="Feedback" 
                     type="text"

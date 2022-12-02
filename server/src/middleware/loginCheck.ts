@@ -1,21 +1,18 @@
-import jwt from 'jsonwebtoken';
+import jwt, { TokenExpiredError } from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 
 const loginCheck = async (req: Request, res: Response, next: NextFunction) => {
 
-    const token: any = req.cookies.token;
-    
-    console.log('this is token=', token)
+    const token: any = req.headers.authorization || '';
     try {
         if (!token) {
             res.redirect('/login');
         }
-        const decoded: any = jwt.verify(token, process.env.JWT_KEY!);
-        console.log('this is decoded',decoded)
+        const decoded: any = await jwt.verify(token, process.env.JWT_KEY!);
         if(!decoded) {
             res.status(401).send({message: "You are not authorized"});
         }
-        req.body.token = decoded
+        req.body.username = decoded.username;
         next();
     } catch (err) {
         console.log(err);

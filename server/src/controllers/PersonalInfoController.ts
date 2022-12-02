@@ -296,8 +296,7 @@ export const get_document = async (req: Request, res: Response) => {
 //---------
 export const getAllDoc = async(req: Request, res: Response) => {
     try{
-        const users = await User.find({}).populate('userInfo').populate('legal').populate('stage');
-        console.log(users)
+        const users = await User.find({}).populate('userInfo').populate('legal').populate('workAuthStatus');
         res.send(users);
     } catch(err) {
         res.status(400).send(err);

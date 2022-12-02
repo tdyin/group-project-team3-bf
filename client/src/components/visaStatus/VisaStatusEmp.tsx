@@ -143,12 +143,13 @@ const VisaStatusHr: React.FC = () => {
   }));
 
   function getRemainDay(user: any) {
-    var date1 = user['legal']['endDate'];
+    var date1 = new Date(user['legal']['endDate']);
     var date2 = new Date();
-    console.log(date1, date2)
-    var Difference_In_Time = date2.getTime() - date1.getTime();
+    var Difference_In_Time = date1.getTime() - date2.getTime();
     var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-    return Difference_In_Days
+    console.log(Difference_In_Time, Difference_In_Days)
+
+    return Math.floor(Difference_In_Days)
   }
 
   return (
@@ -164,16 +165,17 @@ const VisaStatusHr: React.FC = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((user, i) => {
+            {users.map((user: any, i) => {
                 return (
                   <StyledTableRow key={i}>
                     <StyledTableCell>{user['userInfo']['firstName'] + ' ' + user['userInfo']['lastName']}</StyledTableCell>
                     <StyledTableCell>
                       <StyledTableRow >{user['legal']['visaTitle']}</StyledTableRow>
-                      <StyledTableRow >{user['legal']['startDate']}</StyledTableRow>
-                      <StyledTableRow >remaining days</StyledTableRow>
-                      <StyledTableRow >remaining days</StyledTableRow>
+                      <StyledTableRow >{'startDate : ' + user['legal']['startDate'] + ' endDate : ' + user['legal']['endDate']}</StyledTableRow>
+                      <StyledTableRow >{getRemainDay(user)}</StyledTableRow>
                     </StyledTableCell>
+                    <StyledTableCell>Next Step</StyledTableCell>
+                    <StyledTableCell>Action</StyledTableCell>
                   </StyledTableRow>
                 )
             })}

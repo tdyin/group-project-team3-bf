@@ -21,9 +21,9 @@ type Employment = {
 
 const Employment: React.FC = () => {
     const { register, handleSubmit, formState: {errors}, reset } = useForm<Employment>();
-    const [visaTitle, setTitle] = useState("");
-    const [startDate, setStart] = useState("");
-    const [endDate, setEnd] = useState("");
+    const [visaTitle, setTitle] = useState(" ");
+    const [startDate, setStart] = useState(" ");
+    const [endDate, setEnd] = useState(" ");
     const [defaultData, setDefaultData] = useState<Employment>({
         visaTitle: "",
         startDate: "",
@@ -91,15 +91,16 @@ const Employment: React.FC = () => {
 
     return (
         <FormControl sx={{display: "block", flexDirection: "column", alignItems: "center", width: "50em"}}>
-                <InputLabel id="visaSelect">Visa Type</InputLabel>
+                <InputLabel id="visaSelect" sx={{marginTop: "2rem"}}>Visa Type</InputLabel>
                 <Select
                     labelId="visaSelect"
                     label="Visa Type" 
                     fullWidth
                     disabled={disabled}
                     value={visaTitle}
-                    style={{marginTop: "2rem"}}
                     onChange={handleSelect}
+                    sx={{marginTop: "2rem"}}
+                    size="small"
                 >
                     <MenuItem value="H1-B">
                         H1-B

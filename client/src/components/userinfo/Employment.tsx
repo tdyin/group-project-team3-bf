@@ -10,6 +10,8 @@ import axios, { AxiosResponse } from 'axios';
 import FormControl from '@mui/material/FormControl';
 import Modal from '@mui/material/Modal';
 import { link } from '../Link';
+import Select from '@mui/material/Select';
+import InputLabel from '@mui/material/InputLabel'
 
 type Employment = {
     visaTitle: string,
@@ -83,21 +85,21 @@ const Employment: React.FC = () => {
         setDisabled(true);
     }
 
+    const handleSelect = (e: any) => {
+        setTitle(e.target.value);
+    }
+
     return (
         <FormControl sx={{display: "block", flexDirection: "column", alignItems: "center", width: "50em"}}>
-
-                <TextField 
+                <InputLabel id="visaSelect">Visa Type</InputLabel>
+                <Select
+                    labelId="visaSelect"
                     label="Visa Type" 
-                    size="small"
-                    variant="standard"
-                    type="text"
-                    id="visaTitle"
-                    {...register( "visaTitle")}
                     fullWidth
                     disabled={disabled}
                     value={visaTitle}
                     style={{marginTop: "2rem"}}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={handleSelect}
                 >
                     <MenuItem value="H1-B">
                         H1-B
@@ -111,7 +113,10 @@ const Employment: React.FC = () => {
                     <MenuItem value="H4">
                         H4
                     </MenuItem>
-                </TextField>
+                    <MenuItem value="Other">
+                        Other
+                    </MenuItem>
+                </Select>
                 <ErrorMessage errors={errors} name="visaTitle" render={({ message }) => <p>{message}</p>} />
 
                 <TextField 

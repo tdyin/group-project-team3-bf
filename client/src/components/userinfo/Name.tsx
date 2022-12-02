@@ -10,6 +10,8 @@ import axios, { AxiosResponse } from 'axios';
 import FormControl from '@mui/material/FormControl';
 import Modal from '@mui/material/Modal';
 import { link } from '../Link'
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
 
 type User = {
     firstName: string,
@@ -29,11 +31,11 @@ const Name: React.FC = () => {
     const [lastName, setLastName] = useState("");
     const [middleName, setMiddleName] = useState("");
     const [preferredName, setPreferredName] = useState("");
-    const [profilePic, setProfilePic] = useState("");
+    const [profilePic, setProfilePic] = useState(" ");
     const [email, setEmail] = useState("");
     const [ssn, setSSN] = useState("");
-    const [dob, setDob] = useState("");
-    const [gender, setGender] = useState("");
+    const [dob, setDob] = useState(" ");
+    const [gender, setGender] = useState(" ");
 
     const [defaultData, setDefaultData] = useState<User>({
         firstName: "",
@@ -78,7 +80,7 @@ const Name: React.FC = () => {
 
     const onSubmit = async (data: User) => {
         const token = localStorage.getItem('token');
-
+        data.gender = gender;
         try {
             setDisabled(true);
             console.log("Sending Registration Data to Backend: ", data, {headers: { 'authorization': token }});
@@ -201,9 +203,19 @@ const Name: React.FC = () => {
             />
             <ErrorMessage errors={errors} name="preferredName" render={({ message }) => <p>{message}</p>} />
 
-            <Button>
-                Profile Picture
-            </Button>
+            
+            <img src={profilePic} style={{height: "100px", width: "100px", marginTop: "2rem"}}/>
+            <InputLabel id="fileUpload">Upload New</InputLabel>
+            <TextField 
+                size="small"
+                variant="standard"
+                type="file"
+                id="profilePic"
+                {...register("profilePic")}
+                fullWidth
+                disabled={disabled}
+                style={{marginTop: "2rem"}}
+                />
 
             <TextField
                 label="E-mail Address"
@@ -262,17 +274,17 @@ const Name: React.FC = () => {
             />
             <ErrorMessage errors={errors} name="dob" render={({ message }) => <p>{message}</p>} />
 
-            <TextField 
+            <InputLabel id="genderSelect" sx={{marginTop: "2rem"}}>Gender</InputLabel>
+            <Select
+                labelId="genderSelect"
                 label="Gender" 
                 size="small"
                 variant="standard"
-                type="text"
                 id="gender"
-                {...register( "gender")}
                 fullWidth
                 disabled={disabled}
                 value={gender}
-                style={{marginTop: "2rem"}}
+                sx={{marginTop: "2rem"}}
                 onChange={(e) => setGender(e.target.value)}
             >
                 <MenuItem value="Male">
@@ -284,8 +296,7 @@ const Name: React.FC = () => {
                 <MenuItem value="I do not wish to answer.">
                     Prefer not to say
                 </MenuItem>
-            </TextField>
-            <ErrorMessage errors={errors} name="gender" render={({ message }) => <p>{message}</p>} />
+            </Select>
 
             { disabled === true ? 
                     <Button type="button" onClick={() => setDisabled(false)}>Edit</Button>

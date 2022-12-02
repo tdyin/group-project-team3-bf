@@ -14,7 +14,7 @@ enum stage {
   'Never submitted',
   'Pending',
   'Rejected',
-  'Aprove',
+  'Approved',
 }
 
 export interface IUser extends Document {

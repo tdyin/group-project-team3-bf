@@ -46,7 +46,7 @@ export const post_register = async(req : Request, res: Response) => {
         await Status.findOneAndUpdate({email: req.body.email}, update)
 
         //Set Status
-        res.status(200).cookie('token', token, {httpOnly: true})
+        res.status(200).send(token);
     } catch (err) {
         res.status(409).send(err);
     }
@@ -63,10 +63,7 @@ export const get_register = async (req: Request, res: Response) => {
     } catch {
         res.status(403).redirect("/login");
     }
-
-
 }
-
 
 
 export const post_login = async(req: Request, res: Response) => {

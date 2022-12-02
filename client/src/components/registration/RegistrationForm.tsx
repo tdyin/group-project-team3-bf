@@ -23,7 +23,8 @@ const RegistrationForm: React.FC = () => {
     const onSubmit = async (data: User) => {
         try {
             console.log("Sending Registration Data to Backend: ", data);
-            await axios.post('http://localhost:8080/register', data)
+            await axios.post('http://localhost:8080/register', data);
+            navigate("/application");
         } catch (err: any) {
             console.log(err);
 

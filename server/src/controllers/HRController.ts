@@ -1,8 +1,15 @@
 import { Request, Response } from 'express';
 import Status from '../models/Status';
 import User from '../models/User';
+import Feedback from '../models/Feedback';
 import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken';
+import UserInfo from '../models/UserInfo';
+import Address from '../models/Address';
+import Contact from '../models/Contact';
+import EmContact from '../models/EmContact';
+import Legal from '../models/Legal';
+import UserDocs from '../models/UserDocs';
 
 export const get_hiring = async (req: Request, res: Response) => {
     try {
@@ -75,4 +82,167 @@ export const post_email = async (req: Request, res: Response) => {
             res.status(200).send(token);
         }
     })
+}
+
+export const get_userinfo = async (req: Request, res: Response) => {
+    try {
+        const users = await User.find({});
+        res.status(200).send(users);
+    } catch (err) {
+        console.log("get_userinfo HR Error: ", err);
+    }
+}
+
+export const post_feedback = async (req: Request, res: Response) => {
+    try {
+        //Create new feedback object
+        const feedback = new Feedback({
+            user: req.params.userid,
+            feedback: req.body.feedback
+        })
+
+        //Save feedback to Mongo
+        await feedback.save();
+        console.log("Feedback successfully saved to mongo");
+
+        const update = {stage: req.body.status}
+
+        //Update Stage of User
+        await User.findOneAndUpdate({_id: req.params.userid}, update);
+    } catch (err) {
+        console.log("Error in post_feedback: ", err);
+    }
+}
+
+export const get_feedback = async (req: Request, res: Response) => {
+    try {
+        const feedback = await Feedback.findOne({user: req.params.userid});
+        res.status(200).send(feedback);
+    } catch (err) {
+        console.log("Error in get_feedback: " , err);
+    }
+}
+
+export const get_userdata = async (req: Request, res: Response) => {
+    const user: any = req.params.userid;
+    
+    try {
+        const findUser = await User.findOne({ _id: user });
+
+        if(!findUser) {
+            console.log("get_userdata Error: Cannot find user");
+        }
+
+        const filter = findUser?.userInfo;
+        //Find user's info based on ID provided
+        const foundData = await UserInfo.findOne({ _id: filter })
+        res.status(200).send(foundData);
+    } catch (err) {
+        console.log("Error in get_userdata: ", err);
+    }
+}
+
+export const get_useraddress = async (req: Request, res: Response) => {
+    const user: any = req.params.userid;
+
+    try {
+        const findUser = await User.findOne({ _id: user });
+
+        if (!findUser) {
+            res.status(400).send("Cannot find user");
+        }
+
+        const filter = findUser?.address;
+
+        //Send Address JSON Data
+        const foundData = await Address.findOne({_id: filter});
+
+        res.status(200).send(foundData);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+export const get_usercontact = async (req: Request, res: Response) => {
+    const user: any = req.params.userid;
+
+    try {
+        const findUser = await User.findOne({ _id: user });
+
+        if (!findUser) {
+            res.status(400).send("Cannot find user");
+        }
+
+        const filter = findUser?.contact;
+
+        //Send Contact JSON Data
+        const foundData = await Contact.findOne({_id: filter});
+
+        res.status(200).send(foundData);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+export const get_useremergency = async (req: Request, res: Response) => {
+    const user: any = req.params.userid;
+
+    try {
+        const findUser = await User.findOne({ _id: user });
+
+        if (!findUser) {
+            res.status(400).send("Cannot find user");
+        }
+
+        const filter = findUser?.emContact;
+
+        //Send Emergency Contact JSON Data
+        const foundData = await EmContact.findOne({_id: filter});
+
+        res.status(200).send(foundData);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+export const get_userlegal = async (req: Request, res: Response) => {
+    const user: any = req.params.userid;
+
+    try {
+        const findUser = await User.findOne({ _id: user });
+
+        if (!findUser) {
+            res.status(400).send("Cannot find user");
+        }
+
+        const filter = findUser?.legal;
+
+        //Send Legal JSON Data
+        const foundData = await Legal.findOne({_id: filter});
+
+        res.status(200).send(foundData);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+export const get_userdocument = async (req: Request, res: Response) => {
+    const user: any = req.params.userid;
+
+    try {
+        const findUser = await User.findOne({ _id: user });
+
+        if (!findUser) {
+            res.status(400).send("Cannot find user");
+        }
+
+        const filter = findUser?.userDocs;
+
+        //Send Legal JSON Data
+        const foundData = await UserDocs.findOne({_id: filter});
+
+        res.status(200).send(foundData);
+    } catch (err) {
+        console.log(err);
+    }
 }

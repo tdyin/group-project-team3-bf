@@ -35,7 +35,7 @@ const Employment: React.FC = () => {
     //Send Data
     const onSubmit = async (data: Employment) => {
         const token = localStorage.getItem('token');
-
+        data.visaTitle = visaTitle;
         try {
             setDisabled(true);
             console.log("Sending Registration Data to Backend: ", data, {headers: { 'authorization': token }});

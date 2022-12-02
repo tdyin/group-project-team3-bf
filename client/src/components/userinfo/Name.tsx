@@ -80,7 +80,7 @@ const Name: React.FC = () => {
 
     const onSubmit = async (data: User) => {
         const token = localStorage.getItem('token');
-
+        data.gender = gender;
         try {
             setDisabled(true);
             console.log("Sending Registration Data to Backend: ", data, {headers: { 'authorization': token }});

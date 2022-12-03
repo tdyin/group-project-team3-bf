@@ -39,10 +39,9 @@ export default function LoginForm() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(values)
     axios.post('http://localhost:8080/login', values)
       .then((res: any) => {
-        console.log(res)
+        localStorage.setItem('token', res.data)
         navigate('/');
       })
       .catch((err: any) => {

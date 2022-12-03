@@ -42,7 +42,7 @@ const Pending: React.FC = () => {
         //Obtain User Data and set to variable
         const getUsers = async () => {
             try {
-                await axios.get(`${hrLink}/hiring/userinformation`, { headers: { 'authorization' : token }})
+                await axios.get(`${hrLink}/hiring/pending`, { headers: { 'authorization' : token }})
                 .then ((response: AxiosResponse) => {
                     setData(response.data);
                     console.log("Received data from HR UserInfo Link: " , response.data);
@@ -56,8 +56,8 @@ const Pending: React.FC = () => {
     }, [])
 
     //For Modals
+    const [modalData, setModalData] = useState(" ");
     const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
     const handleButtonClose = () => setOpen(false);
     const handleClose = (e: any, reason: "backdropClick" | "escapeKeyDown") => {
         if (reason !== 'backdropClick') {
@@ -67,54 +67,61 @@ const Pending: React.FC = () => {
 
     //Show table of Users. If click on View App, opens a modal with full info
     return (
-        <TableContainer component={Paper}>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Employee</TableCell>
-                        <TableCell>E-mail</TableCell>
-                        <TableCell>Check Application</TableCell>
-                    </TableRow>
-                </TableHead>
+        <>
+            <TableContainer component={Paper}>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Employee</TableCell>
+                            <TableCell>E-mail</TableCell>
+                            <TableCell>Check Application</TableCell>
+                        </TableRow>
+                    </TableHead>
 
-                <TableBody>
-                    {
-                        data ? (data.map((user: any) => {
-                            return (
-                                <TableRow key={user.email} >
-                                    <TableCell>{user.firstName} {user.lastName}</TableCell>
-                                    <TableCell>{user.email}</TableCell>
-                                    <TableCell><Button onClick={handleOpen}>View Application</Button></TableCell>
-                                    <Modal
-                                        open={open}
-                                        onClose={handleClose}
-                                        >
-                                            <Box                             
-                                                sx={{
-                                                position: 'absolute' as 'absolute',
-                                                top: '50%',
-                                                left: '50%',
-                                                transform: 'translate(-50%, -50%)',
-                                                width: 400,
-                                                bgcolor: 'black',
-                                                border: '2px solid #000',
-                                                boxShadow: 24,
-                                                pt: 2,
-                                                px: 4,
-                                                pb: 3,
-                                                color: 'white'
-                                            }}>
-                                                <ShowTabs userid={user._id} />
-                                                <Button onClick={handleButtonClose}>Close</Button>
-                                            </Box>    
-                                    </Modal>
-                                </TableRow>
-                            )
-                        })) : null
-                    }
-                </TableBody>
-            </Table>
-        </TableContainer>
+                    <TableBody>
+                        {
+                            data ? (data.map((user: any) => {
+                                return (
+                                    <TableRow key={user.email} >
+                                        <TableCell>{user.firstName} {user.lastName}</TableCell>
+                                        <TableCell>{user.email}</TableCell>
+                                        <TableCell><Button onClick={() => {
+                                            setModalData(user._id);
+                                            setOpen(true);}
+                                        }>View Application</Button></TableCell>
+                                        
+                                    </TableRow>
+                                )
+                            })) : null
+                        }
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <Modal
+            open={open}
+            onClose={handleClose}
+            sx={{overflow: "scroll"}}
+            >
+                <Box                             
+                    sx={{
+                    position: 'absolute' as 'absolute',
+                    top: '60%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    bgcolor: 'white',
+                    border: '2px solid #000',
+                    boxShadow: 24,
+                    pt: 2,
+                    px: 4,
+                    pb: 3,
+                    color: 'black',
+                    marginTop: "2.3rem"
+                }}>
+                    <ShowTabs userid={modalData} />
+                    <Button onClick={handleButtonClose} style={{float: "right"}}>Close</Button>
+                </Box>    
+            </Modal>
+        </>
     )
 }
 
@@ -184,7 +191,9 @@ const ShowTabs: React.FC<IUserID> = ({userid}: any) => {
             <TabPanel value={value} index={4}>
                 <Documents userid={userid} />
             </TabPanel>
-            <FormControl>
+            
+            <FormControl sx={{marginTop: "5rem"}}>
+                
                 <InputLabel id="statusLabel">Application Status</InputLabel>
                 <Select
                     labelId="statusLabel"
@@ -201,6 +210,7 @@ const ShowTabs: React.FC<IUserID> = ({userid}: any) => {
                     multiline
                     id="feedback"
                     rows={4}
+                    sx={{width: "50rem", marginTop: "1rem"}}
                     {...register('feedback')}
                 />
                 <Button type="submit" onClick={handleSubmit(onSubmit)} >Send Feedback</Button>

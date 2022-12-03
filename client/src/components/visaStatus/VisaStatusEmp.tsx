@@ -19,6 +19,10 @@
 //         if(data.data[0].legal.visaTitle === 'F1(CPT/OPT)') {
 //           setIsOpt(true)
 //         }
+          //  setOptReceipt(data.data[0].workAuthStatus.optReceipt);
+          //  setOptEad(data.data[0].workAuthStatus.optEad);
+          //  setI983(data.data[0].workAuthStatus.i983);
+          //  setI20(data.data[0].workAuthStatus.i20);
 //       })
 //       .catch((err) => {
 //         console.log(err)
@@ -147,9 +151,45 @@ const VisaStatusHr: React.FC = () => {
     var date2 = new Date();
     var Difference_In_Time = date1.getTime() - date2.getTime();
     var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-    console.log(Difference_In_Time, Difference_In_Days)
-
     return Math.floor(Difference_In_Days)
+  }
+
+  function getNextStep(user: any) {
+    if (user['workAuthStatus']['optReceipt'] === '') {
+      return 'Waiting for user to upload next document'
+    } else if (user['workAuthStatus']['optReceipt'] === 'pending') {
+      return "Waiting for HR approval"
+    } else if (user['workAuthStatus']['optReceipt'] === 'rejected') {
+      return 'Waiting for user to upload optReceipt again'
+    } else if (user['workAuthStatus']['optReceipt'] === 'approved' && user['workAuthStatus']['optEad'] === '') {
+      return 'Waiting for user to upload next document'
+    } else if (user['workAuthStatus']['optEad'] === 'pending') {
+      return "Waiting for HR approval"
+    } else if (user['workAuthStatus']['optEad'] === 'rejected') {
+      return 'Waiting for user to upload optEad again'
+    } else if (user['workAuthStatus']['optEad'] === 'approved' && user['workAuthStatus']['i983'] === '') {
+      return 'Waiting for user to upload next document'
+    } else if (user['workAuthStatus']['i983'] === 'pending') {
+      return "Waiting for HR approval"
+    } else if (user['workAuthStatus']['i983'] === 'rejected') {
+      return 'Waiting for user to upload i983 again'
+    } else if (user['workAuthStatus']['i983'] === 'approved' && user['workAuthStatus']['i20'] === '') {
+      return 'Waiting for user to upload next document'
+    } else if (user['workAuthStatus']['i20'] === 'pending') {
+      return "Waiting for HR approval"
+    } else if (user['workAuthStatus']['i20'] === 'rejected') {
+      return 'Waiting for user to upload i20 again'
+    } else {
+      return 'User has uploaded all documents'
+    }
+  }
+
+  function approveDoc(user: any) {
+
+  }
+
+  function rejectDoc(user: any) {
+
   }
 
   return (
@@ -174,8 +214,11 @@ const VisaStatusHr: React.FC = () => {
                       <StyledTableRow >{'startDate : ' + user['legal']['startDate'] + ' endDate : ' + user['legal']['endDate']}</StyledTableRow>
                       <StyledTableRow >{getRemainDay(user)}</StyledTableRow>
                     </StyledTableCell>
-                    <StyledTableCell>Next Step</StyledTableCell>
-                    <StyledTableCell>Action</StyledTableCell>
+                    <StyledTableCell>{getNextStep(user)}</StyledTableCell>
+                    <StyledTableCell>
+                      <button onClick={()=> approveDoc(user)}>Approve</button>
+                      <button onClick={()=> rejectDoc(user)}>Reject</button>
+                    </StyledTableCell>
                   </StyledTableRow>
                 )
             })}

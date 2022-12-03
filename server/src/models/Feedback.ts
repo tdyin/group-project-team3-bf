@@ -7,7 +7,7 @@ export interface IFeedback extends Document {
 }
 
 const FeedbackSchema: Schema = new Schema<IFeedback>({
-    user: { type: Schema.Types.ObjectId, ref: 'User' },
+    user: { type: Schema.Types.ObjectId, ref: 'User', unique: true },
     feedback: { type: String }
 })
 

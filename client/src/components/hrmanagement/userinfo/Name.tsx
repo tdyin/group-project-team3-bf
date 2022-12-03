@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography';
 import axios, { AxiosResponse } from 'axios';
 import { hrLink } from '../../Link';
 
@@ -23,7 +24,17 @@ interface IUserID {
 
 //Display Name information
 const Name: React.FC<IUserID> = ({userid}: any) => {
-    const [data, setData] = useState<User>();
+    const [data, setData] = useState<User>({
+        firstName: " ",
+        lastName: " ",
+        middleName: " ",
+        preferredName: " ",
+        profilePic: " ",
+        email: " ",
+        ssn: " ",
+        dob: " ",
+        gender: " " 
+    });
 
     //GET Data
     useEffect(() => {
@@ -32,11 +43,11 @@ const Name: React.FC<IUserID> = ({userid}: any) => {
             try {
                 await axios.get<User>(`${hrLink}/hiring/${userid}/userinfo/`, {headers: {'authorization': token}})
                 .then((response: AxiosResponse) => {
-                    console.log(response.data);
+                    console.log("Received User Info Data: " , response.data);
                     setData(response.data);
                 })
             } catch (err) {
-                console.log("Error Log: " , err);
+                console.log("Error Log in Nametsx: " , err);
             }
         }
         getData();
@@ -52,8 +63,8 @@ const Name: React.FC<IUserID> = ({userid}: any) => {
                 id="firstName"
                 fullWidth
                 disabled
-                value={data!.firstName}
-                style={{marginTop: "2rem"}}
+                value={data?.firstName}
+                style={{marginTop: "2em"}}
             />
 
             <TextField 
@@ -64,8 +75,8 @@ const Name: React.FC<IUserID> = ({userid}: any) => {
                 id="middleName"
                 fullWidth
                 disabled
-                value={data!.middleName}
-                style={{marginTop: "2rem"}}
+                value={data?.middleName}
+                style={{marginTop: "2em"}}
             />
 
             <TextField 
@@ -76,8 +87,8 @@ const Name: React.FC<IUserID> = ({userid}: any) => {
                 id="lastName"
                 fullWidth
                 disabled
-                value={data!.lastName}
-                style={{marginTop: "2rem"}}
+                value={data?.lastName}
+                style={{marginTop: "2em"}}
             />
 
             <TextField 
@@ -88,14 +99,13 @@ const Name: React.FC<IUserID> = ({userid}: any) => {
                 id="preferredName"
                 fullWidth
                 disabled
-                value={data!.preferredName}
-                style={{marginTop: "2rem"}}
+                value={data?.preferredName}
+                style={{marginTop: "2em"}}
             />
 
-            <Button>
-                Profile Picture
-            </Button>
-
+            <Typography sx={{ marginTop: "rem" }}>Profile Picture</Typography>
+            <img src={data?.profilePic} style={{height: "100px", width: "100px"}}/>
+            
             <TextField
                 label="E-mail Address"
                 size="small"
@@ -104,9 +114,9 @@ const Name: React.FC<IUserID> = ({userid}: any) => {
                 id="email"
                 autoComplete="off"
                 disabled
-                value={data!.email}
+                value={data?.email}
                 fullWidth
-                style={{marginTop: "2rem"}}
+                style={{marginTop: "2em"}}
             />
 
             <TextField 
@@ -117,8 +127,8 @@ const Name: React.FC<IUserID> = ({userid}: any) => {
                 id="ssn"
                 fullWidth
                 disabled
-                value={data!.ssn}
-                style={{marginTop: "2rem"}}
+                value={data?.ssn}
+                style={{marginTop: "2em"}}
             />
 
             <TextField 
@@ -129,8 +139,8 @@ const Name: React.FC<IUserID> = ({userid}: any) => {
                 id="dob"
                 fullWidth
                 disabled
-                value={data!.dob}
-                style={{marginTop: "2rem"}}
+                value={data?.dob}
+                style={{marginTop: "2em"}}
             />
 
             <TextField 
@@ -141,8 +151,8 @@ const Name: React.FC<IUserID> = ({userid}: any) => {
                 id="gender"
                 fullWidth
                 disabled
-                value={data!.gender}
-                style={{marginTop: "2rem"}}
+                value={data?.gender}
+                style={{marginTop: "2em"}}
             />
         </Box>
     )

@@ -48,7 +48,7 @@ const Emergency: React.FC<IUserID> = ({userid}: any) => {
                 id="firstName"
                 fullWidth
                 disabled
-                value={data!.firstName}
+                value={data?.firstName}
                 style={{marginTop: "2rem"}}
             />
 
@@ -60,7 +60,7 @@ const Emergency: React.FC<IUserID> = ({userid}: any) => {
                 id="middleName"
                 fullWidth
                 disabled
-                value={data!.middleName}
+                value={data?.middleName}
                 style={{marginTop: "2rem"}}
             />
 
@@ -72,7 +72,7 @@ const Emergency: React.FC<IUserID> = ({userid}: any) => {
                 id="lastName"
                 fullWidth
                 disabled
-                value={data!.lastName}
+                value={data?.lastName}
                 style={{marginTop: "2rem"}}
             />
 
@@ -84,7 +84,7 @@ const Emergency: React.FC<IUserID> = ({userid}: any) => {
                 id="phone"
                 fullWidth
                 disabled
-                value={data!.phone}
+                value={data?.phone}
                 style={{marginTop: "2rem"}}
             />      
 
@@ -96,7 +96,7 @@ const Emergency: React.FC<IUserID> = ({userid}: any) => {
                 id="email"
                 fullWidth
                 disabled
-                value={data!.email}
+                value={data?.email}
                 style={{marginTop: "2rem"}}
             />   
 
@@ -108,7 +108,7 @@ const Emergency: React.FC<IUserID> = ({userid}: any) => {
                 id="relationship"
                 fullWidth
                 disabled
-                value={data!.relationship}
+                value={data?.relationship}
                 style={{marginTop: "2rem"}}
             />         
         </Box>

@@ -44,7 +44,7 @@ const Documents: React.FC<IUserID> = ({userid}: any) => {
                 id="driverLicense"
                 fullWidth
                 disabled
-                value={data!.driverLicense}
+                value={data?.driverLicense}
                 style={{marginTop: "2rem"}}
             />
 
@@ -56,7 +56,7 @@ const Documents: React.FC<IUserID> = ({userid}: any) => {
                 id="street"
                 fullWidth
                 disabled
-                value={data!.workAuth}
+                value={data?.workAuth}
                 style={{marginTop: "2rem"}}
             />
         </Box>

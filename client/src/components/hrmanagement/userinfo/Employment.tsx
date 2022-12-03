@@ -45,7 +45,7 @@ const Employment: React.FC<IUserID> = ({userid}: any) => {
                 id="visaTitle"
                 fullWidth
                 disabled
-                value={data!.visaTitle}
+                value={data?.visaTitle}
                 style={{marginTop: "2rem"}}
             />
 
@@ -57,7 +57,7 @@ const Employment: React.FC<IUserID> = ({userid}: any) => {
                 id="startDate"
                 fullWidth
                 disabled
-                value={data!.startDate}
+                value={data?.startDate}
                 style={{marginTop: "2rem"}}
             />
 
@@ -69,7 +69,7 @@ const Employment: React.FC<IUserID> = ({userid}: any) => {
                 id="endDate"
                 fullWidth
                 disabled
-                value={data!.endDate}
+                value={data?.endDate}
                 style={{marginTop: "2rem"}}
             />
         </Box>

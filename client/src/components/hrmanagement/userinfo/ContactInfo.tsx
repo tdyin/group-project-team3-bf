@@ -44,7 +44,7 @@ const ContactInfo: React.FC<IUserID> = ({userid}: any) => {
                 id="bldgApt"
                 fullWidth
                 disabled
-                value={data!.cellPhone}
+                value={data?.cellPhone}
                 style={{marginTop: "2rem"}}
             />
 
@@ -56,7 +56,7 @@ const ContactInfo: React.FC<IUserID> = ({userid}: any) => {
                 id="street"
                 fullWidth
                 disabled
-                value={data!.workPhone}
+                value={data?.workPhone}
                 style={{marginTop: "2rem"}}
             />
         </Box>

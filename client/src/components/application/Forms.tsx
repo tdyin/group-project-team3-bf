@@ -10,7 +10,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { useState } from 'react'
+import axios from 'axios'
 import { useForm, Controller, SubmitHandler } from 'react-hook-form'
 
 type Props = {
@@ -48,7 +48,13 @@ interface IFormInput {
     model: string
     color: string
   }
-  legal: {}
+  legal: {
+    ifPermanent: string
+    permanentType: string
+    visaTitle: string
+    startDate: string
+    endDate: string
+  }
   referInfo: {
     firstName: string
     lastName: string
@@ -73,11 +79,12 @@ export default function Forms({
   handleNext,
   handleBack,
 }: Props) {
-  const [ifPermanent, setifPermanent] = useState('no')
-  const [permanent, setPermanent] = useState('')
-  const [visa, setVisa] = useState('')
-
-  const { handleSubmit, watch, control, formState } = useForm<IFormInput>({
+  const {
+    handleSubmit,
+    watch,
+    control,
+    formState: { errors },
+  } = useForm<IFormInput>({
     defaultValues: {
       personalInfo: {
         firstName: '',
@@ -88,34 +95,62 @@ export default function Forms({
         ssn: '',
         gender: 'male',
       },
-      address: {},
-      contact: {},
+      address: {
+        street: '',
+        bldgApt: '',
+        city: '',
+        state: '',
+        zip: '',
+      },
+      contact: {
+        cellPhone: '',
+        workPhone: '',
+      },
       car: {
-        ifLicese: 'no',
-        ifCar: 'no',
+        ifLicese: 'false',
+        ifCar: 'false',
         licenseNum: '',
         expDate: new Date().toISOString().slice(0, 10),
         make: '',
         model: '',
         color: '',
       },
-      legal: {},
-      referInfo: {},
-      emeContact: {},
+      legal: {
+        ifPermanent: 'true',
+        permanentType: 'Citizen',
+        visaTitle: '',
+        startDate: new Date().toISOString().slice(0, 10),
+        endDate: new Date().toISOString().slice(0, 10),
+      },
+      referInfo: {
+        firstName: '',
+        lastName: '',
+        middleName: '',
+        phone: '',
+        email: '',
+        relationship: '',
+      },
+      emeContact: {
+        firstName: '',
+        lastName: '',
+        middleName: '',
+        phone: '',
+        email: '',
+        relationship: '',
+      },
     },
   })
 
   const watchIfCar = watch('car.ifCar')
   const watchIfLicese = watch('car.ifLicese')
+  const watchIfPermanent = watch('legal.ifPermanent')
+  const watchVisa = watch('legal.visaTitle')
 
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log('onSubmit', {
-      formState: {
-        ...formState,
-      },
-      data,
-    })
-    return null
+  const onSubmit: SubmitHandler<IFormInput> = async (formData) => {
+    const data = {
+      formData: formData,
+    }
+    await axios.put('/application', data)
   }
 
   return (
@@ -130,7 +165,7 @@ export default function Forms({
               render={({ field }) => (
                 <TextField {...field} type='text' label='First Name' />
               )}
-              rules={{ required: true }}
+              rules={{ required: 'First name', maxLength: 3 }}
             />
             <Controller
               name='personalInfo.lastName'
@@ -291,12 +326,12 @@ export default function Forms({
                 render={({ field }) => (
                   <RadioGroup {...field}>
                     <FormControlLabel
-                      value='yes'
+                      value='true'
                       control={<Radio />}
                       label='Yes'
                     />
                     <FormControlLabel
-                      value='no'
+                      value='false'
                       control={<Radio />}
                       label='No'
                     />
@@ -304,7 +339,7 @@ export default function Forms({
                 )}
               />
             </FormControl>
-            {watchIfLicese === 'yes' && (
+            {watchIfLicese === 'true' && (
               <>
                 <TextField
                   label='License Number'
@@ -346,12 +381,12 @@ export default function Forms({
                 render={({ field }) => (
                   <RadioGroup {...field}>
                     <FormControlLabel
-                      value='yes'
+                      value={true}
                       control={<Radio />}
                       label='Yes'
                     />
                     <FormControlLabel
-                      value='no'
+                      value={false}
                       control={<Radio />}
                       label='No'
                     />
@@ -359,11 +394,29 @@ export default function Forms({
                 )}
               />
             </FormControl>
-            {watchIfCar === 'yes' && (
+            {watchIfCar === 'true' && (
               <>
-                <TextField label='Make' type='text' name='make' />
-                <TextField label='Model' type='text' name='model' />
-                <TextField label='Color' type='text' name='color' />
+                <Controller
+                  name='car.make'
+                  control={control}
+                  render={({ field }) => (
+                    <TextField {...field} type='text' label='Make' />
+                  )}
+                />
+                <Controller
+                  name='car.model'
+                  control={control}
+                  render={({ field }) => (
+                    <TextField {...field} type='text' label='Model' />
+                  )}
+                />
+                <Controller
+                  name='car.color'
+                  control={control}
+                  render={({ field }) => (
+                    <TextField {...field} type='text' label='Color' />
+                  )}
+                />
               </>
             )}
           </Stack>
@@ -376,35 +429,49 @@ export default function Forms({
               <Typography variant='body1' gutterBottom>
                 Are you a citizen or permanent resident of the U.S?
               </Typography>
-              <RadioGroup
-                value={ifPermanent}
-                onChange={(e) => setifPermanent(e.target.value)}
-              >
-                <FormControlLabel value='yes' control={<Radio />} label='Yes' />
-                <FormControlLabel value='no' control={<Radio />} label='No' />
-              </RadioGroup>
-            </FormControl>
-            {ifPermanent === 'yes' ? (
-              <>
-                <FormControl>
-                  <RadioGroup
-                    value={permanent}
-                    onChange={(e) => setPermanent(e.target.value)}
-                  >
-                    <Typography variant='body1' gutterBottom>
-                      You are:
-                    </Typography>
+              <Controller
+                name='legal.ifPermanent'
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup {...field}>
                     <FormControlLabel
-                      value='Citizen'
+                      value={true}
                       control={<Radio />}
-                      label='Citizen'
+                      label='Yes'
                     />
                     <FormControlLabel
-                      value='Green Card'
+                      value={false}
                       control={<Radio />}
-                      label='Green Card Holder'
+                      label='No'
                     />
                   </RadioGroup>
+                )}
+              />
+            </FormControl>
+            {watchIfPermanent === 'true' ? (
+              <>
+                <FormControl>
+                  <Typography variant='body1' gutterBottom>
+                    You are:
+                  </Typography>
+                  <Controller
+                    name='legal.permanentType'
+                    control={control}
+                    render={({ field }) => (
+                      <RadioGroup {...field}>
+                        <FormControlLabel
+                          value='Citizen'
+                          control={<Radio />}
+                          label='Citizen'
+                        />
+                        <FormControlLabel
+                          value='Green Card'
+                          control={<Radio />}
+                          label='Green Card Holder'
+                        />
+                      </RadioGroup>
+                    )}
+                  />
                 </FormControl>
               </>
             ) : (
@@ -413,61 +480,80 @@ export default function Forms({
                   <Typography variant='body1' gutterBottom>
                     What is your work authorization?
                   </Typography>
-                  <RadioGroup
-                    value={visa}
-                    onChange={(e) => setVisa(e.target.value)}
-                  >
-                    <FormControlLabel
-                      value='H1-B'
-                      control={<Radio />}
-                      label='H1-B'
-                    />
-                    <FormControlLabel
-                      value='L2'
-                      control={<Radio />}
-                      label='L2'
-                    />
-                    <FormControlLabel
-                      value='F1(CPT/OPT)'
-                      control={<Radio />}
-                      label='F1(CPT/OPT)'
-                    />
-                    <FormControlLabel
-                      value='H4'
-                      control={<Radio />}
-                      label='H4'
-                    />
-                    <FormControlLabel
-                      value='Other'
-                      control={<Radio />}
-                      label='Other'
-                    />
-                  </RadioGroup>
-                </FormControl>
-                {visa === 'Other' ? (
-                  <TextField
-                    label='Work Authorization'
-                    type='text'
-                    name='visaTitle'
+                  <Controller
+                    name='legal.visaTitle'
+                    control={control}
+                    render={({ field }) => (
+                      <RadioGroup {...field}>
+                        <FormControlLabel
+                          value='H1-B'
+                          control={<Radio />}
+                          label='H1-B'
+                        />
+                        <FormControlLabel
+                          value='L2'
+                          control={<Radio />}
+                          label='L2'
+                        />
+                        <FormControlLabel
+                          value='F1(CPT/OPT)'
+                          control={<Radio />}
+                          label='F1(CPT/OPT)'
+                        />
+                        <FormControlLabel
+                          value='H4'
+                          control={<Radio />}
+                          label='H4'
+                        />
+                        <FormControlLabel
+                          value='Other'
+                          control={<Radio />}
+                          label='Other'
+                        />
+                      </RadioGroup>
+                    )}
                   />
-                ) : (
-                  <></>
+                </FormControl>
+                {watchVisa === 'Other' && (
+                  <Controller
+                    name='legal.visaTitle'
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                        {...field}
+                        type='text'
+                        label='Work Authorization'
+                      />
+                    )}
+                  />
                 )}
-                <TextField
-                  label='Start Date'
-                  type='date'
-                  name='startDate'
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
+                <Controller
+                  name='legal.startDate'
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      type='date'
+                      label='Start Date'
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  )}
                 />
-                <TextField
-                  label='End Date'
-                  type='date'
-                  name='endDate'
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
+                <Controller
+                  name='legal.endDate'
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      type='date'
+                      label='Start Date'
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  )}
                 />
                 <label htmlFor='btn-upload'>
                   <input
@@ -495,29 +581,103 @@ export default function Forms({
             <Typography variant='h6' gutterBottom>
               Optional
             </Typography>
-            <TextField label='First Name' type='text' name='firstName' />
-            <TextField label='Last Name' type='text' name='lastName' />
-            <TextField label='Middle Name' type='text' name='middleName' />
-            <TextField label='Phone' type='text' name='phone' />
-            <TextField label='Email' type='text' name='email' />
-            <TextField label='Relationship' type='text' name='relationship' />
+            <Controller
+              name='referInfo.firstName'
+              control={control}
+              render={({ field }) => (
+                <TextField {...field} type='text' label='First Name' />
+              )}
+            />
+            <Controller
+              name='referInfo.lastName'
+              control={control}
+              render={({ field }) => (
+                <TextField {...field} type='text' label='First Name' />
+              )}
+            />
+            <Controller
+              name='referInfo.middleName'
+              control={control}
+              render={({ field }) => (
+                <TextField {...field} type='text' label='Last Name' />
+              )}
+            />
+            <Controller
+              name='referInfo.phone'
+              control={control}
+              render={({ field }) => (
+                <TextField {...field} type='text' label='Phone' />
+              )}
+            />
+            <Controller
+              name='referInfo.email'
+              control={control}
+              render={({ field }) => (
+                <TextField {...field} type='text' label='Email' />
+              )}
+            />
+            <Controller
+              name='referInfo.relationship'
+              control={control}
+              render={({ field }) => (
+                <TextField {...field} type='text' label='Relationship' />
+              )}
+            />
           </Stack>
         )}
 
         {/* EmeContact */}
         {activeStep === 6 && (
           <Stack spacing={3}>
-            <TextField label='First Name' type='text' name='firstName' />
-            <TextField label='Last Name' type='text' name='lastName' />
-            <TextField label='Middle Name' type='text' name='middleName' />
-            <TextField label='Phone' type='text' name='phone' />
-            <TextField label='Email' type='text' name='email' />
-            <TextField label='Relationship' type='text' name='relationship' />
+            <Controller
+              name='emeContact.firstName'
+              control={control}
+              render={({ field }) => (
+                <TextField {...field} type='text' label='First Name' />
+              )}
+            />
+            <Controller
+              name='emeContact.lastName'
+              control={control}
+              render={({ field }) => (
+                <TextField {...field} type='text' label='First Name' />
+              )}
+            />
+            <Controller
+              name='emeContact.middleName'
+              control={control}
+              render={({ field }) => (
+                <TextField {...field} type='text' label='Last Name' />
+              )}
+            />
+            <Controller
+              name='emeContact.phone'
+              control={control}
+              render={({ field }) => (
+                <TextField {...field} type='text' label='Phone' />
+              )}
+            />
+            <Controller
+              name='emeContact.email'
+              control={control}
+              render={({ field }) => (
+                <TextField {...field} type='text' label='Email' />
+              )}
+            />
+            <Controller
+              name='emeContact.relationship'
+              control={control}
+              render={({ field }) => (
+                <TextField {...field} type='text' label='Relationship' />
+              )}
+            />
           </Stack>
         )}
 
         {/* Summary */}
         {activeStep === 7 && <div>Summary</div>}
+
+        {/* Buttons */}
         <Box marginTop={2}>
           {activeStep !== steps.length ? (
             <Button

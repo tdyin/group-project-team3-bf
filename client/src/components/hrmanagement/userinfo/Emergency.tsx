@@ -50,6 +50,7 @@ const Emergency: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.firstName}
                 style={{marginTop: "2rem"}}
+                InputLabelProps={{ shrink: true }}
             />
 
             <TextField 
@@ -62,6 +63,7 @@ const Emergency: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.middleName}
                 style={{marginTop: "2rem"}}
+                InputLabelProps={{ shrink: true }}
             />
 
             <TextField 
@@ -74,6 +76,7 @@ const Emergency: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.lastName}
                 style={{marginTop: "2rem"}}
+                InputLabelProps={{ shrink: true }}
             />
 
             <TextField 
@@ -86,6 +89,7 @@ const Emergency: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.phone}
                 style={{marginTop: "2rem"}}
+                InputLabelProps={{ shrink: true }}
             />      
 
             <TextField 
@@ -98,6 +102,7 @@ const Emergency: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.email}
                 style={{marginTop: "2rem"}}
+                InputLabelProps={{ shrink: true }}
             />   
 
             <TextField 
@@ -110,6 +115,7 @@ const Emergency: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.relationship}
                 style={{marginTop: "2rem"}}
+                InputLabelProps={{ shrink: true }}
             />         
         </Box>
     )

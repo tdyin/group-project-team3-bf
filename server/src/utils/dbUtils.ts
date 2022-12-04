@@ -10,6 +10,7 @@ import ReferInfo from '../models/ReferInfo'
 import UserDocs from '../models/UserDocs'
 import UserInfo from '../models/UserInfo'
 import User from '../models/User'
+import WorkAuthStatus from '../models/WorkAuthStatus';
 
 type DocIds = {
   addressId: ObjectId
@@ -20,6 +21,7 @@ type DocIds = {
   referInfoId: ObjectId
   userDocsId: ObjectId
   userInfoId: ObjectId
+  workAuthId: ObjectId
 }
 
 export async function dropAllCollection() {
@@ -33,6 +35,7 @@ export async function dropAllCollection() {
     UserDocs.collection.drop(),
     UserInfo.collection.drop(),
     User.collection.drop(),
+    WorkAuthStatus.collection.drop()
   ])
 }
 
@@ -80,13 +83,21 @@ export async function createDefaultDocs(): Promise<DocIds> {
   })
   const userDocs = new UserDocs({ driverlicense: '', workAuth: '' })
   const userInfo = new UserInfo({
-    firsName: '',
+    firstName: '',
     lastName: '',
     middleName: '',
     preferredName: '',
     ssn: '0',
     dob: new Date(),
     gender: '',
+  })
+
+  const workAuthStatus = new WorkAuthStatus({
+    optReceipt: '',
+    optEat: '',
+    i983: '',
+    i20: '', 
+    feedback: ''
   })
 
   await Promise.all([
@@ -98,6 +109,7 @@ export async function createDefaultDocs(): Promise<DocIds> {
     await referInfo.save(),
     await userDocs.save(),
     await userInfo.save(),
+    await workAuthStatus.save()
   ])
 
   return {
@@ -109,6 +121,7 @@ export async function createDefaultDocs(): Promise<DocIds> {
     referInfoId: referInfo._id,
     userDocsId: userDocs._id,
     userInfoId: userInfo._id,
+    workAuthId: workAuthStatus._id
   }
 }
 
@@ -156,7 +169,7 @@ export async function createRandomDocs(): Promise<DocIds> {
   })
   const userDocs = new UserDocs({ driverlicense: '', workAuth: '' })
   const userInfo = new UserInfo({
-    firsName: faker.name.firstName(),
+    firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
     middleName: faker.name.middleName(),
     preferredName: '',
@@ -176,6 +189,14 @@ export async function createRandomDocs(): Promise<DocIds> {
     await userInfo.save(),
   ])
 
+  const workAuthStatus = new WorkAuthStatus({
+    optReceipt: '',
+    optEat: '',
+    i983: '',
+    i20: '', 
+    feedback: ''
+  })
+
   return {
     addressId: address._id,
     carId: car._id,
@@ -185,5 +206,6 @@ export async function createRandomDocs(): Promise<DocIds> {
     referInfoId: referInfo._id,
     userDocsId: userDocs._id,
     userInfoId: userInfo._id,
+    workAuthId: workAuthStatus._id
   }
 }

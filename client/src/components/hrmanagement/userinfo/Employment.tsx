@@ -47,6 +47,7 @@ const Employment: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.visaTitle}
                 style={{marginTop: "2rem"}}
+                InputLabelProps={{ shrink: true }}
             />
 
             <TextField 
@@ -59,6 +60,7 @@ const Employment: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.startDate}
                 style={{marginTop: "2rem"}}
+                InputLabelProps={{ shrink: true }}
             />
 
             <TextField 
@@ -71,6 +73,7 @@ const Employment: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.endDate}
                 style={{marginTop: "2rem"}}
+                InputLabelProps={{ shrink: true }}
             />
         </Box>
     )

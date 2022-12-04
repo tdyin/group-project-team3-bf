@@ -46,6 +46,7 @@ const ContactInfo: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.cellPhone}
                 style={{marginTop: "2rem"}}
+                InputLabelProps={{ shrink: true }}
             />
 
             <TextField 
@@ -58,6 +59,7 @@ const ContactInfo: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.workPhone}
                 style={{marginTop: "2rem"}}
+                InputLabelProps={{ shrink: true }}
             />
         </Box>
     )

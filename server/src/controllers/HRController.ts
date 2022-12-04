@@ -14,11 +14,10 @@ import UserDocs from '../models/UserDocs';
 export const get_hiring = async (req: Request, res: Response) => {
     try {
         //Get full list of Status Data, and display to front end
-        await Status.find({}, (err: unknown, users: any ) => {
-            res.status(200).send(users);
-        })
+        const status = await Status.find({});
+        res.status(200).send(status);
     } catch (err) {
-        res.status(409).send(err);
+        console.log("Error in get_hiring: ", err);
     }
 }
 
@@ -38,7 +37,7 @@ export const post_email = async (req: Request, res: Response) => {
 
     if(user) {
         status = true;
-    }
+    } 
 
     //Save User to Status Schema; Used to determine if user is registered or not
     const statusData = new Status ({
@@ -84,17 +83,41 @@ export const post_email = async (req: Request, res: Response) => {
     })
 }
 
+//Get all users in pending state
 export const get_userinfo = async (req: Request, res: Response) => {
     try {
-        const users = await User.find({});
+        const users = await User.find({stage: 1});
         res.status(200).send(users);
     } catch (err) {
         console.log("get_userinfo HR Error: ", err);
     }
 }
 
+//Get all users in Accepted state
+export const get_accepted = async (req: Request, res: Response) => {
+    try {
+        const users = await User.find({stage: 3});
+        res.status(200).send(users);
+    } catch (err) {
+        console.log("get_accepted HR Error: ", err);
+    }
+}
+
+//Get all users in Rejected
+export const get_rejected = async (req: Request, res: Response) => {
+    try {
+        const users = await User.find({stage: 2});
+        res.status(200).send(users);
+    } catch (err) {
+        console.log("get_rejected HR Error: ", err);
+    }
+}
+
 export const post_feedback = async (req: Request, res: Response) => {
     try {
+
+        console.log("Received Feedback post_feedback: " , req.body.feedback)
+        console.log("User Params: " , req.params.userid)
         //Create new feedback object
         const feedback = new Feedback({
             user: req.params.userid,
@@ -117,6 +140,8 @@ export const post_feedback = async (req: Request, res: Response) => {
 export const get_feedback = async (req: Request, res: Response) => {
     try {
         const feedback = await Feedback.findOne({user: req.params.userid});
+        console.log("Feedback being sent from get_feedback: " ,feedback)
+        console.log("User Params get_feedback: " , req.params.userid)
         res.status(200).send(feedback);
     } catch (err) {
         console.log("Error in get_feedback: " , err);

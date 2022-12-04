@@ -47,7 +47,7 @@ const Address: React.FC<IUserID> = ({userid}: any) => {
                 id="bldgApt"
                 fullWidth
                 disabled
-                value={data!.bldgApt}
+                value={data?.bldgApt}
                 style={{marginTop: "2rem"}}
             />
 
@@ -59,7 +59,7 @@ const Address: React.FC<IUserID> = ({userid}: any) => {
                 id="street"
                 fullWidth
                 disabled
-                value={data!.street}
+                value={data?.street}
                 style={{marginTop: "2rem"}}
             />
 
@@ -71,7 +71,7 @@ const Address: React.FC<IUserID> = ({userid}: any) => {
                 id="city"
                 fullWidth
                 disabled
-                value={data!.city}
+                value={data?.city}
                 style={{marginTop: "2rem"}}
             />
 
@@ -83,7 +83,7 @@ const Address: React.FC<IUserID> = ({userid}: any) => {
                 id="state"
                 fullWidth
                 disabled
-                value={data!.state}
+                value={data?.state}
                 style={{marginTop: "2rem"}}
             />
 
@@ -95,7 +95,7 @@ const Address: React.FC<IUserID> = ({userid}: any) => {
                 id="zip"
                 autoComplete="off"
                 disabled
-                value={data!.zip}
+                value={data?.zip}
                 fullWidth
                 style={{marginTop: "2rem"}}
             />

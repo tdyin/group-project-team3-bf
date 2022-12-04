@@ -33,6 +33,7 @@ const RegisterToken: React.FC = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<Email>();
 
     const [data, setData] = useState<Hiring>();
+    const [status, setStatus] = useState("Unregistered");
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -108,8 +109,8 @@ const RegisterToken: React.FC = () => {
                                 <TableRow key={user.email} >
                                     <TableCell>{user.email}</TableCell>
                                     <TableCell>{user.firstName} {user.lastName}</TableCell>
-                                    <TableCell><Link href={`/register/${user.token}`}>{user.token}</Link></TableCell>
-                                    <TableCell>{user.status}</TableCell>
+                                    <TableCell style={{whiteSpace: 'normal', wordBreak: 'break-word'}}><Link href={`/register/${user.token}`}>{user.token}</Link></TableCell>
+                                    <TableCell>{String(user.status)}</TableCell>
                                 </TableRow>
                             )
                         })) : null

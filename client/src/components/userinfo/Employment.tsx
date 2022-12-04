@@ -25,9 +25,9 @@ const Employment: React.FC = () => {
     const [startDate, setStart] = useState(" ");
     const [endDate, setEnd] = useState(" ");
     const [defaultData, setDefaultData] = useState<Employment>({
-        visaTitle: "",
-        startDate: "",
-        endDate: ""
+        visaTitle: " ",
+        startDate: " ",
+        endDate: " "
     })
     //Disable fields until Edit button clicked
     const [disabled, setDisabled] = useState(true);

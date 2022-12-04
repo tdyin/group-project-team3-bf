@@ -108,8 +108,13 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { AssistantDirection } from '@mui/icons-material';
 
-const VisaStatusHr: React.FC = () => {
+interface asd {
+  [key: string]: any
+}
+
+const VisaStatusEmp: React.FC = () => {
   const [users, setUsers] = useState([] as any[])
 
   useEffect(() => {
@@ -147,7 +152,7 @@ const VisaStatusHr: React.FC = () => {
   }));
 
   function getRemainDay(user: any) {
-    var date1 = new Date(user['legal']['endDate']);
+    var date1 = new Date(user['user']['legal']['endDate']);
     var date2 = new Date();
     var Difference_In_Time = date1.getTime() - date2.getTime();
     var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
@@ -155,29 +160,29 @@ const VisaStatusHr: React.FC = () => {
   }
 
   function getNextStep(user: any) {
-    if (user['workAuthStatus']['optReceipt'] === '') {
+    if (user['optReceipt'] === '') {
       return 'Waiting for user to upload next document'
-    } else if (user['workAuthStatus']['optReceipt'] === 'pending') {
+    } else if (user['optReceipt'] === 'pending') {
       return "Waiting for HR approval"
-    } else if (user['workAuthStatus']['optReceipt'] === 'rejected') {
+    } else if (user['optReceipt'] === 'rejected') {
       return 'Waiting for user to upload optReceipt again'
-    } else if (user['workAuthStatus']['optReceipt'] === 'approved' && user['workAuthStatus']['optEad'] === '') {
+    } else if (user['optReceipt'] === 'approved' && user['optEad'] === '') {
       return 'Waiting for user to upload next document'
-    } else if (user['workAuthStatus']['optEad'] === 'pending') {
+    } else if (user['optEad'] === 'pending') {
       return "Waiting for HR approval"
-    } else if (user['workAuthStatus']['optEad'] === 'rejected') {
+    } else if (user['optEad'] === 'rejected') {
       return 'Waiting for user to upload optEad again'
-    } else if (user['workAuthStatus']['optEad'] === 'approved' && user['workAuthStatus']['i983'] === '') {
+    } else if (user['optEad'] === 'approved' && user['i983'] === '') {
       return 'Waiting for user to upload next document'
-    } else if (user['workAuthStatus']['i983'] === 'pending') {
+    } else if (user['i983'] === 'pending') {
       return "Waiting for HR approval"
-    } else if (user['workAuthStatus']['i983'] === 'rejected') {
+    } else if (user['i983'] === 'rejected') {
       return 'Waiting for user to upload i983 again'
-    } else if (user['workAuthStatus']['i983'] === 'approved' && user['workAuthStatus']['i20'] === '') {
+    } else if (user['i983'] === 'approved' && user['i20'] === '') {
       return 'Waiting for user to upload next document'
-    } else if (user['workAuthStatus']['i20'] === 'pending') {
+    } else if (user['i20'] === 'pending') {
       return "Waiting for HR approval"
-    } else if (user['workAuthStatus']['i20'] === 'rejected') {
+    } else if (user['i20'] === 'rejected') {
       return 'Waiting for user to upload i20 again'
     } else {
       return 'User has uploaded all documents'
@@ -185,6 +190,20 @@ const VisaStatusHr: React.FC = () => {
   }
 
   function approveDoc(user: any) {
+    // const data = {}
+    // for (let key in user) {
+    //   if (user[key] === 'pending') {
+    //     data.key = 'approved'
+    //   }
+    // }
+
+    axios.put(`http://localhost:8080/emp/info/visa/${user['_id']}`)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
 
   }
 
@@ -208,13 +227,13 @@ const VisaStatusHr: React.FC = () => {
             {users.map((user: any, i) => {
                 return (
                   <StyledTableRow key={i}>
-                    <StyledTableCell>{user['userInfo']['firstName'] + ' ' + user['userInfo']['lastName']}</StyledTableCell>
+                    <StyledTableCell>{user['user']["userInfo"]['lastName']}</StyledTableCell>
                     <StyledTableCell>
-                      <StyledTableRow >{user['legal']['visaTitle']}</StyledTableRow>
-                      <StyledTableRow >{'startDate : ' + user['legal']['startDate'] + ' endDate : ' + user['legal']['endDate']}</StyledTableRow>
+                      <StyledTableRow >{user['user']['legal']['visaTitle']}</StyledTableRow>
+                      <StyledTableRow >{'startDate : ' + user['user']['legal']['startDate'] + ' endDate : ' + user['user']['legal']['endDate']}</StyledTableRow>
                       <StyledTableRow >{getRemainDay(user)}</StyledTableRow>
                     </StyledTableCell>
-                    <StyledTableCell>{}</StyledTableCell>
+                    <StyledTableCell>{getNextStep(user)}</StyledTableCell>
                     <StyledTableCell>
                       <button onClick={()=> approveDoc(user)}>Approve</button>
                       <button onClick={()=> rejectDoc(user)}>Reject</button>
@@ -230,4 +249,4 @@ const VisaStatusHr: React.FC = () => {
   )
 }
 
-export default VisaStatusHr
+export default VisaStatusEmp

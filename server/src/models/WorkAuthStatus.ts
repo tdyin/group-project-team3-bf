@@ -11,7 +11,7 @@ export interface IWorkAuthStatus extends Document {
 }
 
 const WorkAuthStatusSchema: Schema = new Schema<IWorkAuthStatus>({
-    user: { type: Schema.Types.ObjectId, ref: 'User'},
+    user: { type: Schema.Types.ObjectId, ref: 'User', unique: true },
     optReceipt: { type: String },
     optEad: { type: String },
     i983: { type: String },
@@ -19,4 +19,4 @@ const WorkAuthStatusSchema: Schema = new Schema<IWorkAuthStatus>({
     feedback: { type: String },
 })
 
-export default mongoose.model<IWorkAuthStatus>('WorkAuthStatus', WorkAuthStatusSchema, 'WorkAuthStatus');
+export default mongoose.model<IWorkAuthStatus>('WorkAuthStatus', WorkAuthStatusSchema, 'workAuthStatus');

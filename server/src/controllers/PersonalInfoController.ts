@@ -297,11 +297,10 @@ export const get_document = async (req: Request, res: Response) => {
 //---------
 export const getAllDoc = async(req: Request, res: Response) => {
     try{
-        const users = await User.find({}).populate('userInfo').populate('legal');
-        console.log('this is user:',users)
-        const status = await WorkAuthStatus.find({})
-        console.log('this is status:', status)
-        res.send(users);
+        // const users = await User.find({}).populate('userInfo').populate('legal');
+        // console.log('this is user:',users)
+        const status = await WorkAuthStatus.find({}).populate({path:'user', populate:{path:'userInfo'}}).populate({path:'user', populate:{path:'legal'}});
+        res.send(status);
     } catch(err) {
         res.status(400).send(err);
     }
@@ -309,9 +308,26 @@ export const getAllDoc = async(req: Request, res: Response) => {
 
 export const getUserDoc = async(req: Request, res: Response) => {
     try{
-        const data = [];
         const user = await User.find({ username: req.body.username}).populate('legal').populate('workAuthStatus');
         res.send(user);
+    } catch(err) {
+        res.status(400).send(err);
+    }
+}
+
+export const put_status = async(req: Request, res: Response) => {
+    const filter = {_id: req.params.uid}
+    console.log(req.body)
+    try{
+        const user = await WorkAuthStatus.findOne({ _id: req.params.uid })
+        // for (let key in user) {
+        //     if (user[key] === 'pending') {
+        //         console.log(req.body.move)
+        //        await WorkAuthStatus.updateOne({ key: req.body.move});
+        //        await user.save();
+        //     }
+        // }
+        console.log(user)
     } catch(err) {
         res.status(400).send(err);
     }

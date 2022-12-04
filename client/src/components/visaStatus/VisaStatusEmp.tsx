@@ -214,7 +214,7 @@ const VisaStatusHr: React.FC = () => {
                       <StyledTableRow >{'startDate : ' + user['legal']['startDate'] + ' endDate : ' + user['legal']['endDate']}</StyledTableRow>
                       <StyledTableRow >{getRemainDay(user)}</StyledTableRow>
                     </StyledTableCell>
-                    <StyledTableCell>{getNextStep(user)}</StyledTableCell>
+                    <StyledTableCell>{}</StyledTableCell>
                     <StyledTableCell>
                       <button onClick={()=> approveDoc(user)}>Approve</button>
                       <button onClick={()=> rejectDoc(user)}>Reject</button>

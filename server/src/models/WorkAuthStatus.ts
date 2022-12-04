@@ -19,4 +19,4 @@ const WorkAuthStatusSchema: Schema = new Schema<IWorkAuthStatus>({
     feedback: { type: String },
 })
 
-export default mongoose.model<IWorkAuthStatus>('WorkAuthStatus', WorkAuthStatusSchema);
+export default mongoose.model<IWorkAuthStatus>('WorkAuthStatus', WorkAuthStatusSchema, 'WorkAuthStatus');

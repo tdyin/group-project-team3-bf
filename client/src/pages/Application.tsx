@@ -1,54 +1,51 @@
-import Box from '@mui/material/Box'
-import axios from 'axios'
-import { useForm } from 'react-hook-form'
+import { Box, Button, Grid, Paper, Typography } from '@mui/material'
+import { useState } from 'react'
+import { useForm, SubmitHandler } from 'react-hook-form'
 import Forms from '../components/application/Forms'
+import Steps from '../components/application/Steps'
+
+const steps = [
+  'Personal Information',
+  'Address',
+  'Contact',
+  'Car',
+  'Legal Status',
+  'Reference Information',
+  'Emergency Contact',
+  'File Summary',
+]
 
 export default function Application() {
-  const { register, handleSubmit } = useForm()
+  const [activeStep, setActiveStep] = useState(0)
 
-  const onSubmit = async (data: any) => {
-    const file = data.file[0]
-
-    const formData = new FormData()
-    formData.append('file', file)
-
-    const fileData = {
-      bucket: 'bf-t3-test-bucket',
-      fileName: 'test1.pdf',
-    }
-    // Get signed url
-    await axios
-      .post('/s3/upload', fileData)
-      .then((res) =>
-        axios.put(res.data, file, {
-          headers: {
-            'Access-Control-Allow-Origin': '*',
-            'Content-Type': file.type,
-          },
-        })
-      )
-      .catch((err) => console.log(err))
+  const handleNext = () => {
+    setActiveStep((prevState) => prevState + 1)
   }
 
-  const handleDownload = async () => {
-    const fileData = {
-      bucket: 'bf-t3-test-bucket',
-      fileName: 'test.pdf',
-    }
-
-    const url = await axios.post('s3/download', fileData)
-
-    axios.get(url.data)
+  const handleBack = () => {
+    setActiveStep((prevState) => prevState - 1)
   }
 
   return (
-    <Box sx={{ padding: '1rem' }}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input type='file' {...register('file')} />
-        <input type='submit' />
-      </form>
-      <br />
-      <button onClick={handleDownload}>Download</button>
+    <Box sx={{ flexGrow: 1, p: 3 }}>
+      <Typography variant='h4' align='center' marginBottom={3}>
+        Onboarding Application
+      </Typography>
+      <Paper sx={{ p: 3 }}>
+        <Grid container spacing={2}>
+          <Grid item xs={4}>
+            <Steps steps={steps} activeStep={activeStep} />
+          </Grid>
+          <Grid item xs={8}>
+            <Forms
+              steps={steps}
+              activeStep={activeStep}
+              handleNext={handleNext}
+              handleBack={handleBack}
+            />
+          </Grid>
+        </Grid>
+      </Paper>
     </Box>
   )
 }

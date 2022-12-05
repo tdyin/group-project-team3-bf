@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
 
 type User = {
     username: string,
@@ -14,13 +15,16 @@ type User = {
     passMatch: string
 }
 const RegistrationForm: React.FC = () => {
-    const { register, handleSubmit, formState: {errors}, watch } = useForm<User>();
+    const { register, handleSubmit, formState: {errors}, watch } = useForm<User>({ mode: "onTouched"});
     const [email, setEmail] = useState('email@email.com');
+    const { token } = useParams();
+    const navigate = useNavigate();
 
     const onSubmit = async (data: User) => {
         try {
             console.log("Sending Registration Data to Backend: ", data);
-            await axios.post('http://localhost:8080/register', data)
+            await axios.post(`http://localhost:8080/register/${token}`, data);
+            navigate("/application");
         } catch (err: any) {
             console.log(err);
 
@@ -28,15 +32,25 @@ const RegistrationForm: React.FC = () => {
     }
 
     useEffect(() => {
-        axios.get('http://localhost:8080/register')
-        .then((data: any) => {
-            setEmail(data.email);
-        })
+        const checkUrl = async () => {
+            try {
+                await axios.get(`http://localhost:8080/register/${token}`)
+                .then((data: any) => {
+                    setEmail(data.data);
+                    console.log("Received E-mail: " , data)
+                })
+            } catch (err) {
+                console.log("Valid URL failed: " , err);
+                navigate("/forbidden")
+            }
+        }
+        checkUrl();
     }, [])
 
     return (
         <Box sx={{marginTop: 9, display: "flex", flexDirection: "column", alignItems: "center"}} >
-            <form onSubmit={handleSubmit(onSubmit)} style={{maxWidth: "20%", padding: "3rem", boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px" }}>
+            {/**Check if user has real URL*/}
+                <form onSubmit={handleSubmit(onSubmit)} style={{width: "40%", padding: "3rem", boxShadow: "rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px" }}>
                 <Typography variant="h3">Register an Account</Typography>
                 <br/>
 
@@ -48,10 +62,11 @@ const RegistrationForm: React.FC = () => {
                     id="email"
                     {...register( "email")}
                     autoComplete="off"
-                    disabled
-                    defaultValue={email}
+                    inputProps={{ readOnly: true }}
+                    value={email}
                     fullWidth
                     style={{marginTop: "2rem"}}
+                    InputLabelProps={{shrink: true}}
                     />
                 <ErrorMessage errors={errors} name="email" render={({ message }) => <p>{message}</p>} />
 
@@ -61,8 +76,10 @@ const RegistrationForm: React.FC = () => {
                     variant="standard"
                     type="text"
                     id="username"
-                    {...register('username', {required: "Please enter a Username", minLength: 4, maxLength: 16,
-                        pattern: {value: /^[a-zA-z0-9_-]$/, message: "Username must only contains letters and numbers"}
+                    {...register('username', {required: "Please enter a Username", 
+                        minLength: {value: 4, message: "Username must be between 4-16 characters"}, 
+                        maxLength: {value: 16, message: "Username must be between 4-16 characters"},
+                        pattern: {value: /[A-Za-z0-9]/, message: "Username can only contain letters and numbers"}
                     })
                     }
                     autoComplete="off"
@@ -81,11 +98,13 @@ const RegistrationForm: React.FC = () => {
                     required
                     fullWidth
                     style={{marginTop: "2rem"}}
-                    {...register("password", { required: "Please enter a password", minLength: 8, maxLength: 20,
-                        pattern: {
-                            value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*)(+=._-]).$/,
-                            message: "Password must contain at least one Lowercase, Uppercase, Number, and Special Character"
-                        }
+                    {...register("password", { required: "Please enter a password", 
+                    minLength: {value: 8, message: "Password must be between 8-20 characters"}, 
+                    maxLength: {value: 20, message: "Password must be between 8-20 characters"},
+                    pattern: {
+                        value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-])$.{8,}/,
+                        message: "Password must contain at least one Uppercase letter, one Lowercase letter, one Number, and one Special character"
+                    }
                 })}
                     />
                 <ErrorMessage errors={errors} name="password" render={({ message }) => <p>{message}</p>} />

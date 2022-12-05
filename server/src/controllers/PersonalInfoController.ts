@@ -41,7 +41,7 @@ export const put_userinfo = async(req: Request, res: Response) => {
 
 export const get_userinfo = async (req: Request, res: Response) => {
     try {
-        const token: any = req.cookies.token;
+        const token: any = req.headers.authorization;
         const verify: any = await jwt.verify(token, process.env.JWT_KEY);
 
         const findUser = await User.findOne({ username: verify.username });
@@ -91,7 +91,7 @@ export const put_address = async(req: Request, res: Response) => {
 export const get_address = async (req: Request, res: Response) => {
     try {
         //Token will find no Cookie currently and will stop getting data
-        const token: any = req.cookies.token;
+        const token: any = req.headers.authorization;
         const verify: any = await jwt.verify(token, process.env.JWT_KEY);
 
         const findUser = await User.findOne({ username: verify.username });
@@ -134,7 +134,7 @@ export const put_contact = async(req: Request, res: Response) => {
 
 export const get_contact = async (req: Request, res: Response) => {
     try {
-        const token: any = req.cookies.token;
+        const token: any = req.headers.authorization;
         const verify: any = await jwt.verify(token, process.env.JWT_KEY);
 
         const findUser = await User.findOne({ username: verify.username });
@@ -182,7 +182,7 @@ export const put_emergency = async(req: Request, res: Response) => {
 
 export const get_emergency = async (req: Request, res: Response) => {
     try {
-        const token: any = req.cookies.token;
+        const token: any = req.headers.authorization;
         const verify: any = await jwt.verify(token, process.env.JWT_KEY);
 
         const findUser = await User.findOne({ username: verify.username });
@@ -226,7 +226,7 @@ export const put_legal = async (req: Request, res: Response) => {
 
 export const get_legal = async (req: Request, res: Response) => {
     try {
-        const token: any = req.cookies.token;
+        const token: any = req.headers.authorization;
         const verify: any = await jwt.verify(token, process.env.JWT_KEY);
 
         const findUser = await User.findOne({ username: verify.username });
@@ -271,7 +271,7 @@ export const put_document = async (req: Request, res: Response) => {
 
 export const get_document = async (req: Request, res: Response) => {
     try {
-        const token: any = req.cookies.token;
+        const token: any = req.headers.authorization;
         const verify: any = await jwt.verify(token, process.env.JWT_KEY);
 
         const findUser = await User.findOne({ username: verify.username });
@@ -294,9 +294,9 @@ export const get_document = async (req: Request, res: Response) => {
 
 
 //---------
-export const getAll = async(req: Request, res: Response) => {
+export const getAllDoc = async(req: Request, res: Response) => {
     try{
-        const users = await User.find({});
+        const users = await User.find({}).populate('userInfo').populate('legal').populate('workAuthStatus');
         res.send(users);
     } catch(err) {
         res.status(400).send(err);
@@ -306,16 +306,8 @@ export const getAll = async(req: Request, res: Response) => {
 export const getUserDoc = async(req: Request, res: Response) => {
     try{
         const data = [];
-        const user = await User.find({ username: 'user' });
-        console.log(user)
-        const userLegalVisa = user[0].legal.valueOf()
-        const userDocId = user[0].userDocs.valueOf()
-        const visaStatus = await Legal.find({ _id: userLegalVisa })
-        const profile = await UserDocs.find({ _id: userDocId })
-        data.push(visaStatus[0]);
-        data.push(profile[0]);
-        console.log(data)
-        res.send(data);
+        const user = await User.find({ username: req.body.username}).populate('legal').populate('userDocs');
+        res.send(user);
     } catch(err) {
         res.status(400).send(err);
     }

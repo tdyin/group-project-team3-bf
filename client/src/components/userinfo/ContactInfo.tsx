@@ -9,7 +9,7 @@ import Box from '@mui/material/Box'
 import axios from 'axios';
 import FormControl from '@mui/material/FormControl';
 import Modal from '@mui/material/Modal';
-import { link } from './Link'
+import { link } from '../Link'
 
 type Contact = {
     cellPhone: string,
@@ -30,9 +30,11 @@ const Contact: React.FC = () => {
 
     //Edit Data
     const onSubmit = async (data: Contact) => {
+        const token = localStorage.getItem('token');
+        
         try {
             setDisabled(true);
-            console.log("Sending Registration Data to Backend: ", data);
+            console.log("Sending Registration Data to Backend: ", data, {headers: { 'authorization': token }});
             await axios.put(`${link}/contact`, data)
         } catch (err: any) {
             console.log(err);
@@ -42,9 +44,10 @@ const Contact: React.FC = () => {
 
     //GET Data
     useEffect(() => {
+        const token = localStorage.getItem('token');
         const getData = async () => {
             try {
-                await axios.get(`${link}/contact`)
+                await axios.get(`${link}/contact`, {headers: {'authorization': token}})
                 .then((data: any) => {
                     setDefaultData(data.data);
                     console.log(data.data);
@@ -79,7 +82,7 @@ const Contact: React.FC = () => {
     }
 
     return (
-        <FormControl onSubmit={handleSubmit(onSubmit)} sx={{display: "block", flexDirection: "column", alignItems: "center", width: "50em"}}>
+        <FormControl sx={{display: "block", flexDirection: "column", alignItems: "center", width: "50em"}}>
                 <TextField 
                         label="Cell Phone Number" 
                         size="small"
@@ -155,7 +158,7 @@ const Contact: React.FC = () => {
                                 </Box>
                                 
                         </Modal>
-                        <Button type="submit">Update</Button>
+                        <Button type="submit" onClick={handleSubmit(onSubmit)} >Update</Button>
                     </>
                 }
         </FormControl>

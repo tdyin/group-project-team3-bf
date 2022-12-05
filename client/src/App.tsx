@@ -5,6 +5,7 @@ import Register from './pages/Register'
 import Application from './pages/Application'
 import store from './redux/store'
 import { Provider } from 'react-redux'
+import ErrorPage from './components/ErrorPage'
 
 function App() {
   return (
@@ -12,7 +13,8 @@ function App() {
       <BrowserRouter>
         <Provider store={store}>
           <Routes>
-            <Route path='/register' element={<Register />} />
+            <Route path='/register/:token' element={<Register />} />
+            <Route path='/forbidden' element={<ErrorPage />} />
             <Route path='/login' element={<Login />} />
             <Route path='/application' element={<Application />} />
             <Route path='/' element={<Navigate to='/emp/info' />} />

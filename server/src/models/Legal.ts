@@ -2,7 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose'
 
 export interface ILegal extends Document {
   permanent: boolean
-  permanentType: 'Green Card' | 'Citizen' | string
+  permanentType: 'Green card' | 'Citizen' | string
   visaTitle: 'H1-B' | 'L2' | 'F1(CPT/OPT)' | 'H4' | string
   startDate: Date
   endDate: Date

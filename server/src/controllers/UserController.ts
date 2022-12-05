@@ -2,9 +2,9 @@ import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import User from '../models/User';
-import UserDocs from '../models/UserDocs';
+import Status from '../models/Status';
 import { createDefaultDocs } from '../utils/dbUtils';
-import Legal from '../models/Legal';
+
 
 //User Registration
 export const post_register = async(req : Request, res: Response) => {
@@ -25,9 +25,11 @@ export const post_register = async(req : Request, res: Response) => {
             legal: docIds.legalId,
             referInfo: docIds.referInfoId,
             userDocs: docIds.userDocsId,
-            userInfo: docIds.userInfoId
+            userInfo: docIds.userInfoId,
+            workAuthStatus: docIds.workAuthId
         })
 
+        console.log("User user is: " , user);
         //Save details to Mongo
         await user.save();
 
@@ -41,19 +43,29 @@ export const post_register = async(req : Request, res: Response) => {
             email: user.email
         }, key, {expiresIn: "30m"});
 
+        const update = {status: true}
+        //Update Status Model to show that user has registered
+        await Status.findOneAndUpdate({email: req.body.email}, update)
+
         //Set Status
-        res.status(200).cookie('token', token, {httpOnly: true})
+        res.status(200).send(token);
     } catch (err) {
         res.status(409).send(err);
     }
 }
 
 export const get_register = async (req: Request, res: Response) => {
-    const token: any = req.cookies.token;
-    const verify: any = await jwt.verify(token, process.env.JWT_KEY!);
+    const token: any = req.params.token;
+    console.log("Backend Token Check from get_register: " , token);
 
-    //Open token and send Email to Register link
-    res.status(200).send(verify.email);
+    try {
+        //Open token and send Email to Register link if E-mail exists
+        const verify: any = await jwt.verify(token, process.env.JWT_KEY);
+        console.log("Email Backend get_register", verify.email)
+        res.status(200).send(verify.email)
+    } catch {
+        res.status(403).redirect("/login");
+    }
 }
 
 
@@ -76,10 +88,7 @@ export const post_login = async(req: Request, res: Response) => {
                         id: user[0]._id,
                         username: user[0].username,
                     }, key, {expiresIn: '5m'});
-                    console.log(token)
-                    res.cookie('token', token, {httpOnly: true});
-                    // console.log('this is cookies',req.cookies)
-                    res.send('you are loggined successfully');
+                    res.send(token)
                 } else {
                     res.status(401).send('Invalid password')
                 }

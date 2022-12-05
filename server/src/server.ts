@@ -7,11 +7,9 @@ import cors from 'cors'
 import { corsOptions } from './config/cors'
 dotenv.config()
 
-
 const { PORT } = process.env
 const app: Express = express()
 connectDB()
-
 
 // Middleawre
 app.use('/', express.json())

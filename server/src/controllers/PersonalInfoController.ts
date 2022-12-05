@@ -7,6 +7,7 @@ import EmContact from '../models/EmContact';
 import Legal from '../models/Legal';
 import UserDocs from '../models/UserDocs';
 import jwt from 'jsonwebtoken';
+import WorkAuthStatus from '../models/WorkAuthStatus';
 
 
 export const put_userinfo = async(req: Request, res: Response) => {
@@ -306,21 +307,15 @@ export const get_document = async (req: Request, res: Response) => {
 
 
 //---------
-export const getAllDoc = async(req: Request, res: Response) => {
-    try{
-        const users = await User.find({}).populate('userInfo').populate('legal').populate('workAuthStatus');
-        res.send(users);
-    } catch(err) {
-        res.status(400).send(err);
-    }
-}
 
 export const getUserDoc = async(req: Request, res: Response) => {
     try{
-        const data = [];
         const user = await User.find({ username: req.body.username}).populate('legal').populate('userDocs');
         res.send(user);
     } catch(err) {
         res.status(400).send(err);
     }
 }
+
+
+

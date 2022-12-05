@@ -2,11 +2,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { GetObjectCommand, PutObjectAclCommand } from '@aws-sdk/client-s3'
 import client from '../config/s3Client'
 
-type Bucket =
-  | 'bf-t3-drivers-license-bucket'
-  | 'bf-t3-profile-picture-bucket'
-  | 'bf-t3-work-authorization-bucket'
-  | 'bf-t3-test-bucket'
+type Bucket = 'bf-t3-bucket' | 'bf-t3-test-bucket'
 
 export async function getFileSignedUrl(bucket: Bucket, fileName: string) {
   const command = new GetObjectCommand({ Bucket: bucket, Key: fileName })

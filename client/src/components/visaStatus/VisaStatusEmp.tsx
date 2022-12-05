@@ -88,7 +88,7 @@ const VisaStatusEmp: React.FC = () => {
           {i20 === 'approved' && <div>All documents have been approved</div>}
           {i20 === 'rejected' && <div>See HR's feedback: not done yet</div>}
         </div>}
-        <div>Feedback from HR: </div>
+        <div>Feedback from HR:</div>
     </div>
   )
 }

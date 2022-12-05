@@ -84,13 +84,24 @@ export const post_email = async (req: Request, res: Response) => {
     })
 }
 
+//Get all users regardless of stage
+export const get_allusers = async (req: Request, res: Response) => {
+    try {
+        const users = await User.find({}).populate('userInfo').populate('legal').populate('contact');
+        console.log(users);
+        res.status(200).send(users);
+    } catch (err) {
+        console.log("get_allusers Error: ", err);
+    }
+}
+
 //Get all users in pending state
-export const get_userinfo = async (req: Request, res: Response) => {
+export const get_pending = async (req: Request, res: Response) => {
     try {
         const users = await User.find({stage: 1});
         res.status(200).send(users);
     } catch (err) {
-        console.log("get_userinfo HR Error: ", err);
+        console.log("get_pending HR Error: ", err);
     }
 }
 

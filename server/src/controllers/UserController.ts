@@ -25,9 +25,11 @@ export const post_register = async(req : Request, res: Response) => {
             legal: docIds.legalId,
             referInfo: docIds.referInfoId,
             userDocs: docIds.userDocsId,
-            userInfo: docIds.userInfoId
+            userInfo: docIds.userInfoId,
+            workAuthStatus: docIds.workAuthId
         })
 
+        console.log("User user is: " , user);
         //Save details to Mongo
         await user.save();
 
@@ -60,6 +62,7 @@ export const get_register = async (req: Request, res: Response) => {
         //Open token and send Email to Register link if E-mail exists
         const verify: any = await jwt.verify(token, process.env.JWT_KEY);
         console.log("Email Backend get_register", verify.email)
+        res.status(200).send(verify.email)
     } catch {
         res.status(403).redirect("/login");
     }

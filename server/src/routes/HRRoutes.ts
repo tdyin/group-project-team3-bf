@@ -1,15 +1,18 @@
 import { Router } from 'express';
-import { post_email, get_hiring, get_userinfo, post_feedback, get_feedback,
+import { post_email, get_hiring, post_feedback, get_feedback,
         get_userdocument, get_useraddress, get_usercontact, get_userdata, get_useremergency, get_userlegal,
-        get_accepted, get_rejected, getAllDoc, put_status
+        get_accepted,  getAllDoc, put_status, get_rejected, get_pending, get_allusers
         } from '../controllers/HRController';
 //Set variable to import
 const hrRoutes = Router();
 
+//HR Profiles
+hrRoutes.get('/hr/employees', get_allusers);
+
 //Hiring Management
 hrRoutes.get('/hr/hiring', get_hiring);
 hrRoutes.post('/hr/hiring/confirmation', post_email);
-hrRoutes.get('/hr/hiring/pending', get_userinfo);
+hrRoutes.get('/hr/hiring/pending', get_pending);
 hrRoutes.get('/hr/hiring/accepted', get_accepted);
 hrRoutes.get('/hr/hiring/rejected', get_rejected);
 hrRoutes.post('/hr/hiring/:userid/feedback', post_feedback);

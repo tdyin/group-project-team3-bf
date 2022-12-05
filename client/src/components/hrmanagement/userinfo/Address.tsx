@@ -49,6 +49,7 @@ const Address: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.bldgApt}
                 style={{marginTop: "2rem"}}
+                InputLabelProps={{ shrink: true }}
             />
 
             <TextField 
@@ -61,6 +62,7 @@ const Address: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.street}
                 style={{marginTop: "2rem"}}
+                InputLabelProps={{ shrink: true }}
             />
 
             <TextField 
@@ -73,6 +75,7 @@ const Address: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.city}
                 style={{marginTop: "2rem"}}
+                InputLabelProps={{ shrink: true }}
             />
 
             <TextField 
@@ -85,6 +88,7 @@ const Address: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.state}
                 style={{marginTop: "2rem"}}
+                InputLabelProps={{ shrink: true }}
             />
 
             <TextField
@@ -98,6 +102,7 @@ const Address: React.FC<IUserID> = ({userid}: any) => {
                 value={data?.zip}
                 fullWidth
                 style={{marginTop: "2rem"}}
+                InputLabelProps={{ shrink: true }}
             />
         </Box>
     )

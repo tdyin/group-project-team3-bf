@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography';
 import axios, { AxiosResponse } from 'axios';
@@ -65,6 +64,7 @@ const Name: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.firstName}
                 style={{marginTop: "2em"}}
+                InputLabelProps={{ shrink: true }}
             />
 
             <TextField 
@@ -77,6 +77,7 @@ const Name: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.middleName}
                 style={{marginTop: "2em"}}
+                InputLabelProps={{ shrink: true }}
             />
 
             <TextField 
@@ -89,6 +90,7 @@ const Name: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.lastName}
                 style={{marginTop: "2em"}}
+                InputLabelProps={{ shrink: true }}
             />
 
             <TextField 
@@ -101,6 +103,7 @@ const Name: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.preferredName}
                 style={{marginTop: "2em"}}
+                InputLabelProps={{ shrink: true }}
             />
 
             <Typography sx={{ marginTop: "rem" }}>Profile Picture</Typography>
@@ -117,6 +120,7 @@ const Name: React.FC<IUserID> = ({userid}: any) => {
                 value={data?.email}
                 fullWidth
                 style={{marginTop: "2em"}}
+                InputLabelProps={{ shrink: true }}
             />
 
             <TextField 
@@ -129,6 +133,7 @@ const Name: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.ssn}
                 style={{marginTop: "2em"}}
+                InputLabelProps={{ shrink: true }}
             />
 
             <TextField 
@@ -141,6 +146,7 @@ const Name: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.dob}
                 style={{marginTop: "2em"}}
+                InputLabelProps={{ shrink: true }}
             />
 
             <TextField 
@@ -153,6 +159,7 @@ const Name: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.gender}
                 style={{marginTop: "2em"}}
+                InputLabelProps={{ shrink: true }}
             />
         </Box>
     )

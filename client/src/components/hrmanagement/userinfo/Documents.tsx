@@ -46,6 +46,7 @@ const Documents: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.driverLicense}
                 style={{marginTop: "2rem"}}
+                InputLabelProps={{ shrink: true }}
             />
 
             <TextField 
@@ -58,6 +59,7 @@ const Documents: React.FC<IUserID> = ({userid}: any) => {
                 disabled
                 value={data?.workAuth}
                 style={{marginTop: "2rem"}}
+                InputLabelProps={{ shrink: true }}
             />
         </Box>
     )

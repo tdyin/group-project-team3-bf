@@ -129,7 +129,7 @@ const Name: React.FC = () => {
                     { 
                         required: "First Name field cannot be empty",
                         pattern: {
-                                    value: /^[A-Z][a-z]$/,
+                                    value: /[A-Z][a-z]/,
                                     message: "First Name must only contain letters. First letter must be capitalized."
                         }   
                     }
@@ -150,7 +150,7 @@ const Name: React.FC = () => {
                 id="middleName"
                 {...register( "middleName", {
                     pattern: {
-                                value: /^[A-Z][a-z]$/,
+                                value: /[A-Z][a-z]/,
                                 message: "Middle Name must only contain letters. First letter must be capitalized."
                     }   
                 })}
@@ -170,7 +170,7 @@ const Name: React.FC = () => {
                 id="lastName"
                 {...register( "lastName", { required: "Last Name field cannot be empty", 
                             pattern: {
-                                value: /^[A-Z][a-z]$/,
+                                value: /[A-Z][a-z]/,
                                 message: "Last Name must only contain letters. First letter must be capitalized."
                             }    
                         }
@@ -191,7 +191,7 @@ const Name: React.FC = () => {
                 id="preferredName"
                 {...register( "preferredName", {
                     pattern: {
-                                value: /^[A-Z][a-z]$/,
+                                value: /[A-Z][a-z]/,
                                 message: "Name must only contain letters. First letter must be capitalized."
                     }   
                 })}

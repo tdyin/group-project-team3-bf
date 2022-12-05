@@ -10,6 +10,7 @@ import Contact from '../models/Contact';
 import EmContact from '../models/EmContact';
 import Legal from '../models/Legal';
 import UserDocs from '../models/UserDocs';
+import WorkAuthStatus from '../models/WorkAuthStatus';
 
 export const get_hiring = async (req: Request, res: Response) => {
     try {
@@ -37,7 +38,7 @@ export const post_email = async (req: Request, res: Response) => {
 
     if(user) {
         status = true;
-    } 
+    }
 
     //Save User to Status Schema; Used to determine if user is registered or not
     const statusData = new Status ({
@@ -59,21 +60,21 @@ export const post_email = async (req: Request, res: Response) => {
         }
     });
 
-    
+
     const mailConfig = {
         from: 'beaconfire.team3@gmail.com',
         to: `${email}`,
         subject: 'Register an Account to begin Onboarding',
-        text: 
+        text:
                 `Hello ${name},\n\n` +
-                `You are receiving this e-mail as an invitation to register with our company\n` + 
+                `You are receiving this e-mail as an invitation to register with our company\n` +
                 `Please click http://localhost:3000/register/${token} \n` +
                 `to begin your application process.`
-            
+
     }
 
     transport.sendMail(mailConfig, (err: any, info: any) => {
-        if (err) { 
+        if (err) {
             console.error("An error has occurred when sending e-mail: ", err);
         }
         else {
@@ -161,7 +162,7 @@ export const get_feedback = async (req: Request, res: Response) => {
 
 export const get_userdata = async (req: Request, res: Response) => {
     const user: any = req.params.userid;
-    
+
     try {
         const findUser = await User.findOne({ _id: user });
 
@@ -280,5 +281,26 @@ export const get_userdocument = async (req: Request, res: Response) => {
         res.status(200).send(foundData);
     } catch (err) {
         console.log(err);
+    }
+}
+
+
+//---
+export const getAllDoc = async(req: Request, res: Response) => {
+    try{
+        const status = await WorkAuthStatus.find({}).populate({path:'user', populate:{path:'userInfo'}}).populate({path:'user', populate:{path:'legal'}});
+        res.send(status);
+    } catch(err) {
+        res.status(400).send(err);
+    }
+}
+
+export const put_status = async(req: Request, res: Response) => {
+    const filter = {user: req.params.uid}
+    const update = req.body
+    try{
+        const user = await WorkAuthStatus.findOneAndUpdate(filter, update)
+    } catch(err) {
+        res.status(400).send(err);
     }
 }

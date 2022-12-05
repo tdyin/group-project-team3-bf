@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { post_email, get_hiring, post_feedback, get_feedback,
         get_userdocument, get_useraddress, get_usercontact, get_userdata, get_useremergency, get_userlegal,
-        get_accepted, get_rejected, get_pending, get_allusers
+        get_accepted,  getAllDoc, put_status, get_rejected, get_pending, get_allusers
         } from '../controllers/HRController';
 //Set variable to import
 const hrRoutes = Router();
@@ -26,5 +26,9 @@ hrRoutes.get('/hr/hiring/:userid/documents', get_userdocument);
 hrRoutes.get('/hr/hiring/:userid/emergencycontact', get_useremergency);
 hrRoutes.get('/hr/hiring/:userid/documents', get_userdocument);
 hrRoutes.get('/hr/hiring/:userid/employment', get_userlegal);
+
+//---
+hrRoutes.get('/emp/info/visa', getAllDoc);
+hrRoutes.put('/emp/info/visa/:uid', put_status);
 
 export default hrRoutes;

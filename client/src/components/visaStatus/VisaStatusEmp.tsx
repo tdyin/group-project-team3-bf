@@ -19,6 +19,10 @@
 //         if(data.data[0].legal.visaTitle === 'F1(CPT/OPT)') {
 //           setIsOpt(true)
 //         }
+//            setOptReceipt(data.data[0].workAuthStatus.optReceipt);
+//            setOptEad(data.data[0].workAuthStatus.optEad);
+//            setI983(data.data[0].workAuthStatus.i983);
+//            setI20(data.data[0].workAuthStatus.i20);
 //       })
 //       .catch((err) => {
 //         console.log(err)
@@ -84,13 +88,12 @@
 //           {i20 === 'approved' && <div>All documents have been approved</div>}
 //           {i20 === 'rejected' && <div>See HR's feedback: not done yet</div>}
 //         </div>}
+//         <div>Feedback from HR: </div>
 //     </div>
 //   )
 // }
 
 // export default VisaStatusEmp
-
-
 
 
 import React, { useState, useEffect } from 'react';
@@ -106,7 +109,10 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 const VisaStatusHr: React.FC = () => {
-  const [users, setUsers] = useState([] as any[])
+  const [users, setUsers] = useState([] as any[]);
+  const [currentUser, setCurrentUser] = useState('');
+  const [feedback, setFeedback] = useState('');
+  const [showFeedback, setShowFeedback] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -143,13 +149,100 @@ const VisaStatusHr: React.FC = () => {
   }));
 
   function getRemainDay(user: any) {
-    var date1 = new Date(user['legal']['endDate']);
+    var date1 = new Date(user['user']['legal']['endDate']);
     var date2 = new Date();
     var Difference_In_Time = date1.getTime() - date2.getTime();
     var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-    console.log(Difference_In_Time, Difference_In_Days)
-
     return Math.floor(Difference_In_Days)
+  }
+
+  function getNextStep(user: any) {
+    if (user['optReceipt'] === '') {
+      return 'Waiting for user to upload next document'
+    }
+    if (user['i20'] === 'approved') {
+      return 'User has uploaded all documents'
+    } else if (user['oprReceipt'] === 'rejected' || user['optEad'] === 'rejected' || user['i983'] === 'rejected' || user['i20'] === 'rejected') {
+      return 'Waiting for user to upload document again'
+    } else if (user['oprReceipt'] === 'pending' || user['optEad'] === 'pending' || user['i983'] === 'pending' || user['i20'] === 'pending') {
+      return 'Waiting for HR approval'
+    } else {
+      return 'Waiting for user to upload next document'
+    }
+  }
+
+  function approveDoc(user: any) {
+    let data = {}
+    if (user['optReceipt'] === 'pending') {
+      data = { 'optReceipt': 'approved'}
+    }
+    if (user['optEad'] === 'pending') {
+      data = { 'optEad': 'approved'}
+    }
+    if (user['i983'] === 'pending') {
+      data = { 'i983': 'approved'}
+    }
+    if (user['i20'] === 'pending') {
+      data = { 'i20': 'approved'}
+    }
+
+    axios.put(`http://localhost:8080/emp/info/visa/${user['_id']}`, data)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+
+  }
+
+  function rejectDoc(user: any) {
+    let data = {}
+    if (user['optReceipt'] === 'pending') {
+      data = { 'optReceipt': 'rejected'}
+    }
+    if (user['optEad'] === 'pending') {
+      data = { 'optEad': 'rejected'}
+    }
+    if (user['i983'] === 'pending') {
+      data = { 'i983': 'rejected'}
+    }
+    if (user['i20'] === 'pending') {
+      data = { 'i20': 'rejected'}
+    }
+
+    axios.put(`http://localhost:8080/emp/info/visa/${user['_id']}`, data)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  function openFeedback(user: any) {
+    setCurrentUser(user['user']['_id'])
+    setShowFeedback(true)
+  }
+
+  function sendNotification(user: any) {
+
+  }
+
+  function submitFeedback(user: any) {
+    const data = { 'feedback': `${feedback}`}
+    axios.put(`http://localhost:8080/emp/info/visa/${user}`, data)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    setShowFeedback(false);
+  }
+
+  function getFeedback(event: any) {
+    setFeedback(event.target.value)
   }
 
   return (
@@ -168,14 +261,25 @@ const VisaStatusHr: React.FC = () => {
             {users.map((user: any, i) => {
                 return (
                   <StyledTableRow key={i}>
-                    <StyledTableCell>{user['userInfo']['firstName'] + ' ' + user['userInfo']['lastName']}</StyledTableCell>
+                    <StyledTableCell>{user['user']["userInfo"]['lastName']}</StyledTableCell>
                     <StyledTableCell>
-                      <StyledTableRow >{user['legal']['visaTitle']}</StyledTableRow>
-                      <StyledTableRow >{'startDate : ' + user['legal']['startDate'] + ' endDate : ' + user['legal']['endDate']}</StyledTableRow>
+                      <StyledTableRow >{user['user']['legal']['visaTitle']}</StyledTableRow>
+                      <StyledTableRow >{'startDate : ' + user['user']['legal']['startDate'] + ' endDate : ' + user['user']['legal']['endDate']}</StyledTableRow>
                       <StyledTableRow >{getRemainDay(user)}</StyledTableRow>
                     </StyledTableCell>
-                    <StyledTableCell>Next Step</StyledTableCell>
-                    <StyledTableCell>Action</StyledTableCell>
+                    <StyledTableCell>{getNextStep(user)}</StyledTableCell>
+                    <StyledTableCell>
+                      {getNextStep(user)==='Waiting for HR approval' && <div>
+                        <button onClick={()=>approveDoc(user)}>approve</button>
+                        <button onClick={()=>rejectDoc(user)}>reject</button>
+                      </div>}
+                      {getNextStep(user)==='Waiting for user to upload document again' && <div>
+                        <button onClick={()=>openFeedback(user)}>Send Feedback</button>
+                      </div>}
+                      {getNextStep(user)==='Waiting for user to upload next document' && <div>
+                        <button onClick={()=>sendNotification(user)}>Send Notification</button>
+                      </div>}
+                    </StyledTableCell>
                   </StyledTableRow>
                 )
             })}
@@ -183,6 +287,13 @@ const VisaStatusHr: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
+          {showFeedback===true &&
+                  <form>
+                    <label>Send Feedback</label><br></br>
+                    <input type='text' onChange={getFeedback}></input><br></br>
+                    <button onClick={()=> submitFeedback(currentUser)}>send</button>
+                  </form>
+                }
     </>
   )
 }

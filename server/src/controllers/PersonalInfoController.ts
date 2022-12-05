@@ -38,7 +38,7 @@ export const put_userinfo = async(req: Request, res: Response) => {
         //Update UserInfo
         await UserInfo.findOneAndUpdate(filter, updateData);
         //Update E-mail address
-        await User.findOneAndUpdate({ username: verify.username}, req.body.email)
+        await User.findOneAndUpdate({ username: verify.username}, {email: req.body.email})
     } catch (err) {
         res.status(404).send(err);
     }

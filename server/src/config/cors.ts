@@ -6,4 +6,5 @@ export const corsOptions = {
     '*'
   ],
   optionsSuccessState: 200,
+  methods: ['GET', 'POST', 'DELETE', 'PUT']
 }

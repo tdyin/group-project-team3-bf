@@ -83,8 +83,8 @@ const Name: React.FC = () => {
         data.gender = gender;
         try {
             setDisabled(true);
-            console.log("Sending Registration Data to Backend: ", data, {headers: { 'authorization': token }});
-            await axios.put(`${link}/userinfo`, data)
+            console.log("Sending Registration Data to Backend: ", data);
+            await axios.put(`${link}/userinfo`, data, {headers: { 'authorization': token }})
         } catch (err: any) {
             console.log(err);
 
@@ -205,8 +205,9 @@ const Name: React.FC = () => {
 
             
             <img src={profilePic} style={{height: "100px", width: "100px", marginTop: "2rem"}}/>
-            <InputLabel id="fileUpload">Upload New</InputLabel>
+
             <TextField 
+                label="Upload New Photo"
                 size="small"
                 variant="standard"
                 type="file"
@@ -215,6 +216,7 @@ const Name: React.FC = () => {
                 fullWidth
                 disabled={disabled}
                 style={{marginTop: "2rem"}}
+                InputLabelProps={{shrink: true}}
                 />
 
             <TextField
@@ -274,9 +276,8 @@ const Name: React.FC = () => {
             />
             <ErrorMessage errors={errors} name="dob" render={({ message }) => <p>{message}</p>} />
 
-            <InputLabel id="genderSelect" sx={{marginTop: "2rem"}}>Gender</InputLabel>
+            <Typography sx={{marginTop: "2rem", fontSize: "10px"}}>Gender</Typography>
             <Select
-                labelId="genderSelect"
                 label="Gender" 
                 size="small"
                 variant="standard"
@@ -284,7 +285,6 @@ const Name: React.FC = () => {
                 fullWidth
                 disabled={disabled}
                 value={gender}
-                sx={{marginTop: "2rem"}}
                 onChange={(e) => setGender(e.target.value)}
             >
                 <MenuItem value="Male">

@@ -32,8 +32,6 @@ const Address: React.FC = () => {
         state: "",
         zip: ""
     });
-
-    const [exampleState, setExampleState] = useState([]);
     
     //Disable fields until Edit button clicked
     const [disabled, setDisabled] = useState(true);
@@ -43,8 +41,8 @@ const Address: React.FC = () => {
         const token = localStorage.getItem('token')
         try {
             setDisabled(true);
-            console.log("Sending Registration Data to Backend: ", data, {headers: { 'authorization': token }});
-            await axios.put(`${link}/address`, data)
+            console.log("Sending Registration Data to Backend: ", data);
+            await axios.put(`${link}/address`, data, {headers: { 'authorization': token }})
         } catch (err: any) {
             console.log(err);
         }
@@ -106,7 +104,7 @@ const Address: React.FC = () => {
                     {...register( "bldgApt", 
                         { 
                             pattern: {
-                                        value: /^[a-zA-Z0-9-]$/,
+                                        value: /[a-zA-Z0-9-]/,
                                         message: "Building / Apartment # must only contain letters and numbers. Character - is premitted"
                             }   
                         }
@@ -129,7 +127,7 @@ const Address: React.FC = () => {
                         { 
                             required: "Please enter a Street Address",
                             pattern: {
-                                        value: /^[a-zA-Z0-9- ]$/,
+                                        value: /[a-zA-Z0-9- ]/,
                                         message: "Street can only contain numbers, letters, space and - character"
                             }   
                         }
@@ -152,7 +150,7 @@ const Address: React.FC = () => {
                         { 
                             required: "Please enter a City",
                             pattern: {
-                                        value: /^[a-zA-Z]$/,
+                                        value: /[a-zA-Z]/,
                                         message: "City can only contain letters"
                             }   
                         }
@@ -175,7 +173,7 @@ const Address: React.FC = () => {
                         { 
                             required: "Please enter a State",
                             pattern: {
-                                        value: /^[a-zA-Z]$/,
+                                        value: /[a-zA-Z]/,
                                         message: "State can only contain letters"
                             }   
                         }
@@ -198,7 +196,7 @@ const Address: React.FC = () => {
                         { 
                             required: "Please enter a Postal Code or a Zip Code",
                             pattern: {
-                                        value: /^[a-zA-Z0-9- ]$/,
+                                        value: /[a-zA-Z0-9- ]/,
                                         message: "Postal or Zip Code can only contain letters or numbers"
                             }   
                         }

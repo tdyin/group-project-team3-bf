@@ -46,8 +46,8 @@ const Emergency: React.FC = () =>{
 
         try {
             setDisabled(true);
-            console.log("Sending Registration Data to Backend: ", data, {headers: { 'authorization': token }});
-            await axios.put(`${link}/emergency`, data)
+            console.log("Sending Registration Data to Backend: ", data);
+            await axios.put(`${link}/emergency`, data, {headers: { 'authorization': token }})
         } catch (err: any) {
             console.log(err);
 

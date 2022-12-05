@@ -34,8 +34,8 @@ const Documents: React.FC = () =>{
         
         try {
             setDisabled(true);
-            console.log("Sending Registration Data to Backend: ", data, {headers: { 'authorization': token }});
-            await axios.put(`${link}/document`, data)
+            console.log("Sending Registration Data to Backend: ", data);
+            await axios.put(`${link}/document`, data, {headers: { 'authorization': token }})
         } catch (err: any) {
             console.log(err);
 

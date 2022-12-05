@@ -112,8 +112,11 @@ export const get_address = async (req: Request, res: Response) => {
 }
 
 export const put_contact = async(req: Request, res: Response) => {
+    const token: any = req.headers.authorization;
+
     try {
-        const findUser = await User.findOne({ username: req.body.username })
+        const verify: any = await jwt.verify(token, process.env.JWT_KEY);
+        const findUser = await User.findOne({ username: verify.username })
 
         if (!findUser) {
             res.status(400).send("Cannot find user");
@@ -128,7 +131,7 @@ export const put_contact = async(req: Request, res: Response) => {
 
         await Contact.findOneAndUpdate(filter, updateData);
     } catch (err) {
-        res.status(404).send(err);
+        console.log("Error in put_contact: " , err)
     }
 }
 
@@ -155,8 +158,11 @@ export const get_contact = async (req: Request, res: Response) => {
 }
 
 export const put_emergency = async(req: Request, res: Response) => {
+    const token: any = req.headers.authorization;
+
     try {
-        const findUser = await User.findOne({ username: req.body.username })
+        const verify: any = await jwt.verify(token, process.env.JWT_KEY);
+        const findUser = await User.findOne({ username: verify.username })
 
         if (!findUser) {
             res.status(400).send("Cannot find user");
@@ -203,8 +209,11 @@ export const get_emergency = async (req: Request, res: Response) => {
 }
 
 export const put_legal = async (req: Request, res: Response) => {
+    const token: any = req.headers.authorization;
+
     try {
-        const findUser = await User.findOne({ username: req.body.username });
+        const verify: any = await jwt.verify(token, process.env.JWT_KEY);
+        const findUser = await User.findOne({ username: verify.username })
 
         if (!findUser) {
             res.status(400).send("Cannot find user");
@@ -247,8 +256,11 @@ export const get_legal = async (req: Request, res: Response) => {
 }
 
 export const put_document = async (req: Request, res: Response) => {
+    const token: any = req.headers.authorization;
+
     try {
-        const findUser = await User.findOne({ username: req.body.username });
+        const verify: any = await jwt.verify(token, process.env.JWT_KEY);
+        const findUser = await User.findOne({ username: verify.username })
 
         if (!findUser) {
             res.status(400).send("Cannot find user");

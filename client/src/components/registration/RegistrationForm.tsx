@@ -102,7 +102,7 @@ const RegistrationForm: React.FC = () => {
                     minLength: {value: 8, message: "Password must be between 8-20 characters"}, 
                     maxLength: {value: 20, message: "Password must be between 8-20 characters"},
                     pattern: {
-                        value: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-])$.{8,}/,
+                        value: /(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}/,
                         message: "Password must contain at least one Uppercase letter, one Lowercase letter, one Number, and one Special character"
                     }
                 })}

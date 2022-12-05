@@ -89,7 +89,6 @@ const Contact: React.FC = () => {
                         id="cellPhone"
                         {...register( "cellPhone", 
                             { 
-                                required: "Please input a Phone number",
                                 pattern: {
                                             value: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,
                                             message: "Phone Number must only contain numbers and may use - characters"

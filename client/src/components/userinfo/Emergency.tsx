@@ -110,7 +110,6 @@ const Emergency: React.FC = () =>{
                 id="firstName"
                 {...register( "firstName", 
                     { 
-                        required: "First Name field cannot be empty",
                         pattern: {
                                     value: /[A-Z][a-z]/,
                                     message: "First Name must only contain letters. First letter must be capitalized."
@@ -151,7 +150,7 @@ const Emergency: React.FC = () =>{
                 variant="standard"
                 type="text"
                 id="lastName"
-                {...register( "lastName", { required: "Last Name field cannot be empty", 
+                {...register( "lastName", { 
                             pattern: {
                                 value: /[A-Z][a-z]/,
                                 message: "Last Name must only contain letters. First letter must be capitalized."
@@ -173,7 +172,6 @@ const Emergency: React.FC = () =>{
                 type="email"
                 id="email"
                 {...register( "email", {
-                    required: "Please enter an E-mail",
                     pattern: {
                         value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                         message: "E-mail must be in xxx@yyy.zzz format"
@@ -196,7 +194,6 @@ const Emergency: React.FC = () =>{
                     id="phone"
                     {...register( "phone", 
                         { 
-                            required: "Please input a Phone number",
                             pattern: {
                                         value: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/,
                                         message: "Phone Number must only contain numbers and may use - characters"
@@ -218,7 +215,6 @@ const Emergency: React.FC = () =>{
                 type="text"
                 id="relationship"
                 {...register( "relationship", {
-                    required: "Please enter your relationship",
                     pattern: {
                         value: /[A-Za-z]/,
                         message: "Relationship must only contain letters"

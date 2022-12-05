@@ -85,7 +85,7 @@ export const post_login = async(req: Request, res: Response) => {
                     const token: any = jwt.sign({
                         id: user[0]._id,
                         username: user[0].username,
-                    }, key, {expiresIn: '5m'});
+                    }, key, {expiresIn: '3h'});
                     res.send(token)
                 } else {
                     res.status(401).send('Invalid password')

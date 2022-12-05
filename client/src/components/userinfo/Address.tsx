@@ -125,7 +125,6 @@ const Address: React.FC = () => {
                     id="street"
                     {...register( "street", 
                         { 
-                            required: "Please enter a Street Address",
                             pattern: {
                                         value: /[a-zA-Z0-9- ]/,
                                         message: "Street can only contain numbers, letters, space and - character"
@@ -148,7 +147,6 @@ const Address: React.FC = () => {
                     id="city"
                     {...register( "city", 
                         { 
-                            required: "Please enter a City",
                             pattern: {
                                         value: /[a-zA-Z]/,
                                         message: "City can only contain letters"
@@ -171,7 +169,6 @@ const Address: React.FC = () => {
                     id="statey"
                     {...register( "state", 
                         { 
-                            required: "Please enter a State",
                             pattern: {
                                         value: /[a-zA-Z]/,
                                         message: "State can only contain letters"
@@ -194,7 +191,6 @@ const Address: React.FC = () => {
                     id="zip"
                     {...register( "zip", 
                         { 
-                            required: "Please enter a Postal Code or a Zip Code",
                             pattern: {
                                         value: /[a-zA-Z0-9- ]/,
                                         message: "Postal or Zip Code can only contain letters or numbers"

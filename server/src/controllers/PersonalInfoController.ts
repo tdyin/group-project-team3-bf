@@ -12,7 +12,10 @@ import WorkAuthStatus from '../models/WorkAuthStatus';
 
 export const put_userinfo = async(req: Request, res: Response) => {
     try {
-        const findUser = await User.findOne({ username: req.body.username });
+        const token: any = req.headers.authorization;
+        const verify: any = await jwt.verify(token, process.env.JWT_KEY);
+
+        const findUser = await User.findOne({ username: verify.username });
 
         if (!findUser) {
             res.status(400).send("Cannot find user");
@@ -25,7 +28,6 @@ export const put_userinfo = async(req: Request, res: Response) => {
             middleName: req.body.middleName,
             preferredName: req.body.preferredName,
             profilePic: req.body.profilePic,
-            email: req.body.email,
             ssn: req.body.ssn,
             dob: req.body.dob,
             gender: req.body.gender
@@ -35,6 +37,8 @@ export const put_userinfo = async(req: Request, res: Response) => {
 
         //Update UserInfo
         await UserInfo.findOneAndUpdate(filter, updateData);
+        //Update E-mail address
+        await User.findOneAndUpdate({ username: verify.username}, {email: req.body.email})
     } catch (err) {
         res.status(404).send(err);
     }
@@ -65,8 +69,10 @@ export const get_userinfo = async (req: Request, res: Response) => {
 
 export const put_address = async(req: Request, res: Response) => {
     try {
-        const findUser = await User.findOne({ username: req.body.username });
+        const token: any = req.headers.authorization;
+        const verify: any = await jwt.verify(token, process.env.JWT_KEY);
 
+        const findUser = await User.findOne({ username: verify.username });
         if (!findUser) {
             res.status(400).send("Cannot find user");
         }
@@ -91,7 +97,6 @@ export const put_address = async(req: Request, res: Response) => {
 
 export const get_address = async (req: Request, res: Response) => {
     try {
-        //Token will find no Cookie currently and will stop getting data
         const token: any = req.headers.authorization;
         const verify: any = await jwt.verify(token, process.env.JWT_KEY);
 

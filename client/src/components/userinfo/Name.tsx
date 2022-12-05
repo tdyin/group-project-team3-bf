@@ -127,7 +127,6 @@ const Name: React.FC = () => {
                 id="firstName"
                 {...register( "firstName", 
                     { 
-                        required: "First Name field cannot be empty",
                         pattern: {
                                     value: /[A-Z][a-z]/,
                                     message: "First Name must only contain letters. First letter must be capitalized."
@@ -168,7 +167,7 @@ const Name: React.FC = () => {
                 variant="standard"
                 type="text"
                 id="lastName"
-                {...register( "lastName", { required: "Last Name field cannot be empty", 
+                {...register( "lastName", {  
                             pattern: {
                                 value: /[A-Z][a-z]/,
                                 message: "Last Name must only contain letters. First letter must be capitalized."
@@ -226,7 +225,6 @@ const Name: React.FC = () => {
                 type="email"
                 id="email"
                 {...register( "email", {
-                    required: "Please enter an E-mail",
                     pattern: {
                         value: /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
                         message: "E-mail must be in xxx@yyy.zzz format"

@@ -119,7 +119,7 @@ export const get_address = async (req: Request, res: Response) => {
 
 export const put_contact = async(req: Request, res: Response) => {
     const token: any = req.headers.authorization;
-    console.log(token);
+
     try {
         const verify: any = await jwt.verify(token, process.env.JWT_KEY);
         const findUser = await User.findOne({ username: verify.username })

@@ -34,8 +34,8 @@ const Documents: React.FC = () =>{
         
         try {
             setDisabled(true);
-            console.log("Sending Registration Data to Backend: ", data, {headers: { 'authorization': token }});
-            await axios.put(`${link}/document`, data)
+            console.log("Sending Registration Data to Backend: ", data);
+            await axios.put(`${link}/document`, data, {headers: { 'authorization': token }})
         } catch (err: any) {
             console.log(err);
 
@@ -89,7 +89,7 @@ const Documents: React.FC = () =>{
                  * Add upload buttons to upload to AWS
                  */}
                 <TextField 
-                        label="Upload Files" 
+                        label="Upload Driver's License / Green Card" 
                         size="small"
                         variant="standard"
                         type="file"
@@ -99,8 +99,24 @@ const Documents: React.FC = () =>{
                         disabled={disabled}
                         style={{marginTop: "2rem"}}
                         onChange={(e) => setDriverLicense(e.target.value)}
+                        InputLabelProps={{shrink: true}}
                 />
                 <ErrorMessage errors={errors} name="driverLicense" render={({ message }) => <p>{message}</p>} />
+
+                <TextField 
+                        label="Upload Visas" 
+                        size="small"
+                        variant="standard"
+                        type="file"
+                        id="workAuth"
+                        {...register( "workAuth")}
+                        fullWidth
+                        disabled={disabled}
+                        style={{marginTop: "2rem"}}
+                        onChange={(e) => setWorkauth(e.target.value)}
+                        InputLabelProps={{shrink: true}}
+                />
+                <ErrorMessage errors={errors} name="workAuth" render={({ message }) => <p>{message}</p>} />
 
                 { disabled === true ? 
                     <Button type="button" onClick={() => setDisabled(false)}>Edit</Button>

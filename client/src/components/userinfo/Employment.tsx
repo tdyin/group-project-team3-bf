@@ -38,8 +38,8 @@ const Employment: React.FC = () => {
         data.visaTitle = visaTitle;
         try {
             setDisabled(true);
-            console.log("Sending Registration Data to Backend: ", data, {headers: { 'authorization': token }});
-            await axios.put(`${link}/legal`, data)
+            console.log("Sending Registration Data to Backend: ", data);
+            await axios.put(`${link}/legal`, data, {headers: { 'authorization': token }})
         } catch (err: any) {
             console.log(err);
         }

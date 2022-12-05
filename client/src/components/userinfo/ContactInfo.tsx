@@ -31,14 +31,12 @@ const Contact: React.FC = () => {
     //Edit Data
     const onSubmit = async (data: Contact) => {
         const token = localStorage.getItem('token');
-        
         try {
             setDisabled(true);
-            console.log("Sending Registration Data to Backend: ", data, {headers: { 'authorization': token }});
-            await axios.put(`${link}/contact`, data)
+            console.log("Sending Contact Info to Backend: ", data);
+            await axios.put(`${link}/contact`, data, {headers: { 'authorization' : token}})
         } catch (err: any) {
             console.log(err);
-
         }
     }
 

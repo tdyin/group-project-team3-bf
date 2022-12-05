@@ -46,8 +46,8 @@ const Emergency: React.FC = () =>{
 
         try {
             setDisabled(true);
-            console.log("Sending Registration Data to Backend: ", data, {headers: { 'authorization': token }});
-            await axios.put(`${link}/emergency`, data)
+            console.log("Sending Registration Data to Backend: ", data);
+            await axios.put(`${link}/emergency`, data, {headers: { 'authorization': token }})
         } catch (err: any) {
             console.log(err);
 
@@ -112,7 +112,7 @@ const Emergency: React.FC = () =>{
                     { 
                         required: "First Name field cannot be empty",
                         pattern: {
-                                    value: /^[A-Z][a-z]$/,
+                                    value: /[A-Z][a-z]/,
                                     message: "First Name must only contain letters. First letter must be capitalized."
                         }   
                     }
@@ -133,7 +133,7 @@ const Emergency: React.FC = () =>{
                 id="middleName"
                 {...register( "middleName", {
                     pattern: {
-                                value: /^[A-Z][a-z]$/,
+                                value: /[A-Z][a-z]/,
                                 message: "Middle Name must only contain letters. First letter must be capitalized."
                     }   
                 })}
@@ -153,7 +153,7 @@ const Emergency: React.FC = () =>{
                 id="lastName"
                 {...register( "lastName", { required: "Last Name field cannot be empty", 
                             pattern: {
-                                value: /^[A-Z][a-z]$/,
+                                value: /[A-Z][a-z]/,
                                 message: "Last Name must only contain letters. First letter must be capitalized."
                             }    
                         }
@@ -220,7 +220,7 @@ const Emergency: React.FC = () =>{
                 {...register( "relationship", {
                     required: "Please enter your relationship",
                     pattern: {
-                        value: /^[A-Za-z]$/,
+                        value: /[A-Za-z]/,
                         message: "Relationship must only contain letters"
                     }
                 })}

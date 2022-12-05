@@ -78,8 +78,6 @@ export const post_login = async(req: Request, res: Response) => {
                     throw err
                 }
                 if (data) {
-                    // console.log('this is user',user[0], user[0].username)
-                    console.log(process.env.JWT_KEY);
                     const key: any = process.env.JWT_KEY;
                     const token: any = jwt.sign({
                         id: user[0]._id,
@@ -97,15 +95,14 @@ export const post_login = async(req: Request, res: Response) => {
 }
 
 export const put_logout = async(req: Request, res: Response) => {
-  const authHeader: any = req.headers["authorization"];
-  jwt.sign(authHeader, "", { expiresIn: 1 } , (logout, err) => {
+  const token: any = req.headers.authorization;
+  jwt.sign(token, "", { expiresIn: 1 } , (logout, err) => {
   if (logout) {
         res.send({msg : 'You have been Logged Out' });
     } else {
         res.send({msg:'Error'});
     }
   });
-
 }
 
 

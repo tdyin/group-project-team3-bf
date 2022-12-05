@@ -11,7 +11,10 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 const VisaStatusHr: React.FC = () => {
-  const [users, setUsers] = useState([] as any[])
+  const [users, setUsers] = useState([] as any[]);
+  const [currentUser, setCurrentUser] = useState('');
+  const [feedback, setFeedback] = useState('');
+  const [showFeedback, setShowFeedback] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -19,7 +22,7 @@ const VisaStatusHr: React.FC = () => {
             'authorization': token
           }})
       .then((data) => {
-        console.log(data.data[0]['user']["userInfo"]['lastName'])
+        console.log(data.data)
         setUsers(data.data);
       })
       .catch((err) => {
@@ -58,39 +61,90 @@ const VisaStatusHr: React.FC = () => {
   function getNextStep(user: any) {
     if (user['optReceipt'] === '') {
       return 'Waiting for user to upload next document'
-    } else if (user['optReceipt'] === 'pending') {
-      return "Waiting for HR approval"
-    } else if (user['optReceipt'] === 'rejected') {
-      return 'Waiting for user to upload optReceipt again'
-    } else if (user['optReceipt'] === 'approved' && user['optEad'] === '') {
-      return 'Waiting for user to upload next document'
-    } else if (user['optEad'] === 'pending') {
-      return "Waiting for HR approval"
-    } else if (user['optEad'] === 'rejected') {
-      return 'Waiting for user to upload optEad again'
-    } else if (user['optEad'] === 'approved' && user['i983'] === '') {
-      return 'Waiting for user to upload next document'
-    } else if (user['i983'] === 'pending') {
-      return "Waiting for HR approval"
-    } else if (user['i983'] === 'rejected') {
-      return 'Waiting for user to upload i983 again'
-    } else if (user['i983'] === 'approved' && user['i20'] === '') {
-      return 'Waiting for user to upload next document'
-    } else if (user['i20'] === 'pending') {
-      return "Waiting for HR approval"
-    } else if (user['i20'] === 'rejected') {
-      return 'Waiting for user to upload i20 again'
-    } else {
+    }
+    if (user['i20'] === 'approved') {
       return 'User has uploaded all documents'
+    } else if (user['oprReceipt'] === 'rejected' || user['optEad'] === 'rejected' || user['i983'] === 'rejected' || user['i20'] === 'rejected') {
+      return 'Waiting for user to upload document again'
+    } else if (user['oprReceipt'] === 'pending' || user['optEad'] === 'pending' || user['i983'] === 'pending' || user['i20'] === 'pending') {
+      return 'Waiting for HR approval'
+    } else {
+      return 'Waiting for user to upload next document'
     }
   }
 
   function approveDoc(user: any) {
+    let data = {}
+    if (user['optReceipt'] === 'pending') {
+      data = { 'optReceipt': 'approved'}
+    }
+    if (user['optEad'] === 'pending') {
+      data = { 'optEad': 'approved'}
+    }
+    if (user['i983'] === 'pending') {
+      data = { 'i983': 'approved'}
+    }
+    if (user['i20'] === 'pending') {
+      data = { 'i20': 'approved'}
+    }
+
+    axios.put(`http://localhost:8080/emp/info/visa/${user['_id']}`, data)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
 
   }
 
   function rejectDoc(user: any) {
+    let data = {}
+    if (user['optReceipt'] === 'pending') {
+      data = { 'optReceipt': 'rejected'}
+    }
+    if (user['optEad'] === 'pending') {
+      data = { 'optEad': 'rejected'}
+    }
+    if (user['i983'] === 'pending') {
+      data = { 'i983': 'rejected'}
+    }
+    if (user['i20'] === 'pending') {
+      data = { 'i20': 'rejected'}
+    }
 
+    axios.put(`http://localhost:8080/emp/info/visa/${user['_id']}`, data)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  function openFeedback(user: any) {
+    setCurrentUser(user['user']['_id'])
+    setShowFeedback(true)
+  }
+
+  function sendNotification(user: any) {
+
+  }
+
+  function submitFeedback(user: any) {
+    const data = { 'feedback': `${feedback}`}
+    axios.put(`http://localhost:8080/emp/info/visa/${user}`, data)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    setShowFeedback(false);
+  }
+
+  function getFeedback(event: any) {
+    setFeedback(event.target.value)
   }
 
   return (
@@ -109,7 +163,7 @@ const VisaStatusHr: React.FC = () => {
             {users.map((user: any, i) => {
                 return (
                   <StyledTableRow key={i}>
-                    <StyledTableCell>{user['user']["userInfo"]['firstName'] + ' ' + user['user']['userInfo']['lastName']}</StyledTableCell>
+                    <StyledTableCell>{user['user']["userInfo"]['lastName']}</StyledTableCell>
                     <StyledTableCell>
                       <StyledTableRow >{user['user']['legal']['visaTitle']}</StyledTableRow>
                       <StyledTableRow >{'startDate : ' + user['user']['legal']['startDate'] + ' endDate : ' + user['user']['legal']['endDate']}</StyledTableRow>
@@ -117,8 +171,16 @@ const VisaStatusHr: React.FC = () => {
                     </StyledTableCell>
                     <StyledTableCell>{getNextStep(user)}</StyledTableCell>
                     <StyledTableCell>
-                      <button onClick={()=> approveDoc(user)}>Approve</button>
-                      <button onClick={()=> rejectDoc(user)}>Reject</button>
+                      {getNextStep(user)==='Waiting for HR approval' && <div>
+                        <button onClick={()=>approveDoc(user)}>approve</button>
+                        <button onClick={()=>rejectDoc(user)}>reject</button>
+                      </div>}
+                      {getNextStep(user)==='Waiting for user to upload document again' && <div>
+                        <button onClick={()=>openFeedback(user)}>Send Feedback</button>
+                      </div>}
+                      {getNextStep(user)==='Waiting for user to upload next document' && <div>
+                        <button onClick={()=>sendNotification(user)}>Send Notification</button>
+                      </div>}
                     </StyledTableCell>
                   </StyledTableRow>
                 )
@@ -127,6 +189,13 @@ const VisaStatusHr: React.FC = () => {
           </TableBody>
         </Table>
       </TableContainer>
+          {showFeedback===true &&
+                  <form>
+                    <label>Send Feedback</label><br></br>
+                    <input type='text' onChange={getFeedback}></input><br></br>
+                    <button onClick={()=> submitFeedback(currentUser)}>send</button>
+                  </form>
+                }
     </>
   )
 }

@@ -307,15 +307,3 @@ HR will be able to access employee information and make changes regarding the on
 9. **<ins>Adding Houses**:
    - Provide an address, landlord information, basic facility information
 
----
-
-## <ins>NOTE
-
-For any features that involve user input, invalid inputs should be appropriately handled, and users should be notified via alerts or DOM manipulation.
-
-The UI’s design is entirely up to you. Please focus on implementing the correct functionality to avoid spending too much time on styling. We recommend starting the project in this order:
-
-- Data modeling (entities, relationships, schemas)
-- Set up the MVC-based backend structure
-- To implement each page or feature, start with backend routing and then connect it to the frontend for that page or feature.
-

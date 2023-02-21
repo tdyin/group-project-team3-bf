@@ -24,8 +24,6 @@ HR will be able to access employee information and make changes regarding the on
      - 1+ UI component libraries (MUI, react-bootstrap, ant design, …)
      - Any React form library (formik, react hook form, react final form,...)
      - Optional: data visualization library
-     - Your project must make use of reusable components, at least for the sections on the employee personal information page.
-       - https://blog.logrocket.com/building-reusable-ui-components-with-react-hooks/
 
 2. Set up your team’s Github repository and add the Training Managers as collaborators.
 

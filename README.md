@@ -1,6 +1,6 @@
 # HR Proejct
 
-_Beaconfire Group Project by Team 3_
+_Group Project by Team 3_
 _(Tongda Yin, John Nguyen, Jinyan Li)_
 
 ## <ins>Goal
@@ -28,9 +28,6 @@ HR will be able to access employee information and make changes regarding the on
        - https://blog.logrocket.com/building-reusable-ui-components-with-react-hooks/
 
 2. Set up your team’s Github repository and add the Training Managers as collaborators.
-
-   - ehuang@beaconfireinc.com
-   - ljiang@beaconfireinc.com
 
 3. Set up your team’s Jira SCRUM Project and add the Training Managers. - Use this to manage the project (assign tickets for feature implementations and bugfixes).
 
